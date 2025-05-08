@@ -1,3 +1,47 @@
+// "use client";
+
+// import { motion } from "framer-motion";
+
+// interface SectionHeaderProps {
+//   badge?: string;
+//   title: string;
+//   subtitle?: string;
+//   centered?: boolean;
+//   className?: string;
+// }
+
+// const SectionHeader = ({
+//   badge,
+//   title,
+//   subtitle,
+//   centered = false,
+//   className = "",
+// }: SectionHeaderProps) => {
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       whileInView={{ opacity: 1, y: 0 }}
+//       viewport={{ once: true, margin: "-100px" }}
+//       transition={{ duration: 0.6 }}
+//       className={`max-w-5xl ${
+//         centered ? "mx-auto text-center" : ""
+//       } ${className}`}
+//     >
+//       {badge && (
+//         <div className=" font-medium text-xl font-montserrat mb-10">
+//           <span className="text-xl">🎓</span>
+//           <span>{badge}</span>
+//         </div>
+//       )}
+//       <h2 className="text-3xl font-bold tracking-tight md:text-3xl lg:text-5xl mb-8 font-montserrat">
+//         {title}
+//       </h2>
+//       {subtitle && <p className="font-normal max-w-2xl mx-auto">{subtitle}</p>}
+//     </motion.div>
+//   );
+// };
+
+// export default SectionHeader;
 "use client";
 
 import { motion } from "framer-motion";
@@ -8,6 +52,7 @@ interface SectionHeaderProps {
   subtitle?: string;
   centered?: boolean;
   className?: string;
+  textColor?: string; // New prop for text color
 }
 
 const SectionHeader = ({
@@ -16,6 +61,7 @@ const SectionHeader = ({
   subtitle,
   centered = false,
   className = "",
+  textColor = "text-black", // Default text color to black
 }: SectionHeaderProps) => {
   return (
     <motion.div
@@ -28,15 +74,23 @@ const SectionHeader = ({
       } ${className}`}
     >
       {badge && (
-        <div className=" font-medium text-xl font-montserrat mb-10">
+        <div
+          className={`font-medium text-xl font-montserrat mb-10 ${textColor}`}
+        >
           <span className="text-xl">🎓</span>
           <span>{badge}</span>
         </div>
       )}
-      <h2 className="text-3xl font-bold tracking-tight md:text-3xl lg:text-5xl mb-8 font-montserrat">
+      <h2
+        className={`text-3xl font-bold tracking-tight md:text-3xl lg:text-5xl mb-8 font-montserrat ${textColor}`}
+      >
         {title}
       </h2>
-      {subtitle && <p className="font-normal max-w-2xl mx-auto">{subtitle}</p>}
+      {subtitle && (
+        <p className={`font-normal max-w-2xl mx-auto ${textColor}`}>
+          {subtitle}
+        </p>
+      )}
     </motion.div>
   );
 };
