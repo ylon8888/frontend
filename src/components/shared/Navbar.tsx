@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { Search, ChevronDown, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -46,7 +46,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-[#1e2130] text-white py-4 px-4 md:px-8">
+    <nav className="bg-[#1e2130] text-white py-8 px-4 md:px-8">
       <div className="container mx-auto flex items-center justify-between">
         {/* Mobile Menu Button (shifted to the left) */}
         <button
@@ -78,7 +78,7 @@ const Navbar = () => {
             <Link
               key={index}
               href={link.href}
-              className="text-white hover:text-primary font-montserrat transition-colors"
+              className="text-white hover:text-orange-400 font-montserrat transition-colors"
             >
               {link.name}
             </Link>
@@ -134,7 +134,7 @@ const Navbar = () => {
                   <Link
                     key={index}
                     href={link.href}
-                    className="text-white hover:text-primary font-montserrat transition-colors py-2"
+                    className="text-white hover:text-orange-400 font-montserrat transition-colors py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
