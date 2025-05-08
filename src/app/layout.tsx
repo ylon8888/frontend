@@ -30,7 +30,7 @@ export default function RootLayout({
       data-theme="light"
       className={`${poppins.variable} ${montserrat.variable}`}
     >
-      <body className="bg-[#FDF8F0]">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

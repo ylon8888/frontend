@@ -100,7 +100,7 @@ const Navbar = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.2 }}
-                  className="absolute z-10 mt-2 w-48 rounded-md bg-white shadow-lg"
+                  className="absolute z-20 mt-2 w-48 rounded-md bg-white shadow-lg"
                 >
                   <div className="py-1">
                     {courses.map((course, index) => (
@@ -229,7 +229,7 @@ const Navbar = () => {
                 className="bg-teal-600 hover:bg-teal-700 transition-colors p-2 rounded-r-md"
                 onClick={() => setIsSearchOpen(false)}
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </button>
             </div>
           </motion.div>
