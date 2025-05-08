@@ -2,6 +2,7 @@ import ExpectfromPodcastClasses from "@/components/home/ExpectfromPodcastClasses
 import Hero from "@/components/home/Hero";
 import MakeSureYouCompletePreparation from "@/components/home/MakeSureYouCompletePreparation";
 import SpecialClasses from "@/components/home/SpecialClasses";
+import Testimonials from "@/components/shared/Testimonials/Testimonials";
 export default function HomeLayout() {
   return (
     <div className="">
@@ -9,6 +10,7 @@ export default function HomeLayout() {
       <ExpectfromPodcastClasses />
       <SpecialClasses />
       <MakeSureYouCompletePreparation />
+      <Testimonials />
     </div>
   );
 }

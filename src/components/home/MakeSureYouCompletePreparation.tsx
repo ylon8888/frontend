@@ -7,7 +7,7 @@ import Image from "next/image";
 import bg from "@/assets/home/circle-bg.png";
 import SectionHeader from "../shared/SectionHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SubjectCard } from "../shared/cards/subject-card";
+import { SubjectCard } from "../shared/cards/SubjectCard";
 
 // Static data for now, will be replaced with API data later
 const classData = {

@@ -5,7 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import bg from "@/assets/home/circle-bg.png";
 import SectionHeader from "../shared/SectionHeader";
-import PodcastCard from "../shared/cards/podcast-card";
+import PodcastCard from "../shared/cards/PodcastCard";
 
 const podcastData = [
   {
