@@ -32,23 +32,23 @@ const BlogCard = ({ blog, index }: BlogCardProps) => {
     >
       <div className="relative h-48 overflow-hidden">
         <Image
-          src={blog.image || "/placeholder.svg"}
-          alt={blog.title}
+          src={blog?.image || "/placeholder.svg"}
+          alt={blog?.title}
           fill
           className="object-cover transition-transform hover:scale-105 duration-500"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
       <div className="p-5">
-        <p className="text-sm text-gray-500 mb-2">
-          Uploaded Date: {blog.uploadDate}
+        <p className="text-sm text-gray-800 mb-2">
+          Uploaded Date: {blog?.uploadDate}
         </p>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
-          {blog.title}
+        <h3 className="font-montserrat text-2xl font-semibold text-gray-900 mb-2 line-clamp-2 h-20">
+          {blog?.title}
         </h3>
-        <p className="text-gray-600 mb-4 line-clamp-3 h-20">{blog.excerpt}</p>
+        <p className="text-gray-800 mb-4 line-clamp-3 h-24">{blog?.excerpt}</p>
         <Link
-          href={`/blogs/${blog.slug}`}
+          href={`/blog/${blog?.id}`}
           className="inline-flex items-center text-secondary hover:text-secondary font-medium hover:font-semibold hover:underline"
         >
           Read More <SquareArrowOutUpRight className="ml-1 h-4 w-4" />

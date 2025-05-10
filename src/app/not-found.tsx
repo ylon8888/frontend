@@ -14,7 +14,7 @@ const NotFoundPage = () => {
       /> */}
       <h3 className="text-center text-8xl font-semibold">Page Not Found</h3>
       <Link href="/" className="">
-        <button className="flex items-center justify-center mt-10 mx-auto px-6 py-3 rounded-md bg-orange-400 font-montserrat text-white text-lg  shadow-md hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none">
+        <button className="flex items-center justify-center mt-10 mx-auto px-6 py-3 rounded-md bg-secondary font-montserrat text-white text-lg  shadow-md hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none">
           <span>Go to Home</span>
         </button>
       </Link>
