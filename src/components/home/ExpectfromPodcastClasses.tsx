@@ -59,7 +59,6 @@ const ExpectfromPodcastClasses = () => {
 
       <div className="container max-w-[1320px] mx-auto px-4 relative z-10">
         <SectionHeader
-          badge="Classes 09-12"
           title="What Can You Expect from Our Podcast Classes This Year?"
           subtitle="May the advancement of education continue from any part of the country under the care of the best teachers."
           centered

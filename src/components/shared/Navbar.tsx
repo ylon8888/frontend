@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Search, ChevronDown, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isCoursesOpen, setIsCoursesOpen] = useState(false);
+  // const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -31,16 +31,17 @@ const Navbar = () => {
   }, []);
 
   // Sample courses for dropdown
-  const courses = [
-    { name: "Web Development", href: "#" },
-    { name: "Data Science", href: "#" },
-    { name: "Mobile Development", href: "#" },
-    { name: "UI/UX Design", href: "/asdasd" },
-  ];
+  // const courses = [
+  //   { name: "Web Development", href: "#" },
+  //   { name: "Data Science", href: "#" },
+  //   { name: "Mobile Development", href: "#" },
+  //   { name: "UI/UX Design", href: "/asdasd" },
+  // ];
 
   // Navigation links
   const navLinks = [
     { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
     { name: "Blog", href: "/blog" },
     { name: "About Us", href: "/about" },
   ];
@@ -68,7 +69,7 @@ const Navbar = () => {
         <Link href="/" className="flex items-center">
           <div className="text-white font-bold text-2xl md:text-3xl">
             LOGO
-            <span className="inline-block w-2 h-2 bg-orange-500 rounded-full ml-1 align-top mt-2"></span>
+            <span className="inline-block w-2 h-2 bg-secondary rounded-full ml-1 align-top mt-2"></span>
           </div>
         </Link>
 
@@ -78,20 +79,26 @@ const Navbar = () => {
             <Link
               key={index}
               href={link.href}
-              className="text-white hover:text-orange-400 font-montserrat transition-colors"
+              className="text-white hover:text-secondary font-montserrat transition-colors"
             >
               {link.name}
             </Link>
           ))}
 
-          <div className="relative">
-            <button
-              className="flex items-center text-white hover:text-gray-300 transition-colors"
-              onClick={() => setIsCoursesOpen(!isCoursesOpen)}
-              onBlur={() => setTimeout(() => setIsCoursesOpen(false), 100)}
-            >
-              Courses <ChevronDown className="ml-1 h-4 w-4" />
-            </button>
+          {/* <div className="relative">
+            <div className="flex items-center">
+              <Link href="/courses" className="text-white hover:text-secondary">
+                Courses
+              </Link>
+              <button
+                onClick={() => setIsCoursesOpen(!isCoursesOpen)}
+                onBlur={() => setTimeout(() => setIsCoursesOpen(false), 100)}
+                className="ml-1 text-white hover:text-secondary"
+              >
+                {" "}
+                <ChevronDown className="h-5 w-5" />
+              </button>
+            </div>
 
             <AnimatePresence>
               {isCoursesOpen && (
@@ -116,7 +123,7 @@ const Navbar = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </div> */}
         </div>
 
         {/* Mobile Navigation */}
@@ -134,7 +141,7 @@ const Navbar = () => {
                   <Link
                     key={index}
                     href={link.href}
-                    className="text-white hover:text-orange-400 font-montserrat transition-colors py-2"
+                    className="text-white hover:text-secondary font-montserrat transition-colors py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
@@ -143,7 +150,7 @@ const Navbar = () => {
 
                 <Link
                   href="/login"
-                  className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
+                  className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Login Now
@@ -191,7 +198,7 @@ const Navbar = () => {
 
           <Link
             href="/login"
-            className="bg-orange-500 hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
+            className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
           >
             Login Now
           </Link>

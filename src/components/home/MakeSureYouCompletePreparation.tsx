@@ -8,138 +8,139 @@ import bg from "@/assets/home/circle-bg.png";
 import SectionHeader from "../shared/SectionHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SubjectCard } from "../shared/cards/SubjectCard";
+import { classData } from "@/lib/ClassData";
 
 // Static data for now, will be replaced with API data later
-const classData = {
-  "09": [
-    {
-      subject: "English Language Arts",
-      count: "125 Total Podcast Classes",
-      image: "/images/english.jpg",
-    },
-    {
-      subject: "Science",
-      count: "125 Total Podcast Classes",
-      image: "/images/science.jpg",
-    },
-    {
-      subject: "Mathematics",
-      count: "125 Total Podcast Classes",
-      image: "/images/math.jpg",
-    },
-    {
-      subject: "Social Studies",
-      count: "125 Total Podcast Classes",
-      image: "/images/social.jpg",
-    },
-    {
-      subject: "Art",
-      count: "125 Total Podcast Classes",
-      image: "/images/art.jpg",
-    },
-    {
-      subject: "Computer Science",
-      count: "125 Total Podcast Classes",
-      image: "/images/computer.jpg",
-    },
-  ],
-  "10": [
-    {
-      subject: "Advanced English",
-      count: "130 Total Podcast Classes",
-      image: "/images/english.jpg",
-    },
-    {
-      subject: "Physics",
-      count: "120 Total Podcast Classes",
-      image: "/images/science.jpg",
-    },
-    {
-      subject: "Algebra",
-      count: "135 Total Podcast Classes",
-      image: "/images/math.jpg",
-    },
-    {
-      subject: "World History",
-      count: "115 Total Podcast Classes",
-      image: "/images/social.jpg",
-    },
-    {
-      subject: "Visual Arts",
-      count: "100 Total Podcast Classes",
-      image: "/images/art.jpg",
-    },
-    {
-      subject: "Programming Basics",
-      count: "110 Total Podcast Classes",
-      image: "/images/computer.jpg",
-    },
-  ],
-  "11": [
-    {
-      subject: "Literature & Composition",
-      count: "140 Total Podcast Classes",
-      image: "/images/english.jpg",
-    },
-    {
-      subject: "Chemistry",
-      count: "145 Total Podcast Classes",
-      image: "/images/science.jpg",
-    },
-    {
-      subject: "Geometry & Trigonometry",
-      count: "150 Total Podcast Classes",
-      image: "/images/math.jpg",
-    },
-    {
-      subject: "Economics",
-      count: "120 Total Podcast Classes",
-      image: "/images/social.jpg",
-    },
-    {
-      subject: "Digital Media",
-      count: "105 Total Podcast Classes",
-      image: "/images/art.jpg",
-    },
-    {
-      subject: "Web Development",
-      count: "130 Total Podcast Classes",
-      image: "/images/computer.jpg",
-    },
-  ],
-  "12": [
-    {
-      subject: "Advanced Composition",
-      count: "150 Total Podcast Classes",
-      image: "/images/english.jpg",
-    },
-    {
-      subject: "Biology",
-      count: "155 Total Podcast Classes",
-      image: "/images/science.jpg",
-    },
-    {
-      subject: "Calculus",
-      count: "160 Total Podcast Classes",
-      image: "/images/math.jpg",
-    },
-    {
-      subject: "Political Science",
-      count: "130 Total Podcast Classes",
-      image: "/images/social.jpg",
-    },
-    {
-      subject: "Fine Arts",
-      count: "110 Total Podcast Classes",
-      image: "/images/art.jpg",
-    },
-    {
-      subject: "Mobile App Development",
-      count: "140 Total Podcast Classes",
-      image: "/images/computer.jpg",
-    },
-  ],
-};
+// const classData = {
+//   "09": [
+//     {
+//       subject: "English Language Arts",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/english.jpg",
+//     },
+//     {
+//       subject: "Science",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/science.jpg",
+//     },
+//     {
+//       subject: "Mathematics",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/math.jpg",
+//     },
+//     {
+//       subject: "Social Studies",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/social.jpg",
+//     },
+//     {
+//       subject: "Art",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/art.jpg",
+//     },
+//     {
+//       subject: "Computer Science",
+//       count: "125 Total Podcast Classes",
+//       image: "/images/computer.jpg",
+//     },
+//   ],
+//   "10": [
+//     {
+//       subject: "Advanced English",
+//       count: "130 Total Podcast Classes",
+//       image: "/images/english.jpg",
+//     },
+//     {
+//       subject: "Physics",
+//       count: "120 Total Podcast Classes",
+//       image: "/images/science.jpg",
+//     },
+//     {
+//       subject: "Algebra",
+//       count: "135 Total Podcast Classes",
+//       image: "/images/math.jpg",
+//     },
+//     {
+//       subject: "World History",
+//       count: "115 Total Podcast Classes",
+//       image: "/images/social.jpg",
+//     },
+//     {
+//       subject: "Visual Arts",
+//       count: "100 Total Podcast Classes",
+//       image: "/images/art.jpg",
+//     },
+//     {
+//       subject: "Programming Basics",
+//       count: "110 Total Podcast Classes",
+//       image: "/images/computer.jpg",
+//     },
+//   ],
+//   "11": [
+//     {
+//       subject: "Literature & Composition",
+//       count: "140 Total Podcast Classes",
+//       image: "/images/english.jpg",
+//     },
+//     {
+//       subject: "Chemistry",
+//       count: "145 Total Podcast Classes",
+//       image: "/images/science.jpg",
+//     },
+//     {
+//       subject: "Geometry & Trigonometry",
+//       count: "150 Total Podcast Classes",
+//       image: "/images/math.jpg",
+//     },
+//     {
+//       subject: "Economics",
+//       count: "120 Total Podcast Classes",
+//       image: "/images/social.jpg",
+//     },
+//     {
+//       subject: "Digital Media",
+//       count: "105 Total Podcast Classes",
+//       image: "/images/art.jpg",
+//     },
+//     {
+//       subject: "Web Development",
+//       count: "130 Total Podcast Classes",
+//       image: "/images/computer.jpg",
+//     },
+//   ],
+//   "12": [
+//     {
+//       subject: "Advanced Composition",
+//       count: "150 Total Podcast Classes",
+//       image: "/images/english.jpg",
+//     },
+//     {
+//       subject: "Biology",
+//       count: "155 Total Podcast Classes",
+//       image: "/images/science.jpg",
+//     },
+//     {
+//       subject: "Calculus",
+//       count: "160 Total Podcast Classes",
+//       image: "/images/math.jpg",
+//     },
+//     {
+//       subject: "Political Science",
+//       count: "130 Total Podcast Classes",
+//       image: "/images/social.jpg",
+//     },
+//     {
+//       subject: "Fine Arts",
+//       count: "110 Total Podcast Classes",
+//       image: "/images/art.jpg",
+//     },
+//     {
+//       subject: "Mobile App Development",
+//       count: "140 Total Podcast Classes",
+//       image: "/images/computer.jpg",
+//     },
+//   ],
+// };
 
 const MakeSureYouCompletePreparation = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
