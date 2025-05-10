@@ -44,8 +44,8 @@ const Hero = () => {
         />
       </div>
 
-      <div className="container max-w-[1320px] mx-auto px-4 py-16 md:py-36 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-12 items-center">
+      <div className="container max-w-[1320px] mx-auto px-4 py-10 xl:py-36 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
           {/* Left Content */}
           <motion.div
             variants={containerVariants}
@@ -55,7 +55,7 @@ const Hero = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold font-montserrat mb-6 leading-12 lg:leading-20"
+              className="text-4xl md:text-5xl lg:text-[44px] xl:text-6xl font-bold font-montserrat mb-6 leading-16 xl:leading-20"
             >
               Welcome to <br />
               Your <span className="bg-secondary px-2">Personalized</span>
@@ -113,7 +113,7 @@ const Hero = () => {
 
             <motion.div
               variants={containerVariants}
-              className="flex items-center flex-wrap gap-6 lg:gap-20"
+              className="flex flex-col md:flex-row items-start md:items-center justify-start lg:justify-between gap-3 md:gap-10 xl:gap-20"
             >
               {/* Stats Cards */}
               <motion.div
@@ -123,7 +123,7 @@ const Hero = () => {
                 <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
                   <Users className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
                   <p className="">Students</p>
                 </div>
@@ -136,7 +136,7 @@ const Hero = () => {
                 <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
                   <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
                   <p className="">Courses</p>
                 </div>
@@ -149,7 +149,7 @@ const Hero = () => {
                 <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
                   <LayoutGrid className="w-5 h-5 text-white" />
                 </div>
-                <div>
+                <div className="flex md:flex-col gap-1">
                   <p className="">Overall</p>
                   <p className="">Category</p>
                 </div>

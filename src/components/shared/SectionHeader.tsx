@@ -61,7 +61,7 @@ const SectionHeader = ({
   subtitle,
   centered = false,
   className = "",
-  textColor = "text-black", // Default text color to black
+  textColor = "text-black",
 }: SectionHeaderProps) => {
   return (
     <motion.div
@@ -82,7 +82,7 @@ const SectionHeader = ({
         </div>
       )}
       <h2
-        className={`text-3xl font-bold tracking-tight md:text-3xl lg:text-5xl mb-8 font-montserrat ${textColor}`}
+        className={`text-3xl font-semibold tracking-tight md:text-3xl lg:text-5xl mb-8 font-montserrat ${textColor}`}
       >
         {title}
       </h2>

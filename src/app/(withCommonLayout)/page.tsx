@@ -1,4 +1,5 @@
 import ExpectfromPodcastClasses from "@/components/home/ExpectfromPodcastClasses";
+import Faq from "@/components/home/Faq";
 import Hero from "@/components/home/Hero";
 import MakeSureYouCompletePreparation from "@/components/home/MakeSureYouCompletePreparation";
 import SpecialClasses from "@/components/home/SpecialClasses";
@@ -11,6 +12,7 @@ export default function HomeLayout() {
       <SpecialClasses />
       <MakeSureYouCompletePreparation />
       <Testimonials />
+      <Faq />
     </div>
   );
 }
