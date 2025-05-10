@@ -33,7 +33,7 @@ export const FaqItem = ({
         onClick={toggleAccordion}
         aria-expanded={isOpen}
       >
-        <h3 className="text-lg font-medium text-gray-900 pr-8">
+        <h3 className="font-montserrat text-lg font-medium text-gray-900 pr-8">
           {item.question}
         </h3>
         <span className="flex-shrink-0 mt-1">
@@ -54,7 +54,9 @@ export const FaqItem = ({
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-3 text-base text-gray-600">{item.answer}</div>
+            <div className="mt-3 text-base text-gray-600 font-montserrat">
+              {item.answer}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

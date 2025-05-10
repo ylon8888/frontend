@@ -3,9 +3,12 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { Users, BookOpen, LayoutGrid, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import bg from "@/assets/home/hero-section-bg.png";
 import banner from "@/assets/home/hero-banner.png";
+import icon1 from "@/assets/home/students.png";
+import icon2 from "@/assets/home/courses.png";
+import icon3 from "@/assets/home/category.png";
 
 const Hero = () => {
   // Animation variants
@@ -113,15 +116,16 @@ const Hero = () => {
 
             <motion.div
               variants={containerVariants}
-              className="flex flex-col md:flex-row items-start md:items-center justify-start lg:justify-between gap-3 md:gap-10 xl:gap-20"
+              className="flex flex-col md:flex-row items-start md:items-center justify-start gap-3 md:gap-10 xl:gap-10"
             >
               {/* Stats Cards */}
               <motion.div
                 variants={itemVariants}
                 className="flex items-center gap-3"
               >
-                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
-                  <Users className="w-5 h-5 text-white" />
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  {/* <Users className="w-5 h-5 text-white" /> */}
+                  <Image src={icon1} alt="icon" className="w-8 h-8" />
                 </div>
                 <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
@@ -133,8 +137,8 @@ const Hero = () => {
                 variants={itemVariants}
                 className="flex items-center gap-3"
               >
-                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
-                  <BookOpen className="w-5 h-5 text-white" />
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  <Image src={icon2} alt="icon" className="w-8 h-8" />
                 </div>
                 <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
@@ -146,8 +150,8 @@ const Hero = () => {
                 variants={itemVariants}
                 className="flex items-center gap-3"
               >
-                <div className="bg-gray-800/60 backdrop-blur-sm rounded-lg p-4">
-                  <LayoutGrid className="w-5 h-5 text-white" />
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                  <Image src={icon3} alt="icon" className="w-8 h-8" />
                 </div>
                 <div className="flex md:flex-col gap-1">
                   <p className="">Overall</p>
