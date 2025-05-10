@@ -47,7 +47,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-[#1e2130] text-white py-8 px-4 md:px-8">
-      <div className="container mx-auto flex items-center justify-between">
+      <div className="container max-w-[1320px] mx-auto flex items-center justify-between">
         {/* Mobile Menu Button (shifted to the left) */}
         <button
           className="md:hidden text-white"

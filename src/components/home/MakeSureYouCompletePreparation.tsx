@@ -170,7 +170,7 @@ const MakeSureYouCompletePreparation = () => {
         />
       </motion.div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container max-w-[1320px] mx-auto px-4 relative z-10">
         <SectionHeader
           badge="Classes 9-12"
           title="Make sure you complete your preparation for the examination."

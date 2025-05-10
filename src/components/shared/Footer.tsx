@@ -16,7 +16,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-white py-12 px-4 md:px-8 lg:px-12">
-      <div className="container mx-auto">
+      <div className="container max-w-[1320px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo and Community Section */}
           <div className="space-y">

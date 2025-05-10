@@ -68,11 +68,6 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* @theme {
-  --color-primary: #0b7077;
-  --color-secondary: #fd661f;
-} */
-
 body {
   font-family: var(--font-poppins);
 }
@@ -90,6 +85,10 @@ body,
 .font-poppins {
   font-family: var(--font-poppins);
 }
+
+/* @theme {
+  --container-8xl: 1320px;
+} */
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -170,5 +169,28 @@ body,
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .container {
+    @apply w-full mx-auto px-4;
+
+    /* Responsive max-width settings */
+    @media (min-width: 640px) {
+      max-width: 640px;
+    }
+    @media (min-width: 768px) {
+      max-width: 768px;
+    }
+    @media (min-width: 1024px) {
+      max-width: 1024px;
+    }
+    @media (min-width: 1280px) {
+      max-width: 1280px;
+    }
+    @media (min-width: 1320px) {
+      max-width: 1320px;
+    }
   }
 }

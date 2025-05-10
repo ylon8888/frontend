@@ -169,7 +169,7 @@ const Testimonials = () => {
         />
       </motion.div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container max-w-[1320px] mx-auto px-4 relative z-10">
         <SectionHeader
           badge="Testimonials"
           title="What Our Students Are Saying!"

@@ -56,7 +56,7 @@ const SpecialClasses = () => {
         />
       </motion.div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container max-w-[1320px] mx-auto px-4 relative z-10">
         <SectionHeader
           badge="Classes 09-12"
           title="What Can You Expect from Our Podcast Classes This Year?"
