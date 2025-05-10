@@ -54,9 +54,9 @@ const ReviewCard = ({
           <Image
             src={image || "/placeholder.svg?height=48&width=48"}
             alt={name}
-            width={48}
-            height={48}
-            className="object-cover"
+            width={1000}
+            height={1000}
+            className="object-cover w-12 h-12"
           />
         </div>
         <div>

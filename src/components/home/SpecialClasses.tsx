@@ -6,22 +6,23 @@ import Image from "next/image";
 import bg from "@/assets/home/circle-bg.png";
 import SectionHeader from "../shared/SectionHeader";
 import PodcastCard from "../shared/cards/PodcastCard";
+import image from "@/assets/class.png";
 
 const podcastData = [
   {
-    image: "/images/podcast-1.jpg",
+    image: image.src,
     title: "What's happening in the online batch throughout the year?",
     description:
       "Complete preparation for 6th-10th grade studies from home with live classes from expert teachers, a well-organized masterbook, and model tests!",
   },
   {
-    image: "/images/podcast-2.jpg",
+    image: image.src,
     title: "What's happening in the online batch throughout the year?",
     description:
       "Complete preparation for 6th-10th grade studies from home with live classes from expert teachers, a well-organized masterbook, and model tests!",
   },
   {
-    image: "/images/podcast-3.jpg",
+    image: image.src,
     title: "What's happening in the online batch throughout the year?",
     description:
       "Complete preparation for 6th-10th grade studies from home with live classes from expert teachers, a well-organized masterbook, and model tests!",

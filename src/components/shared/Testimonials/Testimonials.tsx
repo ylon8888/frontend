@@ -8,6 +8,7 @@ import bg from "@/assets/home/circle-bg.png";
 import { useEffect } from "react";
 import SectionHeader from "../SectionHeader";
 import ReviewCard from "../cards/ReviewCard";
+import image from "@/assets/class.png";
 
 // Sample testimonial data
 const testimonials = [
@@ -17,7 +18,7 @@ const testimonials = [
       "The course was comprehensive and easy to follow. The hands-on projects were especially helpful, and I was able to apply the skills to real-life data problems!",
     name: "Saifur Rahman",
     position: "Product Manager",
-    image: "/images/profile-1.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -25,7 +26,7 @@ const testimonials = [
       "I gained so much valuable knowledge from this course! The material was practical, and the live sessions with experts were really insightful.",
     name: "Saifur Rahman",
     position: "Product Manager",
-    image: "/images/profile-1.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -33,7 +34,7 @@ const testimonials = [
       "The step-by-step approach in the courses helped me break down complex concepts easily. I feel confident to start building websites on my own now!",
     name: "Saifur Rahman",
     position: "Product Manager",
-    image: "/images/profile-1.jpg",
+    image: image.src,
   },
   {
     rating: 5,
@@ -41,7 +42,7 @@ const testimonials = [
       "The instructors were incredibly knowledgeable and supportive. They answered all my questions promptly and provided valuable feedback on my projects.",
     name: "Amina Khan",
     position: "UX Designer",
-    image: "/images/profile-2.jpg",
+    image: image.src,
   },
   {
     rating: 5,
@@ -49,7 +50,7 @@ const testimonials = [
       "This platform has completely transformed my learning experience. The quality of content and teaching methodology is exceptional!",
     name: "Rahul Sharma",
     position: "Software Engineer",
-    image: "/images/profile-3.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -57,7 +58,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -65,7 +66,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -73,7 +74,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -81,7 +82,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -89,7 +90,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
   {
     rating: 4,
@@ -97,7 +98,7 @@ const testimonials = [
       "I've tried many online learning platforms, but this one stands out for its practical approach and community support. Highly recommended!",
     name: "Priya Patel",
     position: "Data Analyst",
-    image: "/images/profile-4.jpg",
+    image: image.src,
   },
 ];
 
