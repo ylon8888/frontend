@@ -34,13 +34,12 @@ const SpecialClasses = () => {
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden bg-[#0B7077]"
+      className="relative py-16 md:py-24 overflow-hidden bg-primary"
     >
       {/* Background Image */}
       <motion.div

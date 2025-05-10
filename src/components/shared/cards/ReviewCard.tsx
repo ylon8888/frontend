@@ -49,7 +49,7 @@ const ReviewCard = ({
       </div>
 
       {/* Profile Section */}
-      <div className="bg-[#0B7077] p-4 text-white flex items-center">
+      <div className="bg-primary p-4 text-white flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4 flex-shrink-0 border-2 border-white">
           <Image
             src={image || "/placeholder.svg?height=48&width=48"}

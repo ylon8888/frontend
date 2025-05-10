@@ -58,9 +58,9 @@ const Hero = () => {
               className="text-4xl md:text-5xl lg:text-6xl font-bold font-montserrat mb-6 leading-12 lg:leading-20"
             >
               Welcome to <br />
-              Your <span className="bg-orange-500 px-2">Personalized</span>
+              Your <span className="bg-secondary px-2">Personalized</span>
               <br />
-              <span className="bg-teal-500 px-2">Learning</span> Journey
+              <span className="bg-primary px-2">Learning</span> Journey
             </motion.h1>
 
             <motion.p variants={itemVariants} className="mb-8 max-w-lg">
@@ -74,7 +74,7 @@ const Hero = () => {
             >
               <Link
                 href="/courses"
-                className="bg-orange-500 hover:bg-orange-600 transition-colors text-white font-medium py-3 px-6 rounded-md"
+                className="bg-secondary hover:bg-secondary/80 transition-colors text-white font-medium py-3 px-6 rounded-md"
               >
                 Start Learning Now
               </Link>
