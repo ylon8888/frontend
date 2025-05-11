@@ -41,7 +41,7 @@ const SectionHeader = ({
         {title}
       </h2>
       {subtitle && (
-        <p className={`font-normal max-w-2xl mx-auto ${textColor}`}>
+        <p className={`font-normal max-w-4xl mx-auto ${textColor}`}>
           {subtitle}
         </p>
       )}

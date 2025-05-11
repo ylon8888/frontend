@@ -6,6 +6,7 @@ import value from "@/assets/about/values.png";
 import Testimonials from "@/components/shared/Testimonials/Testimonials";
 import Faq from "@/components/home/Faq";
 import SuccessInAcademicYear from "@/components/home/SuccessInAcademicYear";
+import OurTeam from "@/components/about/OurTeam";
 const About = () => {
   return (
     <div>
@@ -45,6 +46,7 @@ const About = () => {
         reverseLayout={true}
         useList={true}
       />
+      <OurTeam />
       <Testimonials />
       <Faq />
       <SuccessInAcademicYear />
