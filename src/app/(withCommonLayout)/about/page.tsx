@@ -7,6 +7,7 @@ import Testimonials from "@/components/shared/Testimonials/Testimonials";
 import Faq from "@/components/home/Faq";
 import SuccessInAcademicYear from "@/components/home/SuccessInAcademicYear";
 import OurTeam from "@/components/about/OurTeam";
+import GetInTouch from "@/components/about/GetInTouch";
 const About = () => {
   return (
     <div>
@@ -47,6 +48,7 @@ const About = () => {
         useList={true}
       />
       <OurTeam />
+      <GetInTouch />
       <Testimonials />
       <Faq />
       <SuccessInAcademicYear />
