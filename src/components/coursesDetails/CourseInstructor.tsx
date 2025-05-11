@@ -11,7 +11,9 @@ const CourseInstructor = ({ instructor }: InstructorProps) => {
   return (
     <div className="bg-white rounded-lg shadow-sm">
       <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6">Course Instructor</h2>
+        <h2 className="text-3xl font-montserrat font-semibold mb-6 font-montserrat">
+          Course Instructor
+        </h2>
 
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
@@ -23,7 +25,9 @@ const CourseInstructor = ({ instructor }: InstructorProps) => {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold">{instructor.name}</h3>
+            <h3 className="text-xl font-semibold font-montserrat mb-6">
+              {instructor.name}
+            </h3>
             <p className="text-gray-600 text-sm">{instructor.title}</p>
 
             <p className="mt-3 text-gray-700">{instructor.description}</p>

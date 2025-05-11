@@ -1,7 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { motion } from "framer-motion";
 
 interface FAQ {
   question: string;
@@ -13,44 +18,42 @@ interface FAQProps {
 }
 
 const FrequentlyAskedQuestions = ({ faqs }: FAQProps) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggleFAQ = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
-    <div className="bg-white rounded-lg shadow-sm">
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-6">Frequently Ask Questions</h2>
+    <div className="p-6">
+      <motion.h2
+        className="text-3xl font-montserrat font-semibold mb-6"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        Frequently Ask Questions
+      </motion.h2>
 
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="border border-gray-200 rounded-lg overflow-hidden"
-            >
-              <button
-                className="w-full flex items-center justify-between p-4 text-left focus:outline-none"
-                onClick={() => toggleFAQ(index)}
-              >
-                <span className="font-medium">{faq.question}</span>
-                {openIndex === index ? (
-                  <ChevronUp className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-500" />
-                )}
-              </button>
-
-              {openIndex === index && (
-                <div className="p-4 pt-0 border-t border-gray-200">
-                  <p className="text-gray-600">{faq.answer}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+      <Accordion type="single" collapsible className="space-y-4">
+        {faqs.map((faq, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <AccordionItem value={`item-${index}`}>
+              <AccordionTrigger className="px-4 py-6 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors data-[state=open]:bg-orange-50 data-[state=open]:text-secondary font-medium">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-4 pt-1 text-gray-600">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {faq.answer}
+                </motion.div>
+              </AccordionContent>
+            </AccordionItem>
+          </motion.div>
+        ))}
+      </Accordion>
     </div>
   );
 };

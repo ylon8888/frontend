@@ -56,7 +56,7 @@ const TabNavigation = ({
   }, [tabs, activeTab, onTabChange]);
 
   // Simple debounce function
-  const debounce = (func: () => void, delay: number) => {
+  const debounce = (func: () => void, delay: number): (() => void) => {
     let timeout: NodeJS.Timeout;
     return () => {
       clearTimeout(timeout);
@@ -73,7 +73,7 @@ const TabNavigation = ({
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors ${
+          className={`px-4 py-3 text-[15px] font-medium whitespace-nowrap transition-colors ${
             activeTab === tab.id
               ? "text-orange-500 border-b-2 border-orange-500"
               : "text-gray-600 hover:text-gray-900"

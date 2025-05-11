@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const EnrollCard = () => {
   return (
-    <div className="bg-white rounded-2xl border border-gray-400 shadow-lg p-4 -mt-[200px]">
+    <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
       <Image
         src="https://images.pexels.com/photos/2876659/pexels-photo-2876659.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
         alt="Science Biology Course"
