@@ -55,13 +55,14 @@ const ClassesSection = ({ title, badge, grade }: ClassesSectionProps) => {
           {classData[grade]?.slice(0, visibleCards).map((classItem, index) => (
             <ClassCard
               key={index}
-              subject={classItem.subject}
-              count={classItem.count}
-              image={classItem.image}
+              id={classItem?.id}
+              subject={classItem?.subject}
+              count={classItem?.count}
+              image={classItem?.image}
               index={index}
-              description={classItem.description}
-              chapters={classItem.chapters}
-              textColor={textColor} // Pass text color to ClassCard
+              description={classItem?.description}
+              chapters={classItem?.chapters}
+              textColor={textColor}
             />
           ))}
         </div>

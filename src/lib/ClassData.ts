@@ -3,6 +3,7 @@ import image from "@/assets/class.png";
 export const classData = {
   "9": [
     {
+      id: "9-1",
       subject: "English Language Arts",
       count: "125 Total Podcast Classes",
       description: "An extensive study of the English language and literature.",
@@ -10,6 +11,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "9-2",
       subject: "Science",
       count: "125 Total Podcast Classes",
       description: "An in-depth exploration of various scientific principles.",
@@ -17,6 +19,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "9-3",
       subject: "Mathematics",
       count: "125 Total Podcast Classes",
       description: "Covering algebra, geometry, and more advanced topics.",
@@ -24,6 +27,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "9-4",
       subject: "Social Studies",
       count: "125 Total Podcast Classes",
       description: "Understanding human societies and global history.",
@@ -31,6 +35,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "9-5",
       subject: "Art",
       count: "125 Total Podcast Classes",
       description: "Exploring different art techniques and history.",
@@ -38,6 +43,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "9-6",
       subject: "Computer Science",
       count: "125 Total Podcast Classes",
       description: "Programming basics and computer science fundamentals.",
@@ -47,6 +53,7 @@ export const classData = {
   ],
   "10": [
     {
+      id: "10-1",
       subject: "Advanced English",
       count: "130 Total Podcast Classes",
       description: "Advanced study of English literature and composition.",
@@ -54,6 +61,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "10-2",
       subject: "Physics",
       count: "120 Total Podcast Classes",
       description: "Exploring the fundamentals of physics and the universe.",
@@ -61,6 +69,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "10-3",
       subject: "Algebra",
       count: "135 Total Podcast Classes",
       description: "Mastering algebraic equations and functions.",
@@ -68,6 +77,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "10-4",
       subject: "World History",
       count: "115 Total Podcast Classes",
       description: "Studying key historical events around the world.",
@@ -75,6 +85,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "10-5",
       subject: "Visual Arts",
       count: "100 Total Podcast Classes",
       description: "Understanding the theory and practice of visual arts.",
@@ -82,6 +93,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "10-6",
       subject: "Programming Basics",
       count: "110 Total Podcast Classes",
       description: "Introduction to programming concepts and languages.",
@@ -91,6 +103,7 @@ export const classData = {
   ],
   "11": [
     {
+      id: "11-1",
       subject: "Literature & Composition",
       count: "140 Total Podcast Classes",
       description: "A deep dive into literary analysis and composition.",
@@ -98,6 +111,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "11-2",
       subject: "Chemistry",
       count: "145 Total Podcast Classes",
       description: "Understanding the principles of chemistry and reactions.",
@@ -105,6 +119,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "11-3",
       subject: "Geometry & Trigonometry",
       count: "150 Total Podcast Classes",
       description: "Mastering geometry and trigonometric concepts.",
@@ -112,6 +127,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "11-4",
       subject: "Economics",
       count: "120 Total Podcast Classes",
       description: "Exploring the fundamentals of economics and markets.",
@@ -119,6 +135,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "11-5",
       subject: "Digital Media",
       count: "105 Total Podcast Classes",
       description:
@@ -127,6 +144,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "11-6",
       subject: "Web Development",
       count: "130 Total Podcast Classes",
       description: "Creating websites and understanding web technologies.",
@@ -136,6 +154,7 @@ export const classData = {
   ],
   "12": [
     {
+      id: "12-1",
       subject: "Advanced Composition",
       count: "150 Total Podcast Classes",
       description:
@@ -144,6 +163,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "12-2",
       subject: "Biology",
       count: "155 Total Podcast Classes",
       description: "Exploring cellular biology, genetics, and ecosystems.",
@@ -151,6 +171,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "12-3",
       subject: "Calculus",
       count: "160 Total Podcast Classes",
       description: "An in-depth study of calculus concepts and techniques.",
@@ -158,6 +179,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "12-4",
       subject: "Political Science",
       count: "130 Total Podcast Classes",
       description: "Understanding political systems and theories.",
@@ -165,6 +187,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "12-5",
       subject: "Fine Arts",
       count: "110 Total Podcast Classes",
       description: "Exploring various fine art techniques and history.",
@@ -172,6 +195,7 @@ export const classData = {
       image: image.src,
     },
     {
+      id: "12-6",
       subject: "Mobile App Development",
       count: "140 Total Podcast Classes",
       description: "Learning how to design and develop mobile applications.",
