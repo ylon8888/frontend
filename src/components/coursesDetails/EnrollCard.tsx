@@ -1,6 +1,8 @@
 import React from "react";
 import { Star } from "lucide-react";
 import Image from "next/image";
+import Modal from "../shared/Testimonials/SharedModal";
+import EnrollForm from "./EnrollForm";
 
 const EnrollCard = () => {
   return (
@@ -32,9 +34,15 @@ const EnrollCard = () => {
       </div>
 
       <div className="flex gap-3 mb-6">
-        <button className="flex-1 bg-secondary text-white py-3 px-6 rounded-lg hover:bg-secondary transition-colors">
-          Enroll Now
-        </button>
+        <Modal
+          trigger={
+            <button className="flex-1 bg-secondary text-white py-3 px-6 rounded-lg hover:bg-secondary/90 transition-colors">
+              Enroll Now
+            </button>
+          }
+        >
+          <EnrollForm />
+        </Modal>
         <button className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
           View Course
         </button>
