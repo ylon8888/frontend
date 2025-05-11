@@ -3,6 +3,7 @@ import { Star } from "lucide-react";
 import Image from "next/image";
 import Modal from "../shared/Testimonials/SharedModal";
 import EnrollForm from "./EnrollForm";
+import Link from "next/link";
 
 const EnrollCard = () => {
   return (
@@ -43,9 +44,12 @@ const EnrollCard = () => {
         >
           <EnrollForm />
         </Modal>
-        <button className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors">
+        <Link
+          href={`${1}/chapters`}
+          className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"
+        >
           View Course
-        </button>
+        </Link>
       </div>
 
       <div className="space-y-3">

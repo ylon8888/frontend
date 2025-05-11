@@ -1,4 +1,4 @@
-import CourseOutlinePage from "@/components/courseOutline/CourseOutlinePage";
+import CourseOutlinePage from "@/components/chapters/ChaptersOutlinePage";
 import React from "react";
 
 const CourseOutline = () => {
