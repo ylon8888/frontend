@@ -151,7 +151,7 @@ const Navbar = () => {
                   ))}
 
                   <Link
-                    href="/login"
+                    href="/"
                     className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
