@@ -6,8 +6,8 @@ const CourseOutlinePage = () => {
   return (
     <div>
       <CourseOutlineHero />
-      <div className="relative mb-80">
-        <div className="absolute left-0 right-0 -bottom-40 z-20">
+      <div className="relative pb-20">
+        <div className="-mt-20 px-3">
           <ChapterModules />
         </div>
       </div>

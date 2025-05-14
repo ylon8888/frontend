@@ -42,7 +42,7 @@ const CourseOutlineHero = () => {
         />
       </div>
 
-      <div className="container max-w-[1320px] mx-auto px-4 pt-20 pb-40 relative z-10">
+      <div className="container max-w-[1320px] mx-auto px-4 pt-20 pb-20 md:pb-40 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 items-center">
           {/* Left Content */}
           <motion.div
