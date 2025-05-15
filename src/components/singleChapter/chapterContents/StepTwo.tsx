@@ -10,43 +10,36 @@ const podcastsData = {
     {
       id: "1",
       title: "The Importance of Early Literacy",
-      youtubeId: "dQw4w9WgXcQ",
+      youtubeUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
     },
     {
       id: "2",
       title: "Top 5 Study Tips for Exam Success",
-      youtubeId: "6Ejga4kJUts",
+      youtubeUrl: "https://www.youtube.com/embed/6Ejga4kJUts",
       thumbnail: "https://i.ytimg.com/vi/6Ejga4kJUts/maxresdefault.jpg",
     },
     {
       id: "3",
       title: "The Importance of Early Literacy",
-      youtubeId: "dQw4w9WgXcQ",
+      youtubeUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
     },
     {
       id: "4",
       title: "Top 5 Study Tips for Exam Success",
-      youtubeId: "6Ejga4kJUts",
+      youtubeUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       thumbnail: "https://i.ytimg.com/vi/6Ejga4kJUts/maxresdefault.jpg",
     },
   ],
 };
 
 const StepTwo = () => {
-  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
+  const playVideo = (youtubeUrl: string) => setActiveVideoUrl(youtubeUrl);
+  const closeVideo = () => setActiveVideoUrl(null);
+
   const { chapterTitle, podcasts } = podcastsData;
-
-  // Function to play a video
-  const playVideo = (youtubeId: string) => {
-    setActiveVideoId(youtubeId);
-  };
-
-  // Function to close the video player
-  const closeVideo = () => {
-    setActiveVideoId(null);
-  };
 
   return (
     <div className="flex flex-col space-y-6">
@@ -60,14 +53,14 @@ const StepTwo = () => {
       {/* Podcast Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {podcasts.map((podcast) => (
-          <div key={podcast.id} className="flex flex-col">
+          <div key={podcast?.id} className="flex flex-col">
             <div
               className="relative rounded-lg overflow-hidden cursor-pointer aspect-video"
-              onClick={() => playVideo(podcast.youtubeId)}
+              onClick={() => playVideo(podcast?.youtubeUrl)}
             >
               <img
-                src={podcast.thumbnail}
-                alt={podcast.title}
+                src={podcast?.thumbnail}
+                alt={podcast?.title}
                 width={1000}
                 height={1000}
                 className="w-full h-full object-cover"
@@ -78,14 +71,14 @@ const StepTwo = () => {
               </div>
             </div>
             <h3 className="mt-2 text-lg font-semibold font-montserrat">
-              {podcast.title}
+              {podcast?.title}
             </h3>
           </div>
         ))}
       </div>
 
       {/* YouTube Player Modal */}
-      {activeVideoId && (
+      {activeVideoUrl && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
           <div className="relative w-full max-w-4xl bg-white rounded-lg overflow-hidden">
             <button
@@ -98,7 +91,7 @@ const StepTwo = () => {
               <iframe
                 width="100%"
                 height="100%"
-                src={`https://www.youtube.com/embed/${activeVideoId}?autoplay=1`}
+                src={`${activeVideoUrl}?autoplay=1`}
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

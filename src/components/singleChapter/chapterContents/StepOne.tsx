@@ -1,6 +1,5 @@
 import Image from "next/image";
 import img from "@/assets/content.png";
-import video from "@/assets/thumbnail.png";
 
 // Step data with HTML format
 const getStepOneData = () => {
@@ -8,7 +7,7 @@ const getStepOneData = () => {
     title: "Chapter 1: Photosynthesis and the Carbon Cycle",
     objective:
       "Understanding the basic unit of life: Cells, and the various organelles involved in cell activities.",
-    videoSrc: video,
+    videoSrc: "/videos/lesson1.mp4",
     imageSrc: img,
     contentHtml: `
       <h3>Photosynthesis and the Carbon Cycle</h3>
@@ -44,20 +43,20 @@ const StepOne = () => {
       {/* Chapter Title */}
       <div className="bg-white rounded-lg px-6 py-6 shadow-sm">
         <h2 className="font-semibold text-2xl font-montserrat">{title}</h2>
-        <div className=" text-gray-600 mt-1">{objective}</div>
+        <div className="text-gray-600 mt-1">{objective}</div>
       </div>
 
       {/* Video Player */}
-      <div className="relative rounded-4xl overflow-hidden">
-        <div className="relative aspect-video bg-black">
-          <Image
-            src={videoSrc}
-            alt="Video thumbnail"
-            width={1000}
-            height={1000}
-            className="object-contain rounded-4xl"
-          />
-        </div>
+      <div className="relative rounded-4xl overflow-hidden bg-black">
+        <video
+          className="w-full rounded-4xl"
+          controls
+          controlsList="nodownload"
+          preload="metadata"
+        >
+          <source src={videoSrc} type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       {/* Content Outline */}
@@ -66,7 +65,6 @@ const StepOne = () => {
           className="prose prose-sm max-w-none text-gray-800"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
-
         <div className="mt-6">
           <Image
             src={imageSrc}
