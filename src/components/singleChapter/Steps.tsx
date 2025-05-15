@@ -1,17 +1,24 @@
 "use client";
 
-import { useState } from "react";
 import { T_Step } from "@/types/Common";
 import { ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-const Steps = () => {
-  const steps: T_Step[] = [
+interface StepsProps {
+  currentStepIndex: number;
+  onStepClick: (index: number) => void;
+  onNext: () => void;
+  onCompleteStep?: (index: number) => void;
+}
+
+const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
+  const [steps, setSteps] = useState<T_Step[]>([
     {
       id: "1",
       number: "01",
       title: "Watch the Video or Read Topic",
       description: "Photosynthesis and the Carbon Cycle",
-      isCompleted: true,
+      isCompleted: false,
     },
     {
       id: "2",
@@ -88,40 +95,44 @@ const Steps = () => {
       isCompleted: false,
       isLast: true,
     },
-  ];
+  ]);
 
-  const [currentStepIndex, setCurrentStepIndex] = useState(0);
-
-  const handleNext = () => {
+  // Mark step as completed when moving to next step
+  const handleNextWithCompletion = () => {
     if (currentStepIndex < steps.length - 1) {
-      setCurrentStepIndex((prev) => prev + 1);
+      const updatedSteps = [...steps];
+      updatedSteps[currentStepIndex] = {
+        ...updatedSteps[currentStepIndex],
+        isCompleted: true,
+      };
+      setSteps(updatedSteps);
+      onNext();
     }
-  };
-
-  const handleStepClick = (index: number) => {
-    setCurrentStepIndex(index);
   };
 
   return (
     <div className="flex flex-col">
-      <h2 className="text-xl font-semibold mb-10 font-montserrat">
+      <h2 className="text-xl font-semibold mb-6 font-montserrat">
         Chapter 01 Progress
       </h2>
-      <div className="flex flex-col space-y-1">
+
+      <div className="flex flex-col space-y-2">
         {steps.map((step, index) => (
           <div
             key={step.id}
             className={`flex cursor-pointer transition-all duration-150 ${
               index === currentStepIndex
                 ? "bg-primary/10 rounded-md p-4"
-                : "px-4"
+                : "px-4 py-3 hover:bg-gray-50 rounded-md"
             }`}
-            onClick={() => handleStepClick(index)}
+            onClick={() => onStepClick(index)}
           >
             <div className="flex flex-col items-center mr-3">
               <div
                 className={`flex items-center justify-center w-8 h-8 p-2 rounded-full text-sm font-medium ${
-                  index === currentStepIndex || step.isCompleted
+                  index === currentStepIndex
+                    ? "bg-secondary text-white"
+                    : step.isCompleted
                     ? "bg-secondary text-white"
                     : "bg-secondary/20 text-secondary"
                 }`}
@@ -129,24 +140,36 @@ const Steps = () => {
                 {step.number}
               </div>
               {!step.isLast && (
-                <div className="w-0.5 h-full bg-secondary my-1" />
+                <div
+                  className={`w-0.5 h-full my-1 ${
+                    step.isCompleted ? "bg-secondary" : "bg-secondary/20"
+                  }`}
+                />
               )}
             </div>
-            <div className={`flex flex-col pb-5 ${step?.isLast ? "pb-2" : ""}`}>
-              <h3 className="font-medium font-montserrat">{step?.title}</h3>
-              <p className="text-sm font-montserrat text-gray-800 mt-0.5">
-                {step?.description}
+            <div className={`flex flex-col ${step.isLast ? "pb-1" : "pb-4"}`}>
+              <h3 className="font-medium font-montserrat text-gray-900">
+                {step.title}
+              </h3>
+              <p className="text-sm font-montserrat text-gray-600 mt-0.5">
+                {step.description}
               </p>
             </div>
           </div>
         ))}
       </div>
+
       <button
-        onClick={handleNext}
+        onClick={handleNextWithCompletion}
         disabled={currentStepIndex === steps.length - 1}
-        className="mt-4 bg-secondary text-white py-3 rounded-md flex items-center justify-center disabled:opacity-50"
+        className="mt-6 bg-secondary text-white py-3 px-4 rounded-md flex items-center justify-center disabled:opacity-50 hover:bg-secondary/90 transition-colors font-medium"
       >
-        Next Step <ChevronRight className="ml-1 h-4 w-4" />
+        {currentStepIndex === steps.length - 1
+          ? "Chapter Complete"
+          : "Next Step"}
+        {currentStepIndex < steps.length - 1 && (
+          <ChevronRight className="ml-1 h-4 w-4" />
+        )}
       </button>
     </div>
   );
