@@ -17,3 +17,12 @@ export type T_TeamMember = {
     message: string;
   };
 };
+
+export type T_Step = {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  isCompleted?: boolean;
+  isLast?: boolean;
+};

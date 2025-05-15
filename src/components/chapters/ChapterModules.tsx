@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 // Dummy data for chapters
 const chaptersData = [
@@ -193,35 +194,37 @@ const ChapterModules = () => {
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 border-t border-gray-200 bg-gray-50">
-                      {chapter.hasImage && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.1 }}
-                          className="mt-4 bg-gray-200 rounded-lg p-4 flex justify-center"
-                        >
-                          <Image
-                            src={chapter.imageUrl! || "/placeholder.svg"}
-                            alt={chapter.imageAlt!}
-                            width={600}
-                            height={400}
-                            className="object-contain"
-                          />
-                        </motion.div>
-                      )}
+                    <Link href={`/courses/${1}/chapters/${chapter.id}`}>
+                      <div className="p-4 border-t border-gray-200 bg-gray-50">
+                        {chapter.hasImage && (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                            className="mt-4 bg-gray-200 rounded-lg p-4 flex justify-center"
+                          >
+                            <Image
+                              src={chapter.imageUrl! || "/placeholder.svg"}
+                              alt={chapter.imageAlt!}
+                              width={600}
+                              height={400}
+                              className="object-contain"
+                            />
+                          </motion.div>
+                        )}
 
-                      {!isCompleted && isUnlocked && (
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => completeChapter(chapter.id)}
-                          className="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
-                        >
-                          Complete Chapter
-                        </motion.button>
-                      )}
-                    </div>
+                        {!isCompleted && isUnlocked && (
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => completeChapter(chapter.id)}
+                            className="mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                          >
+                            Complete Chapter
+                          </motion.button>
+                        )}
+                      </div>
+                    </Link>
                   </motion.div>
                 )}
               </AnimatePresence>
