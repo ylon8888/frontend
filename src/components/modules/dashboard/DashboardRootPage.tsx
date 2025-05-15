@@ -2,6 +2,8 @@
 import { DataTable } from '@/components/shared/core/DataTable/DataTable';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Stats from './Stats/Stats';
+import LineChart from './LineChart/LineChart';
 
 type Student = {
   id: string | number;
@@ -89,16 +91,24 @@ const students: Student[] = [
   },
 ];
 
-
 const DashboardRootPage = () => {
   const router = useRouter();
   // Define columns for the table
   const columns = [
-    { header: 'Enroll Date', accessor: (Student: Student) => Student.enrollDate },
+    {
+      header: 'Enroll Date',
+      accessor: (Student: Student) => Student.enrollDate,
+    },
     { header: 'Name', accessor: (Student: Student) => Student.name },
     { header: 'Email', accessor: (Student: Student) => Student.email },
-    { header: 'Phone Number', accessor: (Student: Student) => Student.phoneNumber },
-    { header: 'Course Class', accessor: (Student: Student) => Student.courseClass },
+    {
+      header: 'Phone Number',
+      accessor: (Student: Student) => Student.phoneNumber,
+    },
+    {
+      header: 'Course Class',
+      accessor: (Student: Student) => Student.courseClass,
+    },
   ];
 
   // Handle row click
@@ -112,27 +122,27 @@ const DashboardRootPage = () => {
       <>
         <button
           onClick={() => {
-            router.push(`/user/billing/${Student?.id}`);
+            router.push(`/`);
             closeMenu();
           }}
-          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+          className="block w-20 cursor-pointer text-left underline text-sm text-secondary"
         >
-          Details
-        </button>
-        <button
-          onClick={() => {
-            router.push(`/user/billing/invoice/${Student?.id}`);
-            closeMenu();
-          }}
-          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        >
-          Invoice
+          View Details
         </button>
       </>
     );
   };
   return (
-    <div>
+    <div className="max-w-7xl space-y-8">
+      <Stats />
+      <div className="my-12 flex flex-col md:flex-row w-full gap-8">
+        <div className="w-full md:w-[60%] p-5 bg-gray-50 rounded-lg">
+          <LineChart />
+        </div>
+        <div className="w-full md:w-[40%] p-5 bg-gray-50 rounded-lg">
+          <LineChart />
+        </div>
+      </div>
       <DataTable
         title="Student List"
         data={students}

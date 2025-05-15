@@ -62,7 +62,9 @@ export function DataTable<T>({
                   </th>
                 ))}
                 {renderActions && (
-                  <th className="px-6 py-4 text-right text-sm md:text-[20px] font-medium md:font-semibold text-white w-20">Action</th>
+                  <th className="px-6 py-4 text-right text-sm md:text-[20px] font-medium md:font-semibold text-white w-20">
+                    Action
+                  </th>
                 )}
               </tr>
             </thead>
@@ -85,7 +87,7 @@ export function DataTable<T>({
                       return (
                         <td
                           key={index}
-                          className={`px-6 py-4 text-sm text-text-primary ${
+                          className={`px-6 py-4 text-sm ${
                             column.className || ''
                           }`}
                         >
@@ -94,8 +96,11 @@ export function DataTable<T>({
                       );
                     })}
                     {renderActions && (
-                      <td className="px-6 py-4 text-right relative">
-                        <button
+                      <td
+                        onClick={(e) => e.stopPropagation()}
+                        className="px-6 py-4 text-sm"
+                      >
+                        {/* <button
                           onClick={(e) => handleActionClick(e, id)}
                           className="text-gray-500 hover:text-gray-700 focus:outline-none"
                         >
@@ -107,7 +112,8 @@ export function DataTable<T>({
                               {renderActions(item, closeMenu)}
                             </div>
                           </div>
-                        )}
+                        )} */}
+                        {renderActions(item, closeMenu)}
                       </td>
                     )}
                   </tr>

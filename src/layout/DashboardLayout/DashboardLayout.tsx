@@ -176,7 +176,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                                 className="h-full w-full object-cover"
                               />
                             </div>
-                            <h3 className="font-medium">Martin De</h3>
+                            <h3 className="font-medium text-black">Martin De</h3>
                           </div>
                           <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             <FiUser className="h-4 w-4 text-blue-primary" />
@@ -201,7 +201,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 //   background: colorBgContainer,
                 borderRadius: borderRadiusLG,
               }}
-              className="overflow-hidden overflow-y-auto h-[calc(100vh-92px)] md:p-4"
+              className="overflow-hidden overflow-y-auto h-[calc(100vh-92px)] p-4"
             >
               {children}
             </Content>
