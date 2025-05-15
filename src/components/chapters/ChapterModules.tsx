@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
+import img from "@/assets/thumbnail.png";
 // Dummy data for chapters
 const chaptersData = [
   {
@@ -15,8 +15,7 @@ const chaptersData = [
       "Understanding the basic unit of life: Cells, and the various organelles involved in cell activities.",
     instructor: "Saifur Rahman",
     hasImage: true,
-    imageUrl:
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-KlQ5VrvtNlt6zsiChx3gMDOVsNGa3W.png",
+    imageUrl: img,
     imageAlt: "Cell Structure Diagram",
     isLocked: false,
     warningText: "Complete each nine steps to unlock your Next Chapter 2!",
@@ -204,11 +203,11 @@ const ChapterModules = () => {
                             className="mt-4 bg-gray-200 rounded-lg p-4 flex justify-center"
                           >
                             <Image
-                              src={chapter.imageUrl! || "/placeholder.svg"}
+                              src={chapter.imageUrl!}
                               alt={chapter.imageAlt!}
-                              width={600}
-                              height={400}
-                              className="object-contain"
+                              width={1000}
+                              height={1000}
+                              className="w-[875px] h-[542px]  object-contain"
                             />
                           </motion.div>
                         )}

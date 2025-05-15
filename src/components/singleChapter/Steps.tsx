@@ -113,7 +113,7 @@ const Steps = () => {
             key={step.id}
             className={`flex cursor-pointer transition-all duration-150 ${
               index === currentStepIndex
-                ? "bg-primary/20 rounded-md p-4"
+                ? "bg-primary/10 rounded-md p-4"
                 : "px-4"
             }`}
             onClick={() => handleStepClick(index)}
@@ -121,10 +121,8 @@ const Steps = () => {
             <div className="flex flex-col items-center mr-3">
               <div
                 className={`flex items-center justify-center w-8 h-8 p-2 rounded-full text-sm font-medium ${
-                  index === currentStepIndex
+                  index === currentStepIndex || step.isCompleted
                     ? "bg-secondary text-white"
-                    : step?.isCompleted
-                    ? "bg-secondary/60 text-white"
                     : "bg-secondary/20 text-secondary"
                 }`}
               >
