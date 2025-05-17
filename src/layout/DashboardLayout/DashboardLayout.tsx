@@ -106,7 +106,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 width={280}
               >
                 <div className="ms-2 xl:ms-3 2xl:ms-4 !font-poppins">
-                  <SideMenu role={role as string} />
+                  <SideMenu role={"ADMIN"} />
                 </div>
               </Sider>
             )}
@@ -227,7 +227,7 @@ const SideMenu = ({ role }: { role: string }) => {
         {
           href: '/dashboard/student-list',
           icon: <Users className="w-5 h-5 mr-1" />,
-          text: 'Student',
+          text: 'Student List',
           isActive: false,
         },
         {
