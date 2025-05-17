@@ -112,7 +112,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
             )}
           </div>
           <div className="w-full">
-            <Header className="!bg-gray-800 !text-white flex items-center justify-between !-mt-1 px-3 lg:px-6 !py-3 lg:!py-0 !h-fit border ">
+            <Header className="!bg-gray-800 !text-white flex items-center justify-between !-mt-1 !px-5 lg:!px-12 !py-3 lg:!py-0 !h-fit border ">
               <div className="flex flex-row items-center justify-between w-full">
                 <div className="flex items-center gap-6 lg:!-mt-5">
                   {isSmallScreen && (
@@ -201,7 +201,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 //   background: colorBgContainer,
                 borderRadius: borderRadiusLG,
               }}
-              className="overflow-hidden overflow-y-auto h-[calc(100vh-92px)] p-4"
+              className="overflow-hidden overflow-y-auto h-[calc(100vh-100px)] px-5 lg:px-12 py-6"
             >
               {children}
             </Content>

@@ -1,4 +1,4 @@
-import DashboardRootPage from '@/components/modules/dashboard/DashboardRootPage';
+import DashboardRootPage from '@/components/modules/AdminDashboard/DashboardRootPage/DashboardRootPage';
 import React from 'react';
 
 const DashboardRoot = () => {
