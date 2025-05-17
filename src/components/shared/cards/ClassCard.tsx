@@ -12,7 +12,7 @@ interface ClassCardProps {
   chapters: string;
   image: string;
   index: number;
-  textColor: string; // Accept textColor as a prop
+  textColor?: string; // Accept textColor as a prop
 }
 
 const ClassCard = ({
