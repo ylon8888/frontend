@@ -42,9 +42,9 @@ const ChapterLayout = () => {
   };
 
   return (
-    <div className="flex gap-10 w-full my-16 md:my-24">
-      <div className="w-full lg:w-2/3">{stepComponents[currentStepIndex]}</div>
-      <div className="w-full lg:w-1/3 border shadow-lg p-5 rounded-2xl">
+    <div className="flex flex-col-reverse md:flex-row gap-5 xl:gap-10 w-full my-16 md:my-24">
+      <div className="w-full md:w-2/3">{stepComponents[currentStepIndex]}</div>
+      <div className="w-full md:w-1/3 border shadow-lg p-5 rounded-2xl">
         <Steps
           currentStepIndex={currentStepIndex}
           onStepClick={handleStepClick}

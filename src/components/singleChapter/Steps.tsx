@@ -116,7 +116,7 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
         Chapter 01 Progress
       </h2>
 
-      <div className="flex flex-col space-y-2">
+      <div className="flex md:flex-col space-y-2">
         {steps.map((step, index) => (
           <div
             key={step.id}
@@ -127,7 +127,7 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
             }`}
             onClick={() => onStepClick(index)}
           >
-            <div className="flex flex-col items-center mr-3">
+            <div className="flex flex-col items-center md:mr-3">
               <div
                 className={`flex items-center justify-center w-8 h-8 p-2 rounded-full text-sm font-medium ${
                   index === currentStepIndex
@@ -147,7 +147,11 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
                 />
               )}
             </div>
-            <div className={`flex flex-col ${step.isLast ? "pb-1" : "pb-4"}`}>
+            <div
+              className={`hidden md:flex flex-col ${
+                step.isLast ? "pb-1" : "pb-4"
+              }`}
+            >
               <h3 className="font-medium font-montserrat text-gray-900">
                 {step.title}
               </h3>

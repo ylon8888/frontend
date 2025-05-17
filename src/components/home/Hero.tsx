@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { Star } from "lucide-react";
-import bg from "@/assets/home/hero-section-bg.png";
-import banner from "@/assets/home/hero-banner.png";
-import icon1 from "@/assets/home/students.png";
-import icon2 from "@/assets/home/courses.png";
-import icon3 from "@/assets/home/category.png";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Star } from 'lucide-react';
+import bg from '@/assets/home/hero-section-bg.png';
+import banner from '@/assets/home/hero-banner.png';
+import icon1 from '@/assets/home/students.png';
+import icon2 from '@/assets/home/courses.png';
+import icon3 from '@/assets/home/category.png';
 
 const Hero = () => {
   // Animation variants
@@ -38,7 +38,7 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={bg || "/placeholder.svg"}
+          src={bg || '/placeholder.svg'}
           alt="Background"
           fill
           priority
@@ -170,7 +170,7 @@ const Hero = () => {
           >
             <div className="relative h-[500px] w-full">
               <Image
-                src={banner || "/placeholder.svg"}
+                src={banner || '/placeholder.svg'}
                 alt="Learning Platform Banner"
                 fill
                 className="object-contain"
