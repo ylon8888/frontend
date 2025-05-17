@@ -246,18 +246,6 @@ const SideMenu = ({ role }: { role: string }) => {
           text: "Feedback",
           isActive: false,
         },
-        {
-          href: "/dashboard/feedback",
-          icon: <MessageSquareText className="w-5 h-5 mr-1" />,
-          text: "Feedback",
-          isActive: false,
-        },
-        {
-          href: "/dashboard/feedback",
-          icon: <MessageSquareText className="w-5 h-5 mr-1" />,
-          text: "Feedback",
-          isActive: false,
-        },
       ];
     } else {
       return [

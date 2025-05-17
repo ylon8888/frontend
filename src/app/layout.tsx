@@ -36,7 +36,7 @@ export default function RootLayout({
       <body>
         <MyContextProvider>
           <ReduxStoreProvider>
-            <Toaster richColors position="top-center" />
+            <Toaster richColors />
             {children}
           </ReduxStoreProvider>
         </MyContextProvider>
