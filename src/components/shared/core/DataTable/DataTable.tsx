@@ -1,9 +1,7 @@
-'use client';
+"use client";
 
-import type React from 'react';
-
-import { useState } from 'react';
-import { EllipsisHorizontalIcon } from './icons';
+import type React from "react";
+import { useState } from "react";
 
 export type Column<T> = {
   header: string;
@@ -55,7 +53,7 @@ export function DataTable<T>({
                   <th
                     key={index}
                     className={`px-6 py-4 text-left text-sm md:text-[20px] font-medium md:font-semibold text-white ${
-                      column.className || ''
+                      column.className || ""
                     }`}
                   >
                     {column.header}
@@ -75,20 +73,20 @@ export function DataTable<T>({
                   <tr
                     key={id}
                     className={`hover:bg-gray-50 ${
-                      onRowClick ? 'cursor-pointer' : ''
+                      onRowClick ? "cursor-pointer" : ""
                     }`}
                     onClick={() => onRowClick && onRowClick(item)}
                   >
                     {columns.map((column, index) => {
                       const value =
-                        typeof column.accessor === 'function'
+                        typeof column.accessor === "function"
                           ? column.accessor(item)
                           : item[column.accessor];
                       return (
                         <td
                           key={index}
                           className={`px-6 py-4 text-sm ${
-                            column.className || ''
+                            column.className || ""
                           }`}
                         >
                           {value as any}

@@ -29,7 +29,7 @@ const Abouts = ({
             <Image
               src={image}
               alt={title}
-              className="w-full rounded-lg shadow-lg object-cover"
+              className="w-full rounded-lg object-cover"
             />
           </div>
 

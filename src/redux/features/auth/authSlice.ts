@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '@/redux/store';
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "@/redux/store";
 
 type TAuthState = {
   user: null | any;
@@ -15,7 +14,7 @@ const initialState: TAuthState = {
 };
 
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setUser: (state, action) => {

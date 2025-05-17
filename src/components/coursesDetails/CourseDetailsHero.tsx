@@ -60,11 +60,10 @@ const CourseDetailsHero = () => {
               variants={itemVariants}
               className="text-4xl lg:text-6xl font-semibold font-montserrat mb-6 "
             >
-              Our Blog
+              Science - Biology
             </motion.h1>
             <motion.p variants={itemVariants} className="mb-8 max-w-3xl">
-              Latest Insights and Updates. Stay updated with the latest trends,
-              tips, and stories in education, literature, and beyond.
+              Objective of the course
             </motion.p>
           </motion.div>
         </div>

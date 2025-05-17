@@ -12,7 +12,7 @@ interface ClassCardProps {
   chapters: string;
   image: string;
   index: number;
-  textColor: string; // Accept textColor as a prop
+  textColor?: string; // Accept textColor as a prop
 }
 
 const ClassCard = ({
@@ -41,7 +41,7 @@ const ClassCard = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <div className={`${textColor}`}>
+        <div className={`${textColor} mt-6`}>
           <p className="text-sm mb-4">{chapters}</p>{" "}
           <h3 className="text-2xl font-semibold mb-1 font-montserrat ">
             {subject}

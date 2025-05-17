@@ -1,3 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
+// import Image from "next/image";
+
 interface InstructorProps {
   instructor: {
     name: string;
@@ -18,8 +21,8 @@ const CourseInstructor = ({ instructor }: InstructorProps) => {
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0">
             <img
-              src={instructor.image || "/placeholder.svg"}
-              alt={instructor.name}
+              src={instructor?.image || "/placeholder.svg"}
+              alt={instructor?.name}
               className="w-16 h-16 rounded-full object-cover"
             />
           </div>

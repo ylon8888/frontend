@@ -8,13 +8,9 @@ import { SquareArrowOutUpRight } from "lucide-react";
 export interface BlogPost {
   id: string;
   title: string;
-  excerpt: string;
   content: string;
   image: string;
   uploadDate: string;
-  author: string;
-  category: string;
-  slug: string;
 }
 
 interface BlogCardProps {
@@ -46,7 +42,7 @@ const BlogCard = ({ blog, index }: BlogCardProps) => {
         <h3 className="font-montserrat text-2xl font-semibold text-gray-900 mb-2 line-clamp-2 h-20">
           {blog?.title}
         </h3>
-        <p className="text-gray-800 mb-4 line-clamp-3 h-24">{blog?.excerpt}</p>
+        <p className="text-gray-800 mb-4 line-clamp-3 h-24">{blog?.content}</p>
         <Link
           href={`/blog/${blog?.id}`}
           className="inline-flex items-center text-secondary hover:text-secondary font-medium hover:font-semibold hover:underline"
