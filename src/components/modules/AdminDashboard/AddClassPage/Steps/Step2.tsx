@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import { PlusIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 interface Subject {
-  id: string;
   name: string;
   enabled: boolean;
 }
@@ -21,16 +19,17 @@ type TStepProps = {
 
 const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
   const router = useRouter();
+
   const [subjects, setSubjects] = useState<Subject[]>([
-    { id: 'math', name: 'Mathematic', enabled: true },
-    { id: 'english', name: 'English Language Arts', enabled: true },
-    { id: 'social', name: 'Social Studies', enabled: false },
-    { id: 'science', name: 'Science', enabled: true },
-    { id: 'computer', name: 'Computer Science', enabled: false },
-    { id: 'biology', name: 'Biology', enabled: true },
-    { id: 'physics', name: 'Physics', enabled: true },
-    { id: 'chemistry', name: 'Chemistry', enabled: true },
-    { id: 'art', name: 'Art', enabled: false },
+    { name: 'Mathematic', enabled: false },
+    { name: 'English Language Arts', enabled: false },
+    { name: 'Social Studies', enabled: false },
+    { name: 'Science', enabled: false },
+    { name: 'Computer Science', enabled: false },
+    { name: 'Biology', enabled: false },
+    { name: 'Physics', enabled: false },
+    { name: 'Chemistry', enabled: false },
+    { name: 'Art', enabled: false },
   ]);
 
   const [newSubjectName, setNewSubjectName] = useState('');
@@ -38,17 +37,50 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
 
   // Load class data from session storage
   useEffect(() => {
-    const classData = sessionStorage.getItem('classData');
-    if (!classData) {
+    const classDataString = sessionStorage.getItem('classData');
+    if (!classDataString) {
       router.push('/dashboard/classes/add-class');
       setCurrentStep(1);
+      return;
     }
-  }, [router]);
+    const classData = JSON.parse(classDataString);
+    const savedSubjects: string[] = classData.subjects || [];
 
-  const toggleSubject = (id: string) => {
+    // Default subjects
+    const defaultSubjects: Subject[] = [
+      { name: 'Mathematic', enabled: false },
+      { name: 'English Language Arts', enabled: false },
+      { name: 'Social Studies', enabled: false },
+      { name: 'Science', enabled: false },
+      { name: 'Computer Science', enabled: false },
+      { name: 'Biology', enabled: false },
+      { name: 'Physics', enabled: false },
+      { name: 'Chemistry', enabled: false },
+      { name: 'Art', enabled: false },
+    ];
+
+    // Create a map for quick lookup of existing default subject names
+    const defaultSubjectNames = new Set(defaultSubjects.map((s) => s.name));
+
+    // Find custom subjects (not in the default list)
+    const customSubjects: Subject[] = savedSubjects
+      .filter((name) => !defaultSubjectNames.has(name))
+      .map((name) => ({ name, enabled: true }));
+
+    // Enable the matched subjects from savedSubjects
+    const updatedSubjects = defaultSubjects.map((subject) => ({
+      ...subject,
+      enabled: savedSubjects.includes(subject.name),
+    }));
+
+    // Combine updated defaults with previously added custom subjects
+    setSubjects([...updatedSubjects, ...customSubjects]);
+  }, [router, setCurrentStep]);
+
+  const toggleSubject = (subjectName: string) => {
     setSubjects(
       subjects.map((subject) => {
-        if (subject.id === id) {
+        if (subject.name === subjectName) {
           return { ...subject, enabled: !subject.enabled };
         }
         return subject;
@@ -58,10 +90,9 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
 
   const addNewSubject = () => {
     if (newSubjectName.trim()) {
-      const newId = `subject-${Date.now()}`;
       setSubjects([
         ...subjects,
-        { id: newId, name: newSubjectName.trim(), enabled: true },
+        { name: newSubjectName.trim(), enabled: true },
       ]);
       setNewSubjectName('');
       setShowNewSubjectInput(false);
@@ -84,7 +115,6 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
     };
 
     sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
-    toast.success('Subjects saved to session storage!');
     goNext();
   };
 
@@ -106,13 +136,13 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
           <div className="space-y-3">
             {subjects.map((subject) => (
               <div
-                key={subject.id}
+                key={subject.name}
                 className="flex items-center justify-between"
               >
                 <span className="text-gray-800">{subject.name}</span>
                 <button
                   type="button"
-                  onClick={() => toggleSubject(subject.id)}
+                  onClick={() => toggleSubject(subject.name)}
                   className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
                     subject.enabled ? 'bg-teal-600' : 'bg-gray-200'
                   }`}
@@ -142,7 +172,7 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
             <button
               type="button"
               onClick={addNewSubject}
-              className="ml-2 px-3 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
+              className="ml-2 cursor-pointer px-3 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
             >
               Add
             </button>
@@ -152,7 +182,7 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
                 setShowNewSubjectInput(false);
                 setNewSubjectName('');
               }}
-              className="ml-2 px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+              className="ml-2 cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
             >
               Cancel
             </button>

@@ -35,7 +35,6 @@ const Step1 = ({ goNext }: TStepProps) => {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     sessionStorage.setItem('classData', JSON.stringify(formData));
-    toast.success('Successfully added the class');
     goNext();
   };
   return (
