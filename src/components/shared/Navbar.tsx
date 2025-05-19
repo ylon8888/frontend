@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect } from "react";
-import { Search, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { ProgressProvider } from "@bprogress/next/app";
+import { useState, useRef, useEffect } from 'react';
+import { Search, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Link from 'next/link';
+import { ProgressProvider } from '@bprogress/next/app';
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -22,13 +22,13 @@ const Navbar = () => {
   // Close search on escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setIsSearchOpen(false);
       }
     };
 
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
   }, []);
 
   // Sample courses for dropdown
@@ -41,10 +41,10 @@ const Navbar = () => {
 
   // Navigation links
   const navLinks = [
-    { name: "Home", href: "/" },
-    { name: "Courses", href: "/courses" },
-    { name: "Blog", href: "/blog" },
-    { name: "About Us", href: "/about" },
+    { name: 'Home', href: '/' },
+    { name: 'Courses', href: '/courses' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'About Us', href: '/about' },
   ];
 
   return (
@@ -133,7 +133,7 @@ const Navbar = () => {
             {isMobileMenuOpen && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
+                animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
                 className="absolute top-16 left-0 right-0 bg-[#1e2130] z-20 md:hidden"
@@ -176,7 +176,7 @@ const Navbar = () => {
                 {isSearchOpen && (
                   <motion.div
                     initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "250px" }}
+                    animate={{ opacity: 1, width: '250px' }}
                     exit={{ opacity: 0, width: 0 }}
                     transition={{ duration: 0.3 }}
                     className="absolute right-0 top-0 flex items-center"
@@ -222,7 +222,7 @@ const Navbar = () => {
           {isSearchOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
+              animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
               className="md:hidden px-4 pt-4"

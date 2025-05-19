@@ -1,70 +1,108 @@
 'use client';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import { PlusIcon } from 'lucide-react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import AddSubjectModal from '../AddClassPage/Steps/AddSubjectModal/AddSubjectModal';
 
-const ClassesPageComponent = () => {
+type TSingleClassProps = {
+  classId: string;
+};
+
+const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
   const router = useRouter();
-  const classData = [
+  const [showNewSubjectInput, setShowNewSubjectInput] = useState(false);
+  const subjects = [
     {
-      id: 1,
-      name: 'Class 09',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
+      id: '1',
+      name: 'Mathematics',
+      description: 'The study of numbers, shapes, and patterns.',
+      image: 'https://example.com/images/mathematics.jpg',
     },
     {
-      id: 2,
-      name: 'Class 10',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
+      id: '2',
+      name: 'Physics',
+      description: 'The science of matter, motion, energy, and force.',
+      image: 'https://example.com/images/physics.jpg',
     },
     {
-      id: 3,
-      name: 'Class 11',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
+      id: '3',
+      name: 'Chemistry',
+      description:
+        'The study of substances, their properties, and how they interact.',
+      image: 'https://example.com/images/chemistry.jpg',
     },
     {
-      id: 4,
-      name: 'Class 12',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
+      id: '4',
+      name: 'Biology',
+      description: 'The study of living organisms and life processes.',
+      image: 'https://example.com/images/biology.jpg',
+    },
+    {
+      id: '5',
+      name: 'History',
+      description: 'The study of past events and human civilization.',
+      image: 'https://example.com/images/history.jpg',
+    },
+    {
+      id: '6',
+      name: 'Geography',
+      description: "The study of Earth's landscapes, environments, and places.",
+      image: 'https://example.com/images/geography.jpg',
     },
   ];
+
+  const handleAddSubject = (data: any, reset: any) => {
+    const preAddedClassData: any = JSON.parse(
+      sessionStorage.getItem('classData') || '{}'
+    );
+    const updatedClassData = {
+      ...preAddedClassData,
+      subjects: [
+        ...(preAddedClassData.subjects ?? []),
+        { ...data, enabled: true },
+      ],
+    };
+    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
+    reset();
+  };
 
   return (
     <section className="flex flex-col w-full max-w-[1580px] items-start gap-6">
       <div className="flex flex-col items-start gap-5 w-full">
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
           <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
-            All Classes
+            Class 9 All Subject
           </h1>
-          <Link href={'/dashboard/classes/add-class'}>
-            <MyButton
-              label="Add New Class"
-              customIcon={<PlusIcon className="w-5 h-5 text-white" />}
-              iconPosition="left"
+          <MyButton
+            onClick={() => setShowNewSubjectInput(true)}
+            label="Add New Subject"
+            customIcon={<PlusIcon className="w-5 h-5 text-white" />}
+            iconPosition="left"
+          />
+          {showNewSubjectInput ? (
+            <AddSubjectModal
+              isOpen={showNewSubjectInput}
+              onClose={() => setShowNewSubjectInput(false)}
+              onAddSubject={handleAddSubject}
             />
-          </Link>
+          ) : (
+            ''
+          )}
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-          {classData.map((classItem) => (
+          {subjects?.map((subject) => (
             <div
-              key={classItem.id}
-              onClick={() => router.push(`/dashboard/classes/${classItem.id}`)}
+              key={subject.id}
+              onClick={() => router.push(`/dashboard/classes/${classId}/${subject.id}`)}
               className="border cursor-pointer border-neutral-300 rounded-2xl p-6 bg-white"
             >
               <div className="flex flex-col items-start justify-center gap-2 w-full">
                 <div className="flex flex-col items-start gap-3 w-full">
                   <div className="flex items-center gap-5 justify-between w-full">
                     <h2 className="font-['Montserrat',Helvetica] font-semibold text-heading text-xl sm:text-2xl tracking-[0.48px] leading-[1.4]">
-                      {classItem.name}
+                      {subject.name}
                     </h2>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -82,13 +120,10 @@ const ClassesPageComponent = () => {
 
                   <div className="flex flex-col items-start gap-1.5 w-full">
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Subject - {classItem.subjects}
-                    </p>
-                    <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Chapter - {classItem.chapters}
+                      Total Chapter - 12
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
-                      Total Lesson - {classItem.lessons}
+                      Total Enrolled Student - 200
                     </p>
                   </div>
                 </div>
@@ -101,4 +136,4 @@ const ClassesPageComponent = () => {
   );
 };
 
-export default ClassesPageComponent;
+export default SubjectsPageComponent;

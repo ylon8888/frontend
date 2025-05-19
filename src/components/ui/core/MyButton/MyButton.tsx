@@ -43,7 +43,7 @@ const MyButton: React.FC<ButtonProps> = ({
       'hover:bg-secondary/10 active:bg-secondary/20',
       'px-[calc(24px-2px)]'
     ),
-    filled: cn('bg-secondary text-white hover:bg-secondary'),
+    filled: cn('bg-secondary !text-white hover:bg-secondary'),
   };
 
   return (

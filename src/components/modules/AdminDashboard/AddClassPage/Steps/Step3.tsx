@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 interface Subject {
-  name: string;
+  subjectName: string;
 }
 
 type TStepProps = {
@@ -41,13 +41,15 @@ const Step3 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
         </div>
 
         <div className="space-y-3 mb-6">
-          {subjects.map((subject: string, index: number) => (
+          {subjects.map((subject: Subject, index: number) => (
             <button
               key={index}
               className="w-full text-left p-4 cursor-pointer border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors flex justify-between items-center"
             >
               <div>
-                <h3 className="text-gray-800 font-medium">{subject}</h3>
+                <h3 className="text-gray-800 font-medium">
+                  {subject?.subjectName}
+                </h3>
               </div>
             </button>
           ))}
@@ -55,10 +57,11 @@ const Step3 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
 
         <div className="space-y-3">
           <MyButton
-            className="!bg-gray-200 !text-gray-800 !hover:bg-gray-300 transition duration-200"
+            className="!bg-gray-200 !text-gray-800 !border-0 !hover:bg-gray-300 transition duration-200"
             onClick={goBack}
             label="< Previous"
             fullWidth
+            variant="outline"
           />
           <MyButton onClick={goNext} label="Finish" fullWidth isArrow />
         </div>

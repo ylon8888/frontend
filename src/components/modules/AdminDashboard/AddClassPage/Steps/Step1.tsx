@@ -1,40 +1,42 @@
 'use client';
 
-import type React from 'react';
-
 import MyButton from '@/components/ui/core/MyButton/MyButton';
-import { useState, type FormEvent } from 'react';
-import { toast } from 'sonner';
+import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
+import MyFormSelect from '@/components/ui/core/MyForm/MyFormSelect/MyFormSelect';
+import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
+import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 type TStepProps = {
   goNext: () => void;
 };
 
+const addClassValidationSchema = z.object({
+  className: z
+    .string({ required_error: 'Class name is required' })
+    .min(1, { message: 'Class name is required' })
+    .max(50, { message: 'Class name must be less than 50 characters' }),
+  classDescription: z
+    .string({ required_error: 'Class description is required' })
+    .min(1, { message: 'Class description is required' })
+    .max(200, {
+      message: 'Class description must be less than 200 characters',
+    }),
+  totalSubjects: z
+    .number({ required_error: 'Total subjects is required' })
+    .min(1, { message: 'Total subjects is required' })
+    .max(20, { message: 'Total subjects must be less than 20' }),
+});
+
 const Step1 = ({ goNext }: TStepProps) => {
   const preAddedClassData: any = JSON.parse(
     sessionStorage.getItem('classData') || '{}'
   );
-  const [formData, setFormData] = useState({
-    className: preAddedClassData?.className || '',
-    classDescription: preAddedClassData?.classDescription || '',
-    totalSubjects: preAddedClassData?.totalSubjects || '',
-  });
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    sessionStorage.setItem('classData', JSON.stringify(formData));
+  const handleSubmit = (data: any, reset: any) => {
+    sessionStorage.setItem('classData', JSON.stringify(data));
+    reset();
     goNext();
   };
   return (
@@ -47,86 +49,57 @@ const Step1 = ({ goNext }: TStepProps) => {
           </h1>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <MyFormWrapper
+          onSubmit={handleSubmit}
+          resolver={zodResolver(addClassValidationSchema)}
+          defaultValues={{
+            totalSubjects: preAddedClassData.totalSubjects, // ✅ ensure this is a number (1–20)
+            // other fields...
+          }}
+        >
           <div className="mb-4">
-            <label htmlFor="className" className="block text-gray-800 mb-2">
-              Class Name
-            </label>
-            <input
-              type="text"
-              id="className"
+            <MyFormInput
+              label="Class Name"
+              value={preAddedClassData.className}
               name="className"
-              value={formData.className}
-              onChange={handleChange}
-              placeholder="Enter the name of the class"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
+              placeHolder="Enter the name of the class"
+              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
           <div className="mb-4">
-            <label
-              htmlFor="classDescription"
-              className="block text-gray-800 mb-2"
-            >
-              Class Description
-            </label>
-            <textarea
-              id="classDescription"
+            <MyFormTextArea
+              label="Class Description"
+              value={preAddedClassData.classDescription}
               name="classDescription"
-              value={formData.classDescription}
-              onChange={handleChange}
-              placeholder="Provide a brief description of the class. This helps students understand the course content and objectives."
-              rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
+              placeHolder="Provide a brief description of the class. This helps students understand the course content and objectives."
+              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
 
           <div className="mb-6">
-            <label htmlFor="totalSubjects" className="block text-gray-800 mb-2">
-              Select Total Subject
-            </label>
             <div className="relative">
-              <select
-                id="totalSubjects"
+              <MyFormSelect
+                label="Select Total Subjects"
+                defaultValue={preAddedClassData.totalSubjects}
                 name="totalSubjects"
-                value={formData.totalSubjects}
-                onChange={handleChange}
+                options={Array.from({ length: 20 }, (_, i) => ({
+                  value: i + 1,
+                  label: `${i + 1} Subject${i > 0 ? 's' : ''}`,
+                }))}
                 className="w-full cursor-pointer appearance-none px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 bg-white"
-                required
-              >
-                {[...Array(20)].map((_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
-              <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </div>
+                placeHolder="Select total subjects"
+              />
             </div>
           </div>
           <MyButton
             label="Next: Add Subjects"
+            className='!text-white'
             type="submit"
             fullWidth
             isArrow
           />
-        </form>
+        </MyFormWrapper>
       </div>
     </div>
   );

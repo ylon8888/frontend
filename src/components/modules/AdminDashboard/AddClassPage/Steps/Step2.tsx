@@ -5,9 +5,12 @@ import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import AddSubjectModal from './AddSubjectModal/AddSubjectModal';
+import { set } from 'react-hook-form';
 
 interface Subject {
-  name: string;
+  subjectName: string;
+  subjectDescription: string;
   enabled: boolean;
 }
 
@@ -20,20 +23,20 @@ type TStepProps = {
 const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
   const router = useRouter();
 
-  const [subjects, setSubjects] = useState<Subject[]>([
-    { name: 'Mathematic', enabled: false },
-    { name: 'English Language Arts', enabled: false },
-    { name: 'Social Studies', enabled: false },
-    { name: 'Science', enabled: false },
-    { name: 'Computer Science', enabled: false },
-    { name: 'Biology', enabled: false },
-    { name: 'Physics', enabled: false },
-    { name: 'Chemistry', enabled: false },
-    { name: 'Art', enabled: false },
-  ]);
-
-  const [newSubjectName, setNewSubjectName] = useState('');
+  // const [subjects, setSubjects] = useState<Subject[]>([
+  //   { name: 'Mathematic', enabled: false },
+  //   { name: 'English Language Arts', enabled: false },
+  //   { name: 'Social Studies', enabled: false },
+  //   { name: 'Science', enabled: false },
+  //   { name: 'Computer Science', enabled: false },
+  //   { name: 'Biology', enabled: false },
+  //   { name: 'Physics', enabled: false },
+  //   { name: 'Chemistry', enabled: false },
+  //   { name: 'Art', enabled: false },
+  // ]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [showNewSubjectInput, setShowNewSubjectInput] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
   // Load class data from session storage
   useEffect(() => {
@@ -44,78 +47,44 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
       return;
     }
     const classData = JSON.parse(classDataString);
-    const savedSubjects: string[] = classData.subjects || [];
-
-    // Default subjects
-    const defaultSubjects: Subject[] = [
-      { name: 'Mathematic', enabled: false },
-      { name: 'English Language Arts', enabled: false },
-      { name: 'Social Studies', enabled: false },
-      { name: 'Science', enabled: false },
-      { name: 'Computer Science', enabled: false },
-      { name: 'Biology', enabled: false },
-      { name: 'Physics', enabled: false },
-      { name: 'Chemistry', enabled: false },
-      { name: 'Art', enabled: false },
-    ];
-
-    // Create a map for quick lookup of existing default subject names
-    const defaultSubjectNames = new Set(defaultSubjects.map((s) => s.name));
-
-    // Find custom subjects (not in the default list)
-    const customSubjects: Subject[] = savedSubjects
-      .filter((name) => !defaultSubjectNames.has(name))
-      .map((name) => ({ name, enabled: true }));
-
-    // Enable the matched subjects from savedSubjects
-    const updatedSubjects = defaultSubjects.map((subject) => ({
-      ...subject,
-      enabled: savedSubjects.includes(subject.name),
-    }));
-
-    // Combine updated defaults with previously added custom subjects
-    setSubjects([...updatedSubjects, ...customSubjects]);
-  }, [router, setCurrentStep]);
+    const savedSubjects: Subject[] = classData.subjects || [];
+    setSubjects(savedSubjects);
+  }, [router, setCurrentStep, refetch]);
 
   const toggleSubject = (subjectName: string) => {
-    setSubjects(
-      subjects.map((subject) => {
-        if (subject.name === subjectName) {
-          return { ...subject, enabled: !subject.enabled };
-        }
-        return subject;
-      })
-    );
-  };
-
-  const addNewSubject = () => {
-    if (newSubjectName.trim()) {
-      setSubjects([
-        ...subjects,
-        { name: newSubjectName.trim(), enabled: true },
-      ]);
-      setNewSubjectName('');
-      setShowNewSubjectInput(false);
-    }
+    const classData = JSON.parse(sessionStorage.getItem('classData') || '{}');
+    const updatedSubjects = (classData.subjects || []).map((subject: any) => {
+      if (subject.subjectName === subjectName) {
+        return { ...subject, enabled: !subject.enabled };
+      }
+      return subject;
+    });
+    setSubjects(updatedSubjects);
+    const updatedClassData = {
+      ...classData,
+      subjects: updatedSubjects,
+    };
+    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
   };
 
   const handleSubmit = () => {
-    // Get selected subjects
-    const selectedSubjects = subjects
-      .filter((subject) => subject.enabled)
-      .map((subject) => subject.name);
-
-    // Get existing class data
-    const classDataString = sessionStorage.getItem('classData');
-    const classData = classDataString ? JSON.parse(classDataString) : {};
-
-    const updatedClassData = {
-      ...classData,
-      subjects: selectedSubjects,
-    };
-
-    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
     goNext();
+  };
+
+  const handleAddSubject = (data: any, reset: any) => {
+    const preAddedClassData: any = JSON.parse(
+      sessionStorage.getItem('classData') || '{}'
+    );
+    const updatedClassData = {
+      ...preAddedClassData,
+      subjects: [
+        ...(preAddedClassData.subjects ?? []),
+        { ...data, enabled: true },
+      ],
+    };
+    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
+    setRefetch(!refetch);
+    reset();
   };
 
   return (
@@ -129,20 +98,21 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
         </div>
 
         <div className="mb-6">
-          <h3 className="text-gray-800 font-medium mb-4">
-            Add Subjects to Class
-          </h3>
+          {subjects.length > 0 ? (
+            <h3 className="text-gray-800 font-medium mb-4">
+              Add Subjects to Class
+            </h3>
+          ) : (
+            ''
+          )}
 
           <div className="space-y-3">
-            {subjects.map((subject) => (
-              <div
-                key={subject.name}
-                className="flex items-center justify-between"
-              >
-                <span className="text-gray-800">{subject.name}</span>
+            {subjects.map((subject, idx: number) => (
+              <div key={idx} className="flex items-center justify-between">
+                <span className="text-gray-800">{subject.subjectName}</span>
                 <button
                   type="button"
-                  onClick={() => toggleSubject(subject.name)}
+                  onClick={() => toggleSubject(subject.subjectName)}
                   className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
                     subject.enabled ? 'bg-teal-600' : 'bg-gray-200'
                   }`}
@@ -161,32 +131,11 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
         </div>
 
         {showNewSubjectInput ? (
-          <div className="mb-6 flex items-center">
-            <input
-              type="text"
-              value={newSubjectName}
-              onChange={(e) => setNewSubjectName(e.target.value)}
-              placeholder="Enter subject name"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-            <button
-              type="button"
-              onClick={addNewSubject}
-              className="ml-2 cursor-pointer px-3 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700"
-            >
-              Add
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setShowNewSubjectInput(false);
-                setNewSubjectName('');
-              }}
-              className="ml-2 cursor-pointer px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-            >
-              Cancel
-            </button>
-          </div>
+          <AddSubjectModal
+            isOpen={showNewSubjectInput}
+            onClose={() => setShowNewSubjectInput(false)}
+            onAddSubject={handleAddSubject}
+          />
         ) : (
           <button
             type="button"
@@ -198,12 +147,13 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
           </button>
         )}
 
-        <div className="flex space-x-4">
+        <div className="flex !space-x-4 mt-5">
           <MyButton
-            className="!bg-gray-200 !text-gray-800 !hover:bg-gray-300 transition duration-200"
+            className="!bg-gray-200 !text-gray-800 !border-0 !hover:bg-gray-300 transition duration-200"
             onClick={goBack}
             label="< Previous"
             fullWidth
+            variant="outline"
           />
           <MyButton onClick={handleSubmit} label="Next" fullWidth />
         </div>

@@ -15,6 +15,7 @@ const AddClassPageComponent = () => {
   const goNext = () => {
     if (currentStep === 3) {
       toast.success('Class added successfully');
+      // sessionStorage.removeItem('classData');
       router.push('/dashboard/classes');
       return;
     }
