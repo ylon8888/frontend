@@ -6,7 +6,7 @@ import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTex
 import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Divide, UploadCloud } from 'lucide-react';
+import { UploadCloud } from 'lucide-react';
 import { z } from 'zod';
 
 interface AddTopicModalProps {
