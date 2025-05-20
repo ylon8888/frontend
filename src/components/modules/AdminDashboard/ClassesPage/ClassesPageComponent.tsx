@@ -57,7 +57,7 @@ const ClassesPageComponent = () => {
           {classData.map((classItem) => (
             <div
               key={classItem.id}
-              onClick={() => router.push(`/dashboard/classes/${classItem.id}`)}
+              onClick={() => router.push(`/dashboard/classes/subjects/${classItem.id}`)}
               className="border cursor-pointer border-neutral-300 rounded-2xl p-6 bg-white"
             >
               <div className="flex flex-col items-start justify-center gap-2 w-full">

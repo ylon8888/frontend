@@ -64,7 +64,7 @@ const MyFormImageUpload = ({
 
   return (
     <div className={cn(`form-group h-full ${size}`, parentClassName)}>
-      {label && <p className={cn("mb-2", labelClassName)}>{label}</p>}
+      {label && <p className={cn("mb-2 text-base", labelClassName)}>{label}</p>}
       <Controller
         control={control}
         name={name}

@@ -1,7 +1,10 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { useState } from "react";
+import MyButton from '@/components/ui/core/MyButton/MyButton';
+import { PlusIcon } from 'lucide-react';
+import Link from 'next/link';
+import type React from 'react';
+import { useState } from 'react';
 
 export type Column<T> = {
   header: string;
@@ -11,6 +14,10 @@ export type Column<T> = {
 
 type DataTableProps<T> = {
   title?: string;
+  navigateInfo?: {
+    btnLabel: string;
+    onClick: () => void;
+  };
   data: T[];
   columns: Column<T>[];
   keyField: keyof T;
@@ -20,6 +27,7 @@ type DataTableProps<T> = {
 
 export function DataTable<T>({
   title,
+  navigateInfo,
   data,
   columns,
   keyField,
@@ -39,11 +47,21 @@ export function DataTable<T>({
 
   return (
     <div className="w-full">
-      {title && (
-        <h2 className="text-2xl md:text-[32px] font-semibold text-text-primary mb-4">
-          {title}
-        </h2>
-      )}
+      <div className="flex justify-between gap-5 items-center mb-4">
+        {title && (
+          <h2 className="text-2xl md:text-[32px] font-semibold text-text-primary">
+            {title}
+          </h2>
+        )}
+        {navigateInfo && (
+          <MyButton
+            onClick={navigateInfo.onClick}
+            label={navigateInfo?.btnLabel}
+            customIcon={<PlusIcon className="w-5 h-5 text-white" />}
+            iconPosition="left"
+          />
+        )}
+      </div>
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -53,7 +71,7 @@ export function DataTable<T>({
                   <th
                     key={index}
                     className={`px-6 py-4 text-left text-sm md:text-[20px] font-medium md:font-semibold text-white ${
-                      column.className || ""
+                      column.className || ''
                     }`}
                   >
                     {column.header}
@@ -73,20 +91,20 @@ export function DataTable<T>({
                   <tr
                     key={id}
                     className={`hover:bg-gray-50 ${
-                      onRowClick ? "cursor-pointer" : ""
+                      onRowClick ? 'cursor-pointer' : ''
                     }`}
                     onClick={() => onRowClick && onRowClick(item)}
                   >
                     {columns.map((column, index) => {
                       const value =
-                        typeof column.accessor === "function"
+                        typeof column.accessor === 'function'
                           ? column.accessor(item)
                           : item[column.accessor];
                       return (
                         <td
                           key={index}
                           className={`px-6 py-4 text-sm ${
-                            column.className || ""
+                            column.className || ''
                           }`}
                         >
                           {value as any}

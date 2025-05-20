@@ -95,7 +95,7 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
           {subjects?.map((subject) => (
             <div
               key={subject.id}
-              onClick={() => router.push(`/dashboard/classes/${classId}/${subject.id}`)}
+              onClick={() => router.push(`/dashboard/classes/subjects/${classId}/chapters/${subject.id}`)}
               className="border cursor-pointer border-neutral-300 rounded-2xl p-6 bg-white"
             >
               <div className="flex flex-col items-start justify-center gap-2 w-full">
