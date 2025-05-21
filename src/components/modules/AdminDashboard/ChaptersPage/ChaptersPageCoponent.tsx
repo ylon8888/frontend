@@ -84,7 +84,7 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
     // In a real application, this would open a form to add a new chapter
     console.log(data);
     reset();
-    router.push("/dashboard/classes/add-topic")
+    router.push('/dashboard/classes/add-topic?step=1');
   };
 
   return (

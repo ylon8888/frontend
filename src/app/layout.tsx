@@ -29,6 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       data-theme="light"
       className={`${poppins.variable} ${montserrat.variable}`}
