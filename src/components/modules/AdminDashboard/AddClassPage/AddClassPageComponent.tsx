@@ -1,64 +1,44 @@
 'use client';
-import React, { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useMemo } from 'react';
+import { toast } from 'sonner';
 import Step1 from './Steps/Step1';
 import Step2 from './Steps/Step2';
-import { useRouter, useSearchParams } from 'next/navigation';
 import Step3 from './Steps/Step3';
-import { toast } from 'sonner';
 
 const AddClassPageComponent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const preSelectedStep = searchParams.get('step');
-  const [currentStep, setCurrentStep] = useState(Number(preSelectedStep) || 1);
+
+  const currentStep = useMemo(() => {
+    return Number(searchParams.get('step')) || 1;
+  }, [searchParams]);
 
   const goNext = () => {
-    if (currentStep === 3) {
-      toast.success('Class added successfully');
-      // sessionStorage.removeItem('classData');
+    if (currentStep >= 3) {
+      toast.success('Successfully');
       router.push('/dashboard/classes');
+      sessionStorage.removeItem('classId');
       return;
     }
-    setCurrentStep((prev) => {
-      const nextStep = prev + 1;
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('step', nextStep.toString());
-      router.replace(`${window.location.pathname}?${params.toString()}`);
-
-      return nextStep;
-    });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('step', (currentStep + 1).toString());
+    router.replace(`${window.location.pathname}?${params.toString()}`);
   };
-  const goBack = () => {
-    setCurrentStep((prev) => {
-      const nextStep = prev - 1;
-      const params = new URLSearchParams(searchParams.toString());
-      params.set('step', nextStep.toString());
-      router.replace(`${window.location.pathname}?${params.toString()}`);
 
-      return nextStep;
-    });
+  const goBack = () => {
+    if (currentStep > 1) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('step', (currentStep - 1).toString());
+      router.replace(`${window.location.pathname}?${params.toString()}`);
+    }
   };
 
   return (
     <div>
-      {/* add class */}
       {currentStep === 1 && <Step1 goNext={goNext} />}
-      {/* add subjects */}
-      {currentStep === 2 && (
-        <Step2
-          goNext={goNext}
-          goBack={goBack}
-          setCurrentStep={setCurrentStep}
-        />
-      )}
-      {/* all subjects */}
-      {currentStep === 3 && (
-        <Step3
-          goNext={goNext}
-          goBack={goBack}
-          setCurrentStep={setCurrentStep}
-        />
-      )}
+      {currentStep === 2 && <Step2 goNext={goNext} goBack={goBack} />}
+      {currentStep === 3 && <Step3 goNext={goNext} goBack={goBack} />}
     </div>
   );
 };

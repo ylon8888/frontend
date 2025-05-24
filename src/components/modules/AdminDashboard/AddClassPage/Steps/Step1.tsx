@@ -3,9 +3,9 @@
 import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormSelect from '@/components/ui/core/MyForm/MyFormSelect/MyFormSelect';
-import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { useCreateClassMutation } from '@/redux/features/class/class.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { z } from 'zod';
@@ -25,10 +25,10 @@ const addClassValidationSchema = z.object({
   //   .max(200, {
   //     message: 'Class description must be less than 200 characters',
   //   }),
-  totalSubjects: z
-    .number({ required_error: 'Total subjects is required' })
-    .min(1, { message: 'Total subjects is required' })
-    .max(20, { message: 'Total subjects must be less than 20' }),
+  // totalSubjects: z
+  //   .number({ required_error: 'Total subjects is required' })
+  //   .min(1, { message: 'Total subjects is required' })
+  //   .max(20, { message: 'Total subjects must be less than 20' }),
 });
 
 const Step1 = ({ goNext }: TStepProps) => {
@@ -51,14 +51,27 @@ const Step1 = ({ goNext }: TStepProps) => {
     }
   };
 
-  const handleSubmit = (data: any, reset: any) => {
+  const [createClass] = useCreateClassMutation();
+
+  const handleSubmit = async (data: any, reset: any) => {
     if (isEditorEmpty(description)) {
       setShowError(true);
       return;
     }
-    sessionStorage.setItem('classData', JSON.stringify(data));
-    reset();
-    goNext();
+    const payload = {
+      ...data,
+      classDescription: description,
+    };
+    // sessionStorage.setItem('classData', JSON.stringify(payload));
+    const res = await handleAsyncWithToast(async () => {
+      return createClass(payload);
+    });
+    if (res?.data?.success) {
+      const id = res?.data?.data?.classCreation?.id;
+      sessionStorage.setItem('classId', JSON.stringify(id));
+      reset();
+      goNext();
+    }
   };
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
@@ -96,7 +109,7 @@ const Step1 = ({ goNext }: TStepProps) => {
               placeHolder="Provide a brief description of the class. This helps students understand the course content and objectives."
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             /> */}
-            <p className="mb-2 text-base">Blog Description</p>
+            <p className="mb-2 text-base">Class Description</p>
             <RichTextEditor content={description} onChange={onChange} />
             {showError && isEditorEmpty(description) && (
               <p className="text-red-500 text-base mt-2">
@@ -105,7 +118,7 @@ const Step1 = ({ goNext }: TStepProps) => {
             )}
           </div>
 
-          <div className="mb-6">
+          {/* <div className="mb-6">
             <div className="relative">
               <MyFormSelect
                 label="Select Total Subjects"
@@ -119,7 +132,7 @@ const Step1 = ({ goNext }: TStepProps) => {
                 placeHolder="Select total subjects"
               />
             </div>
-          </div>
+          </div> */}
           <MyButton
             label="Next: Add Subjects"
             className="!text-white"

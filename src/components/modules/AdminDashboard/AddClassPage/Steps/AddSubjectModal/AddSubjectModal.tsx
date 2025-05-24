@@ -4,7 +4,6 @@ import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal } from 'antd';
@@ -55,7 +54,7 @@ export default function AddSubjectModal({
       setShowError(true);
       return;
     }
-    onAddSubject(data, reset);
+    onAddSubject({...data, subjectDescription: description}, reset);
     onClose();
   };
 

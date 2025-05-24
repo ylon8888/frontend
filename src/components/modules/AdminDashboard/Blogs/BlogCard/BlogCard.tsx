@@ -1,6 +1,11 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
+import { TbTrashFilled } from 'react-icons/tb';
+import { IBlog } from '../BlogsPageComponent';
+import { useDeleteBlogMutation } from '@/redux/features/blog/blog.admin.api';
+import Swal from 'sweetalert2';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 
 interface TBlogCardProps {
   blog: {
@@ -11,29 +16,60 @@ interface TBlogCardProps {
   };
 }
 
-const BlogCard = ({ blog }: TBlogCardProps) => {
+const BlogCard = ({ blog }: { blog: IBlog }) => {
+  const [deleteBlog] = useDeleteBlogMutation();
+
+  const handleDelete = async () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await handleAsyncWithToast(async () => {
+          return deleteBlog(blog.id);
+        });
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'Your blog has been deleted.',
+          icon: 'success',
+        });
+      }
+    });
+  };
+
   return (
     <div className="rounded-3xl overflow-hidden shadow-md bg-white flex flex-col h-full">
       <div className="relative h-48 w-full">
-        <Image
-          src={
-            'https://res.cloudinary.com/du68mtlti/image/upload/v1744520403/Frame_1321315189_2_gxtqlh.png'
-          }
-          alt={'title'}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 384px"
-        />
+        {blog?.image ? (
+          <Image
+            src={
+              blog?.image?.includes('localhost')
+                ? blog?.image?.replace('localhost', '10.0.10.33')
+                : blog?.image
+            }
+            alt={blog?.title}
+            fill
+            className="object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-300 animate-pulse"></div>
+        )}
       </div>
       <div className="p-5 flex-grow flex flex-col">
-        <h3 className="font-bold text-xl mb-2">
-          {blog?.title || 'The Importance of Early Literacy'}
-        </h3>
-        <p className="text-gray-600 text-sm mb-4">
+        <h3 className="font-bold text-xl mb-2">{blog?.title || 'No title'}</h3>
+        {/* <p className="text-gray-600 text-sm mb-4">
           {blog?.description ||
             'Learn why early literacy plays a crucial role in a child’s academic...'}
-        </p>
-        <div className="flex justify-end mt-auto">
+        </p> */}
+        {/* <div
+          dangerouslySetInnerHTML={{ __html: blog?.description }}
+        /> */}
+        <div className="flex justify-end gap-2 mt-auto">
           <Link
             href={`/dashboard/blogs/${blog?.id}`}
             className="!text-secondary text-sm font-medium flex items-center hover:underline"
@@ -56,6 +92,12 @@ const BlogCard = ({ blog }: TBlogCardProps) => {
               />
             </svg>
           </Link>
+          <button onClick={handleDelete}>
+            <TbTrashFilled
+              size={20}
+              className="text-secondary hover:text-red-700 cursor-pointer"
+            />
+          </button>
         </div>
       </div>
     </div>

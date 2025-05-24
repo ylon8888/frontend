@@ -1,91 +1,89 @@
 'use client';
 
+import Loading from '@/components/ui/core/Loading/Loading';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
+import {
+  useCreateSubjectMutation,
+  useGetAllSubjectQuery,
+  useUpdateSubjectVisibilityMutation,
+} from '@/redux/features/subject/subject.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import AddSubjectModal from './AddSubjectModal/AddSubjectModal';
-import { set } from 'react-hook-form';
 
-interface Subject {
+
+export type TSubject = {
+  id: string;
+  classId: string;
   subjectName: string;
   subjectDescription: string;
-  enabled: boolean;
-}
+  banner: string;
+  isVisible: boolean;
+  createdAt: string; // or Date if you're converting to Date objects
+  updatedAt: string; // or Date
+};
 
 type TStepProps = {
   goNext: () => void;
   goBack: () => void;
-  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
+const Step2 = ({ goNext, goBack }: TStepProps) => {
   const router = useRouter();
+  const [subjects, setSubjects] = useState<TSubject[]>([]);
+  const [showModal, setShowModal] = useState(false);
 
-  // const [subjects, setSubjects] = useState<Subject[]>([
-  //   { name: 'Mathematic', enabled: false },
-  //   { name: 'English Language Arts', enabled: false },
-  //   { name: 'Social Studies', enabled: false },
-  //   { name: 'Science', enabled: false },
-  //   { name: 'Computer Science', enabled: false },
-  //   { name: 'Biology', enabled: false },
-  //   { name: 'Physics', enabled: false },
-  //   { name: 'Chemistry', enabled: false },
-  //   { name: 'Art', enabled: false },
-  // ]);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [showNewSubjectInput, setShowNewSubjectInput] = useState(false);
-  const [refetch, setRefetch] = useState(false);
-
-  // Load class data from session storage
   useEffect(() => {
-    const classDataString = sessionStorage.getItem('classData');
-    if (!classDataString) {
+    const classID = JSON.parse(sessionStorage.getItem('classId') || '{}');
+    if (!classID) {
+      toast.error('No class data found. Redirecting...');
       router.push('/dashboard/classes/add-class');
-      setCurrentStep(1);
       return;
     }
-    const classData = JSON.parse(classDataString);
-    const savedSubjects: Subject[] = classData.subjects || [];
-    setSubjects(savedSubjects);
-  }, [router, setCurrentStep, refetch]);
+  }, [router]);
 
-  const toggleSubject = (subjectName: string) => {
-    const classData = JSON.parse(sessionStorage.getItem('classData') || '{}');
-    const updatedSubjects = (classData.subjects || []).map((subject: any) => {
-      if (subject.subjectName === subjectName) {
-        return { ...subject, enabled: !subject.enabled };
-      }
-      return subject;
+  const classID = JSON.parse(sessionStorage.getItem('classId') || '{}');
+
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllSubjectQuery(classID, { skip: !classID });
+
+  useEffect(() => {
+    if (response?.data?.subject) {
+      setSubjects(response.data.subject);
+    }
+  }, [response]);
+
+  const [createSubject] = useCreateSubjectMutation();
+  const [updateVisibility] = useUpdateSubjectVisibilityMutation();
+
+  const handleAddSubject = async (data: any, reset: () => void) => {
+    const { subjectBanner, ...rest } = data;
+    const formData = new FormData();
+    formData.append('file', subjectBanner);
+    formData.append('data', JSON.stringify(rest));
+    const res = await handleAsyncWithToast(async () => {
+      return createSubject({ data: formData, classID: classID });
     });
-    setSubjects(updatedSubjects);
-    const updatedClassData = {
-      ...classData,
-      subjects: updatedSubjects,
-    };
-    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
+    if (res?.data?.success) {
+      setShowModal(false);
+      reset();
+      toast.success('Subject added successfully!');
+    }
   };
 
-  const handleSubmit = () => {
-    goNext();
+  const toggleSubject = async (id: string, isVisible: boolean) => {
+    await handleAsyncWithToast(async () => {
+      return updateVisibility({ id, action: { isVisible } });
+    });
   };
 
-  const handleAddSubject = (data: any, reset: any) => {
-    const preAddedClassData: any = JSON.parse(
-      sessionStorage.getItem('classData') || '{}'
-    );
-    const updatedClassData = {
-      ...preAddedClassData,
-      subjects: [
-        ...(preAddedClassData.subjects ?? []),
-        { ...data, enabled: true },
-      ],
-    };
-    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
-    setRefetch(!refetch);
-    reset();
-  };
+  if (isLoading || isFetching) return <Loading />;
 
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
@@ -97,49 +95,48 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
           </h1>
         </div>
 
-        <div className="mb-6">
-          {subjects.length > 0 ? (
+        {subjects.length > 0 && (
+          <div className="mb-6">
             <h3 className="text-gray-800 font-medium mb-4">
               Add Subjects to Class
             </h3>
-          ) : (
-            ''
-          )}
-
-          <div className="space-y-3">
-            {subjects.map((subject, idx: number) => (
-              <div key={idx} className="flex items-center justify-between">
-                <span className="text-gray-800">{subject.subjectName}</span>
-                <button
-                  type="button"
-                  onClick={() => toggleSubject(subject.subjectName)}
-                  className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
-                    subject.enabled ? 'bg-teal-600' : 'bg-gray-200'
-                  }`}
-                  role="switch"
-                  aria-checked={subject.enabled}
-                >
-                  <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                      subject.enabled ? 'translate-x-6' : 'translate-x-1'
+            <div className="space-y-3">
+              {subjects.map((subject, idx) => (
+                <div key={idx} className="flex items-center justify-between">
+                  <span className="text-gray-800">{subject.subjectName}</span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      toggleSubject(subject?.id, !subject.isVisible)
+                    }
+                    className={`relative cursor-pointer inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                      subject.isVisible ? 'bg-teal-600' : 'bg-gray-200'
                     }`}
-                  />
-                </button>
-              </div>
-            ))}
+                    role="switch"
+                    aria-checked={subject.isVisible}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        subject.isVisible ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {showNewSubjectInput ? (
+        {showModal ? (
           <AddSubjectModal
-            isOpen={showNewSubjectInput}
-            onClose={() => setShowNewSubjectInput(false)}
+            isOpen={showModal}
+            onClose={() => setShowModal(false)}
             onAddSubject={handleAddSubject}
           />
         ) : (
           <button
             type="button"
-            onClick={() => setShowNewSubjectInput(true)}
+            onClick={() => setShowModal(true)}
             className="flex items-center text-gray-700 cursor-pointer font-medium gap-1 mb-6 hover:text-gray-900"
           >
             <PlusIcon className="w-5 h-5 text-black" />
@@ -147,7 +144,7 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
           </button>
         )}
 
-        <div className="flex !space-x-4 mt-5">
+        <div className="flex space-x-4 mt-5">
           <MyButton
             className="!bg-gray-200 !text-gray-800 !border-0 !hover:bg-gray-300 transition duration-200"
             onClick={goBack}
@@ -155,7 +152,7 @@ const Step2 = ({ goNext, goBack, setCurrentStep }: TStepProps) => {
             fullWidth
             variant="outline"
           />
-          <MyButton onClick={handleSubmit} label="Next" fullWidth />
+          <MyButton onClick={goNext} label="Next" fullWidth />
         </div>
       </div>
     </div>

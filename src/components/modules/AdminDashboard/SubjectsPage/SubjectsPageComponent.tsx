@@ -2,77 +2,116 @@
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { use, useState } from 'react';
 import AddSubjectModal from '../AddClassPage/Steps/AddSubjectModal/AddSubjectModal';
+import {
+  useCreateSubjectMutation,
+  useGetAllSubjectQuery,
+} from '@/redux/features/subject/subject.admin.api';
+import Loading from '@/components/ui/core/Loading/Loading';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
+import { toast } from 'sonner';
 
 type TSingleClassProps = {
   classId: string;
 };
 
+export type TSubject = {
+  id: string;
+  classId: string;
+  subjectName: string;
+  subjectDescription: string;
+  banner: string;
+  isVisible: boolean;
+  createdAt: string; // or Date if you're converting to Date objects
+  updatedAt: string; // or Date
+};
+
 const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
   const router = useRouter();
   const [showNewSubjectInput, setShowNewSubjectInput] = useState(false);
-  const subjects = [
-    {
-      id: '1',
-      name: 'Mathematics',
-      description: 'The study of numbers, shapes, and patterns.',
-      image: 'https://example.com/images/mathematics.jpg',
-    },
-    {
-      id: '2',
-      name: 'Physics',
-      description: 'The science of matter, motion, energy, and force.',
-      image: 'https://example.com/images/physics.jpg',
-    },
-    {
-      id: '3',
-      name: 'Chemistry',
-      description:
-        'The study of substances, their properties, and how they interact.',
-      image: 'https://example.com/images/chemistry.jpg',
-    },
-    {
-      id: '4',
-      name: 'Biology',
-      description: 'The study of living organisms and life processes.',
-      image: 'https://example.com/images/biology.jpg',
-    },
-    {
-      id: '5',
-      name: 'History',
-      description: 'The study of past events and human civilization.',
-      image: 'https://example.com/images/history.jpg',
-    },
-    {
-      id: '6',
-      name: 'Geography',
-      description: "The study of Earth's landscapes, environments, and places.",
-      image: 'https://example.com/images/geography.jpg',
-    },
-  ];
+  // const subjects = [
+  //   {
+  //     id: '1',
+  //     name: 'Mathematics',
+  //     description: 'The study of numbers, shapes, and patterns.',
+  //     image: 'https://example.com/images/mathematics.jpg',
+  //   },
+  //   {
+  //     id: '2',
+  //     name: 'Physics',
+  //     description: 'The science of matter, motion, energy, and force.',
+  //     image: 'https://example.com/images/physics.jpg',
+  //   },
+  //   {
+  //     id: '3',
+  //     name: 'Chemistry',
+  //     description:
+  //       'The study of substances, their properties, and how they interact.',
+  //     image: 'https://example.com/images/chemistry.jpg',
+  //   },
+  //   {
+  //     id: '4',
+  //     name: 'Biology',
+  //     description: 'The study of living organisms and life processes.',
+  //     image: 'https://example.com/images/biology.jpg',
+  //   },
+  //   {
+  //     id: '5',
+  //     name: 'History',
+  //     description: 'The study of past events and human civilization.',
+  //     image: 'https://example.com/images/history.jpg',
+  //   },
+  //   {
+  //     id: '6',
+  //     name: 'Geography',
+  //     description: "The study of Earth's landscapes, environments, and places.",
+  //     image: 'https://example.com/images/geography.jpg',
+  //   },
+  // ];
 
-  const handleAddSubject = (data: any, reset: any) => {
-    const preAddedClassData: any = JSON.parse(
-      sessionStorage.getItem('classData') || '{}'
-    );
-    const updatedClassData = {
-      ...preAddedClassData,
-      subjects: [
-        ...(preAddedClassData.subjects ?? []),
-        { ...data, enabled: true },
-      ],
-    };
-    sessionStorage.setItem('classData', JSON.stringify(updatedClassData));
-    reset();
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllSubjectQuery(classId);
+
+  const subjects: TSubject[] = response?.data?.subject || [];
+  const [createSubject] = useCreateSubjectMutation();
+
+  const handleAddSubject = async (data: any, reset: () => void) => {
+    const { subjectBanner, ...rest } = data;
+    const formData = new FormData();
+    formData.append('file', subjectBanner);
+    formData.append('data', JSON.stringify(rest));
+    const res = await handleAsyncWithToast(async () => {
+      return createSubject({ data: formData, classID: classId });
+    });
+    if (res?.data?.success) {
+      setShowNewSubjectInput(false);
+      reset();
+      toast.success('Subject added successfully!');
+    }
   };
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
+
+  if (response.data.subject?.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <h1 className="text-2xl font-bold text-center">No Subject Found</h1>
+      </div>
+    );
+  }
 
   return (
     <section className="flex flex-col w-full max-w-[1580px] items-start gap-6">
       <div className="flex flex-col items-start gap-5 w-full">
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
           <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
-            Class 9 All Subject
+            All Subject
           </h1>
           <MyButton
             onClick={() => setShowNewSubjectInput(true)}
@@ -95,14 +134,18 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
           {subjects?.map((subject) => (
             <div
               key={subject.id}
-              onClick={() => router.push(`/dashboard/classes/subjects/${classId}/chapters/${subject.id}`)}
+              onClick={() =>
+                router.push(
+                  `/dashboard/classes/subjects/${classId}/chapters/${subject.id}`
+                )
+              }
               className="border cursor-pointer border-neutral-300 rounded-2xl p-6 bg-white"
             >
               <div className="flex flex-col items-start justify-center gap-2 w-full">
                 <div className="flex flex-col items-start gap-3 w-full">
                   <div className="flex items-center gap-5 justify-between w-full">
                     <h2 className="font-['Montserrat',Helvetica] font-semibold text-heading text-xl sm:text-2xl tracking-[0.48px] leading-[1.4]">
-                      {subject.name}
+                      {subject.subjectName}
                     </h2>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

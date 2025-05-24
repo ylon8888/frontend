@@ -1,9 +1,12 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BlogCard from './BlogCard/BlogCard';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { Pagination } from 'antd';
+import { useGetAllBlogQuery } from '@/redux/features/blog/blog.admin.api';
+import Loading from '@/components/ui/core/Loading/Loading';
 
 const blogsData = [
   {
@@ -64,8 +67,71 @@ const blogsData = [
   },
 ];
 
+export type IBlog = {
+  id: string;
+  title: string;
+  excerpt: string;
+  description: string;
+  image: string;
+  category: string | null; // null means optional or not assigned
+  isDeleted: boolean;
+  createdAt: string; // or `Date` if you're converting it
+  updatedAt: string; // or `Date` if you're converting it
+};
+
 const BlogsPageComponent = () => {
   const router = useRouter();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [objectQuery, setObjectQuery] = useState([
+    {
+      name: 'page',
+      value: page,
+    },
+    {
+      name: 'pageSize',
+      value: pageSize,
+    },
+  ]);
+
+  // Handle pagination changes
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setPage(page);
+    setPageSize(pageSize);
+  };
+
+  useEffect(() => {
+    setObjectQuery([
+      {
+        name: 'page',
+        value: page,
+      },
+      {
+        name: 'pageSize',
+        value: pageSize,
+      },
+    ]);
+  }, [page, pageSize]);
+
+  const {
+    data: getAllBlogResponse,
+    isLoading,
+    isFetching,
+  } = useGetAllBlogQuery(objectQuery);
+
+  const blogsData: IBlog[] = getAllBlogResponse?.data?.data || [];
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
+  if (getAllBlogResponse?.data?.data?.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-[300px]">
+        <h2 className="text-2xl font-bold">No Blogs Found</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-[1580px]">
       <div className="flex justify-between items-center mb-6">
@@ -78,9 +144,21 @@ const BlogsPageComponent = () => {
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {blogsData?.map((blog, idx: number) => (
+        {blogsData?.map((blog: IBlog, idx: number) => (
           <BlogCard key={idx} blog={blog} />
         ))}
+      </div>
+      <div className="p-4 w-full flex justify-center items-center mt-6">
+        <Pagination
+          current={page}
+          pageSize={pageSize}
+          total={getAllBlogResponse?.data?.meta?.total}
+          // total={20}
+          onChange={handlePaginationChange}
+          className="custom-pagination"
+          // showSizeChanger
+          // pageSizeOptions={[5, 10, 20, 50]}
+        />
       </div>
     </div>
   );

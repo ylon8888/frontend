@@ -1,41 +1,71 @@
 'use client';
+import Loading from '@/components/ui/core/Loading/Loading';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
+import { useGetAllClassQuery } from '@/redux/features/class/class.admin.api';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+export type TClass = {
+  id: string;
+  className: string;
+  classDescription: string; // contains HTML string
+  isDeleted: boolean;
+  createdAt: string; // or Date if you're converting it
+  updatedAt: string; // or Date
+};
+
 const ClassesPageComponent = () => {
   const router = useRouter();
-  const classData = [
-    {
-      id: 1,
-      name: 'Class 09',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
-    },
-    {
-      id: 2,
-      name: 'Class 10',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
-    },
-    {
-      id: 3,
-      name: 'Class 11',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
-    },
-    {
-      id: 4,
-      name: 'Class 12',
-      subjects: 9,
-      chapters: 14,
-      lessons: 56,
-    },
-  ];
+  // const classData = [
+  //   {
+  //     id: 1,
+  //     name: 'Class 09',
+  //     subjects: 9,
+  //     chapters: 14,
+  //     lessons: 56,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Class 10',
+  //     subjects: 9,
+  //     chapters: 14,
+  //     lessons: 56,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'Class 11',
+  //     subjects: 9,
+  //     chapters: 14,
+  //     lessons: 56,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'Class 12',
+  //     subjects: 9,
+  //     chapters: 14,
+  //     lessons: 56,
+  //   },
+  // ];
+
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllClassQuery(undefined);
+
+  const classData: TClass[] = response?.data?.data;
+
+  if (isLoading || isFetching) return <Loading />;
+
+  if (!response?.data?.data?.length)
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full">
+        <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
+          No Class Found
+        </h1>
+      </div>
+    );
 
   return (
     <section className="flex flex-col w-full max-w-[1580px] items-start gap-6">
@@ -54,17 +84,19 @@ const ClassesPageComponent = () => {
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
-          {classData.map((classItem) => (
+          {classData?.map((classItem) => (
             <div
               key={classItem.id}
-              onClick={() => router.push(`/dashboard/classes/subjects/${classItem.id}`)}
+              onClick={() =>
+                router.push(`/dashboard/classes/subjects/${classItem.id}`)
+              }
               className="border cursor-pointer border-neutral-300 rounded-2xl p-6 bg-white"
             >
               <div className="flex flex-col items-start justify-center gap-2 w-full">
                 <div className="flex flex-col items-start gap-3 w-full">
                   <div className="flex items-center gap-5 justify-between w-full">
                     <h2 className="font-['Montserrat',Helvetica] font-semibold text-heading text-xl sm:text-2xl tracking-[0.48px] leading-[1.4]">
-                      {classItem.name}
+                      {classItem.className}
                     </h2>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +112,7 @@ const ClassesPageComponent = () => {
                     </svg>
                   </div>
 
-                  <div className="flex flex-col items-start gap-1.5 w-full">
+                  {/* <div className="flex flex-col items-start gap-1.5 w-full">
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
                       Total Subject - {classItem.subjects}
                     </p>
@@ -90,7 +122,7 @@ const ClassesPageComponent = () => {
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
                       Total Lesson - {classItem.lessons}
                     </p>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

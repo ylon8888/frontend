@@ -4,11 +4,14 @@ import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
+import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { useCreateBlogMutation } from '@/redux/features/blog/blog.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadCloud } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -17,6 +20,7 @@ const addBlogValidationSchema = z.object({
     .string()
     .min(1, 'Blog name is required')
     .max(50, 'Blog name must be less than 50 characters'),
+  excerpt: z.string().min(1, 'Excerpt is required'),
   blogThumbnail: z
     .instanceof(File, { message: 'Thumbnail must be uploaded' })
     .refine((file) => !!file, { message: 'Thumbnail is required' }),
@@ -26,6 +30,7 @@ export default function CreateBlogPageComponent() {
   const [description, setDescription] = useState('');
   const [showError, setShowError] = useState(false);
   const router = useRouter();
+  const [createBlog] = useCreateBlogMutation();
 
   const isEditorEmpty = (html: string) => {
     const textContent = html.replace(/<[^>]*>/g, '').trim();
@@ -39,24 +44,36 @@ export default function CreateBlogPageComponent() {
     }
   };
 
-  const handleSubmit = (data: any, reset: any) => {
+  const handleSubmit = async (data: any, reset: any) => {
     if (isEditorEmpty(description)) {
       setShowError(true);
       return;
     }
 
-    // Handle form submission with both form data and rich text content
-    console.log('New blog data:', {
-      ...data,
+    const { blogThumbnail, ...rest } = data;
+
+    const payload = {
+      title: rest?.blogTitle,
+      excerpt: rest?.excerpt,
       description,
+    };
+
+    // Handle form submission with both form data and rich text content
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(payload));
+    formData.append('file', blogThumbnail);
+
+    const res = await handleAsyncWithToast(async () => {
+      return await createBlog(formData);
     });
 
-    toast.success('Blog added successfully!');
-
-    // Reset form
-    reset();
-    setDescription('');
-    setShowError(false);
+    if (res?.data?.success) {
+      toast.success('Blog added successfully!');
+      router.push(`/dashboard/blogs`);
+      reset();
+      setDescription('');
+      setShowError(false);
+    }
   };
 
   return (
@@ -72,6 +89,14 @@ export default function CreateBlogPageComponent() {
               label="Blog Title"
               name="blogTitle"
               placeHolder="Enter the name of the blog"
+              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <div className="mb-4">
+            <MyFormTextArea
+              label="Excerpt"
+              name="excerpt"
+              placeHolder="Excerpt"
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>

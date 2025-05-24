@@ -6,79 +6,39 @@ import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import AddChapterModal from './AddChapterModal/AddChapterModal';
+import { useGetAllChapterQuery } from '@/redux/features/chapter/chapter.admin.api';
+import Loading from '@/components/ui/core/Loading/Loading';
 
-interface Chapter {
-  id: number;
+export type TChapter = {
+  id: string;
   chapterName: string;
   chapterDescription: string;
-  chapterThumbnail: string;
-  instructor: string;
-}
+  thumbnail: string; // URL to the image
+};
+
+export type TSubject = {
+  id: string;
+  subjectName: string;
+  subjectDescription: string;
+  banner: string;
+};
+
+
 
 const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
   const params = useParams();
   const classId = params.classId as string;
   const router = useRouter();
-  const subject = params.subject as string;
   const [showAddNewChapterModal, setShowAddNewChapterModal] = useState(false);
 
-  // Fake data for chapters
-  const [chapters, setChapters] = useState<Chapter[]>([
-    {
-      id: 1,
-      chapterName: 'Cell Structure and Function',
-      chapterDescription:
-        'Understanding the basic unit of life: Cells, and the various organelles involved in cell activities.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-    {
-      id: 2,
-      chapterName: 'Transport in Plants and Animals',
-      chapterDescription:
-        'The processes of transpiration, osmosis, and circulation in both plants and animals.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-    {
-      id: 3,
-      chapterName: 'Human Physiology',
-      chapterDescription:
-        'Detailed study of the human body, including the digestive, respiratory, circulatory, excretory, and nervous systems.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-    {
-      id: 4,
-      chapterName: 'Genetics and Evolution',
-      chapterDescription:
-        'Study of heredity, genetic variation, and the process of evolution through natural selection.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-    {
-      id: 5,
-      chapterName: 'Ecology and Environment',
-      chapterDescription:
-        'Understanding ecosystems, biodiversity, and the interactions between organisms and their environment.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-    {
-      id: 6,
-      chapterName: 'Molecular Biology',
-      chapterDescription:
-        'Study of biological molecules such as DNA, RNA, and proteins, and their roles in cellular processes.',
-      chapterThumbnail:
-        'https://img.freepik.com/premium-vector/maths-doodle-hand-drawn-mathematics-formulas-chalkboard-background-banner-book-cover-etc-education-industry-mathematical-theory-school-education_93083-3540.jpg',
-      instructor: 'Saifur Rahman',
-    },
-  ]);
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllChapterQuery(subjectId);
+
+  const chapters: TChapter[] = response?.data?.data?.chapters;
+  const subject: TSubject = response?.data?.data?.subject;
 
   const handleAddNewChapter = (data: any, reset: any) => {
     // In a real application, this would open a form to add a new chapter
@@ -87,12 +47,20 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
     router.push('/dashboard/classes/add-topic?step=1');
   };
 
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
+
+  if (!chapters) {
+    return <div>No chapters found</div>;
+  }
+
   return (
     <div className="min-h-screen">
       <div className="max-w-[1580px]">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
-            {subject || 'Mathematic'}
+            {subject?.subjectName || 'N/A'}
           </h1>
           <MyButton
             onClick={() => setShowAddNewChapterModal(true)}
@@ -112,12 +80,12 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {chapters.map((chapter) => (
+          {chapters.map((chapter: TChapter) => (
             <div
-              key={chapter.id}
+              key={chapter?.id}
               onClick={() => {
                 router.push(
-                  `/dashboard/classes/subjects/${classId}/chapters/${subjectId}/students/${chapter.id}`
+                  `/dashboard/classes/subjects/${classId}/chapters/${subjectId}/students/${chapter?.id}`
                 );
               }}
               className="bg-white rounded-lg border border-gray-200 hover:border-secondary cursor-pointer overflow-hidden flex flex-col h-full"
@@ -125,7 +93,7 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
               <div className="p-4 flex flex-col flex-grow">
                 <div className="flex justify-between items-start mb-3">
                   <h2 className="text-lg md:text-[20px] font-semibold text-gray-900">
-                    Chapter {chapter.id}: {chapter.chapterName}
+                    Chapter {chapter?.id}: {chapter?.chapterName}
                   </h2>
                   <button className="text-gray-500 hover:text-gray-700">
                     <svg
@@ -148,18 +116,18 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
                     <span className="text-sm font-medium text-gray-700">
                       Objective:
                     </span>{' '}
-                    {chapter.chapterDescription}
+                    {chapter?.chapterDescription}
                   </p>
                 </div>
 
-                <p className="text-sm text-gray-500 mb-3">
+                {/* <p className="text-sm text-gray-500 mb-3">
                   Instructor by: {chapter.instructor}
-                </p>
+                </p> */}
 
                 <div className="relative mt-auto rounded-md overflow-hidden">
                   <Image
-                    src={chapter.chapterThumbnail || '/placeholder.svg'}
-                    alt={`Thumbnail for ${chapter.chapterName}`}
+                    src={chapter?.thumbnail || '/placeholder.svg'}
+                    alt={`Thumbnail for ${chapter?.chapterName}`}
                     width={350}
                     height={200}
                     className="w-full h-auto"
