@@ -1,5 +1,6 @@
 'use client';
 
+import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
@@ -8,6 +9,7 @@ import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapp
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal } from 'antd';
 import { UploadCloud } from 'lucide-react';
+import { useState } from 'react';
 import { z } from 'zod';
 
 interface AddSubjectModalProps {
@@ -21,10 +23,10 @@ const addSubjectValidationSchema = z.object({
     .string()
     .min(1, 'Subject name is required')
     .max(50, 'Subject name must be less than 50 characters'),
-  subjectDescription: z
-    .string()
-    .min(1, 'Subject description is required')
-    .max(200, 'Subject description must be less than 200 characters'),
+  // subjectDescription: z
+  //   .string()
+  //   .min(1, 'Subject description is required')
+  //   .max(200, 'Subject description must be less than 200 characters'),
   subjectBanner: z.instanceof(File).optional(),
 });
 
@@ -33,7 +35,26 @@ export default function AddSubjectModal({
   onClose,
   onAddSubject,
 }: AddSubjectModalProps) {
+  const [description, setDescription] = useState('');
+  const [showError, setShowError] = useState(false);
+
+  const isEditorEmpty = (html: string) => {
+    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    return textContent === '';
+  };
+
+  const onChange = (content: string) => {
+    setDescription(content);
+    if (content && !isEditorEmpty(content)) {
+      setShowError(false);
+    }
+  };
+
   const handleSubmit = (data: any, reset: any) => {
+    if (isEditorEmpty(description)) {
+      setShowError(true);
+      return;
+    }
     onAddSubject(data, reset);
     onClose();
   };
@@ -64,13 +85,20 @@ export default function AddSubjectModal({
         </div>
 
         <div className="mb-4">
-          <MyFormTextArea
+          {/* <MyFormTextArea
             label="Subject Description"
             // value={preAddedClassData.classDescription}
             name="subjectDescription"
             placeHolder="Provide a brief description of the class. This helps students understand the course content and objectives."
             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
+          /> */}
+          <p className="mb-2 text-base">Blog Description</p>
+          <RichTextEditor content={description} onChange={onChange} />
+          {showError && isEditorEmpty(description) && (
+            <p className="text-red-500 text-base mt-2">
+              Description is required
+            </p>
+          )}
         </div>
         <div className="mb-4">
           <MyFormImageUpload

@@ -1,3 +1,4 @@
+import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
@@ -6,7 +7,7 @@ import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapp
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Modal } from 'antd';
 import { UploadCloud } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
 
 interface AddChapterModalProps {
@@ -20,10 +21,10 @@ const addChapterValidationSchema = z.object({
     .string()
     .min(1, 'Chapter name is required')
     .max(50, 'Chapter name must be less than 50 characters'),
-  chapterDescription: z
-    .string()
-    .min(1, 'Chapter description is required')
-    .max(200, 'Chapter description must be less than 200 characters'),
+  // chapterDescription: z
+  //   .string()
+  //   .min(1, 'Chapter description is required')
+  //   .max(200, 'Chapter description must be less than 200 characters'),
   chapterBanner: z.instanceof(File).optional(),
 });
 
@@ -32,7 +33,26 @@ const AddChapterModal = ({
   onClose,
   onAddChapter,
 }: AddChapterModalProps) => {
+  const [description, setDescription] = useState('');
+  const [showError, setShowError] = useState(false);
+
+  const isEditorEmpty = (html: string) => {
+    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    return textContent === '';
+  };
+
+  const onChange = (content: string) => {
+    setDescription(content);
+    if (content && !isEditorEmpty(content)) {
+      setShowError(false);
+    }
+  };
+
   const handleSubmit = (data: any, reset: any) => {
+    if (isEditorEmpty(description)) {
+      setShowError(true);
+      return;
+    }
     onAddChapter(data, reset);
     onClose();
   };
@@ -62,13 +82,20 @@ const AddChapterModal = ({
         </div>
 
         <div className="mb-4">
-          <MyFormTextArea
+          {/* <MyFormTextArea
             label="Chapter Description"
             // value={preAddedClassData.classDescription}
             name="chapterDescription"
             placeHolder="Provide a brief description of the class. This helps students understand the course content and objectives."
             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-          />
+          /> */}
+          <p className="mb-2 text-base">Blog Description</p>
+          <RichTextEditor content={description} onChange={onChange} />
+          {showError && isEditorEmpty(description) && (
+            <p className="text-red-500 text-base mt-2">
+              Description is required
+            </p>
+          )}
         </div>
         <div className="mb-4">
           <MyFormImageUpload

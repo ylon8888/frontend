@@ -87,7 +87,7 @@ const MyFormInput = ({
                 />
               )}
             </Form.Item>
-            {error && <small style={{ color: 'red' }}>{error.message}</small>}
+            {error && <small style={{ color: 'red' }} className='text-base'>{error.message}</small>}
           </div>
         )}
       />

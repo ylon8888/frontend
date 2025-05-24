@@ -1,3 +1,4 @@
+import RichTextEditor from '@/components/shared/rich-text-editor';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
 import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
@@ -6,6 +7,7 @@ import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapp
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadCloud } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { z } from 'zod';
 
 const addTopicValidationSchema = z.object({
@@ -13,10 +15,10 @@ const addTopicValidationSchema = z.object({
     .string()
     .min(1, 'Topic name is required')
     .max(50, 'Topic name must be less than 50 characters'),
-  topicDescription: z
-    .string()
-    .min(1, 'Topic description is required')
-    .max(200, 'Topic description must be less than 200 characters'),
+  // topicDescription: z
+  //   .string()
+  //   .min(1, 'Topic description is required')
+  //   .max(200, 'Topic description must be less than 200 characters'),
   topicVideo: z
     .instanceof(File)
     .refine(
@@ -31,8 +33,27 @@ const addTopicValidationSchema = z.object({
 });
 
 const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
+  const [description, setDescription] = useState('');
+  const [showError, setShowError] = useState(false);
   const router = useRouter();
+
+  const isEditorEmpty = (html: string) => {
+    const textContent = html.replace(/<[^>]*>/g, '').trim();
+    return textContent === '';
+  };
+
+  const onChange = (content: string) => {
+    setDescription(content);
+    if (content && !isEditorEmpty(content)) {
+      setShowError(false);
+    }
+  };
+
   const handleSubmit = (data: any, reset: any) => {
+    if (isEditorEmpty(description)) {
+      setShowError(true);
+      return;
+    }
     // Handle adding a new topic
     console.log('New topic data:', data);
     reset();
@@ -40,7 +61,7 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
   };
   return (
     <div className='min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-100"'>
-      <div className="max-w-md w-full bg-white mx-auto p-6 rounded-lg shadow-md flex flex-col">
+      <div className="max-w-xl w-full bg-white mx-auto p-6 rounded-lg shadow-md flex flex-col">
         <h2 className="text-2xl font-bold mb-4">Step-0{currentStep}</h2>
         <MyFormWrapper
           onSubmit={handleSubmit}
@@ -57,30 +78,22 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
           </div>
 
           <div className="mb-4">
-            <MyFormTextArea
+            {/* <MyFormTextArea
               label="Topic Description"
               // value={preAddedClassData.classDescription}
               name="topicDescription"
               placeHolder="Topic description"
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
+            /> */}
+            <p className="mb-2 text-base">Blog Description</p>
+            <RichTextEditor content={description} onChange={onChange} />
+            {showError && isEditorEmpty(description) && (
+              <p className="text-red-500 text-base mt-2">
+                Description is required
+              </p>
+            )}
           </div>
           <div className="mb-4">
-            {/* <MyFormImageUpload
-            name="topicBanner"
-            label="Display Image"
-            inputClassName="cursor-pointer"
-          >
-            <div className="flex items-center flex-col justify-center text-primary border border-dashed border-gray-300 rounded-lg p-5 cursor-pointer">
-              <UploadCloud className="w-5 h-5 mr-2" />
-              <span className="text-sm text-center font-medium">
-                Upload item image
-              </span>
-              <p className="mt-1 text-xs text-center text-gray-500">
-                PNG, JPG up to 3MB
-              </p>
-            </div>
-          </MyFormImageUpload> */}
             <MyFormVideoUpload
               name="topicVideo"
               label="Upload Lecture Video"
