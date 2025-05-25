@@ -53,7 +53,7 @@ const AddChapterModal = ({
       setShowError(true);
       return;
     }
-    onAddChapter(data, reset);
+    onAddChapter({...data, chapterDescription: description}, reset);
     onClose();
   };
   return (

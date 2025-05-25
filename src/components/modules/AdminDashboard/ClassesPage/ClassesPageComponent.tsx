@@ -58,12 +58,22 @@ const ClassesPageComponent = () => {
 
   if (isLoading || isFetching) return <Loading />;
 
-  if (!response?.data?.data?.length)
+  if (response?.data?.data?.length === 0)
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full">
+      <div className="flex flex-col min-h-[calc(100vh-200px)] items-center justify-center w-full h-full gap-3">
         <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
           No Class Found
         </h1>
+        <p className="font-['Montserrat',Helvetica] font-normal text-[#101010] text-base sm:text-lg leading-[1.4]">
+          You don&apos;t have any class yet.
+        </p>
+        <Link href={'/dashboard/classes/add-class'}>
+          <MyButton
+            label="Add New Class"
+            customIcon={<PlusIcon className="w-5 h-5 text-white" />}
+            iconPosition="left"
+          />
+        </Link>
       </div>
     );
 

@@ -98,10 +98,30 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
     return <Loading />;
   }
 
-  if (response.data.subject?.length === 0) {
+  if (subjects.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center w-full h-full">
-        <h1 className="text-2xl font-bold text-center">No Subject Found</h1>
+      <div className="flex flex-col min-h-[calc(100vh-200px)] items-center justify-center w-full h-full gap-3">
+        <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
+          No Subject Found
+        </h1>
+        <p className="font-['Montserrat',Helvetica] font-normal text-[#101010] text-base sm:text-lg leading-[1.4]">
+          You don&apos;t have any subject yet.
+        </p>
+        <MyButton
+          onClick={() => setShowNewSubjectInput(true)}
+          label="Add New Subject"
+          customIcon={<PlusIcon className="w-5 h-5 text-white" />}
+          iconPosition="left"
+        />
+        {showNewSubjectInput ? (
+          <AddSubjectModal
+            isOpen={showNewSubjectInput}
+            onClose={() => setShowNewSubjectInput(false)}
+            onAddSubject={handleAddSubject}
+          />
+        ) : (
+          ''
+        )}
       </div>
     );
   }
@@ -129,7 +149,6 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
             ''
           )}
         </header>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
           {subjects?.map((subject) => (
             <div
