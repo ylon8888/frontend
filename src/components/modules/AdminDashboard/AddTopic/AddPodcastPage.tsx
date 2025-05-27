@@ -3,9 +3,11 @@ import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
 import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadCloud } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { z } from 'zod';
 
 const addTopicValidationSchema = z.object({
@@ -16,8 +18,8 @@ const addTopicValidationSchema = z.object({
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => file.size <= 10 * 1024 * 1024, // 10MB
-      'Video must be less than 10MB'
+      (file) => file.size <= 15 * 1024 * 1024, // 15MB
+      'Video must be less than 15MB'
     )
     .refine(
       (file) => ['video/mp4', 'video/webm'].includes(file.type),
@@ -28,11 +30,54 @@ const addTopicValidationSchema = z.object({
 
 const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
   const router = useRouter();
-  const handleSubmit = (data: any, reset: any) => {
-    // Handle adding a new topic
-    console.log('New topic data:', data);
-    reset();
-    router.push(`/dashboard/classes/add-topic?step=${currentStep + 1}`);
+  const searchParams = useSearchParams();
+  const chapterId = searchParams.get('chapterId');
+
+  const [createStep] = useCreateStepMutation();
+
+  const handleSubmit = async (data: any, reset: any) => {
+    const formData = new FormData();
+    formData.append('poadcast', data.topicVideo);
+    formData.append(
+      'data',
+      JSON.stringify({
+        podcastName: data.topicName,
+      })
+    );
+
+    const payload = {
+      data: formData,
+      stepNumber:
+        currentStep === 1
+          ? 'one'
+          : currentStep === 2
+          ? 'two'
+          : currentStep === 3
+          ? 'three'
+          : currentStep === 4
+          ? 'four'
+          : currentStep === 5
+          ? 'five'
+          : currentStep === 6
+          ? 'six'
+          : currentStep === 7
+          ? 'seven'
+          : currentStep === 8
+          ? 'eight'
+          : '',
+      chapterId: chapterId,
+    };
+    const res = await handleAsyncWithToast(async () => {
+      return createStep(payload);
+    });
+    if (res?.data?.success) {
+      reset();
+      router.push(
+        `/dashboard/classes/add-topic?step=${
+          currentStep + 1
+        }&chapterId=${chapterId}`
+      );
+    }
   };
   return (
     <div className='min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-100"'>

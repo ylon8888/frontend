@@ -18,7 +18,7 @@ const FeedBackPageComponent = () => {
   };
   return (
     <div className="max-w-[1580px]">
-      <div className="w-full bg-gray-50 mb-5 flex flex-col md:flex-row justify-between md:items-center gap-4">
+      <div className="w-full mb-5 flex flex-col md:flex-row justify-between md:items-center gap-4">
         <h1 className="text-3xl font-bold text-gray-900">Feedback</h1>
 
         <div className="flex flex-col md:flex-row gap-5">

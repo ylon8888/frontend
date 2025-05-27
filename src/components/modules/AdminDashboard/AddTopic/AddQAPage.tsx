@@ -1,15 +1,15 @@
 'use client';
 
 import MyButton from '@/components/ui/core/MyButton/MyButton';
-import {
-    PlusOutlined,
-    UploadOutlined
-} from '@ant-design/icons';
+import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
+import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { UploadProps } from 'antd';
 import { Button, Input, Upload, message } from 'antd';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 
 // Define the validation schema
@@ -31,12 +31,16 @@ type QuestionAnswerFormData = z.infer<typeof questionAnswerSchema>;
 
 const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const chapterId = searchParams.get('chapterId');
+  const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const {
     control,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<QuestionAnswerFormData>({
     resolver: zodResolver(questionAnswerSchema),
     defaultValues: {
@@ -50,30 +54,83 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
     name: 'questions',
   });
 
-  const onSubmit = (data: QuestionAnswerFormData) => {
+  const [createStep] = useCreateStepMutation();
+
+  const onSubmit = async (data: QuestionAnswerFormData) => {
     console.log('Form data:', data);
     message.success('Form submitted successfully!');
-    reset();
-    router.push(`/dashboard/classes/add-topic?step=${currentStep! + 1}`);
+
+    const formData = new FormData();
+    if (data.video) {
+      formData.append('file', data.video);
+    }
+    formData.append(
+      'data',
+      JSON.stringify({
+        stepName: data.topicName,
+        questionAnswer: data.questions,
+      })
+    );
+
+    const payload = {
+      data: formData,
+      stepNumber:
+        currentStep === 1
+          ? 'one'
+          : currentStep === 2
+          ? 'two'
+          : currentStep === 3
+          ? 'three'
+          : currentStep === 4
+          ? 'four'
+          : currentStep === 5
+          ? 'five'
+          : currentStep === 6
+          ? 'six'
+          : currentStep === 7
+          ? 'seven'
+          : currentStep === 8
+          ? 'eight'
+          : '',
+      chapterId: chapterId,
+    };
+
+    const res = await handleAsyncWithToast(async () => {
+      return createStep(payload);
+    });
+    if (res?.data?.success) {
+      reset();
+      router.push(
+        `/dashboard/classes/add-topic?step=${
+          currentStep! + 1
+        }&chapterId=${chapterId}`
+      );
+    }
   };
 
   const uploadProps: UploadProps = {
     name: 'file',
     multiple: false,
-    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188', // Replace with your actual upload endpoint
+    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
     accept: 'video/*',
     beforeUpload: (file) => {
-      const isVideo = file.type === 'video/mp4' || file.type === 'video/webm';
+      const isVideo = file.type.startsWith('video/');
       if (!isVideo) {
-        message.error('You can only upload MP4 or WebM video files!');
+        message.error('You can only upload video files!');
         return Upload.LIST_IGNORE;
       }
-      const isLt10M = file.size / 1024 / 1024 < 10;
-      if (!isLt10M) {
-        message.error('Video must be smaller than 10MB!');
+      const isLt25M = file.size / 1024 / 1024 < 25;
+      if (!isLt25M) {
+        message.error('Video must be smaller than 25MB!');
         return Upload.LIST_IGNORE;
       }
-      return true;
+
+      // Create preview URL
+      const previewUrl = URL.createObjectURL(file);
+      setVideoPreview(previewUrl);
+      setValue('video', file);
+
+      return false; // Prevent automatic upload
     },
     onChange(info) {
       if (info.file.status === 'done') {
@@ -82,7 +139,21 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
+    onRemove() {
+      setVideoPreview(null);
+      setValue('video', null);
+    },
+    showUploadList: false,
   };
+
+  // Clean up preview URL when component unmounts
+  useEffect(() => {
+    return () => {
+      if (videoPreview) {
+        URL.revokeObjectURL(videoPreview);
+      }
+    };
+  }, [videoPreview]);
 
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-50 p-4">
@@ -121,35 +192,50 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
             <Controller
               name="video"
               control={control}
-              render={({ field: { value, onChange, ...field } }) => (
-                <Upload
-                  {...uploadProps}
-                  {...field}
-                  onChange={(info) => {
-                    uploadProps.onChange?.(info);
-                    if (info.file.status === 'done') {
-                      onChange(info.file.originFileObj);
-                    }
-                  }}
-                  className="w-full"
-                >
-                  <div className="flex items-center flex-col justify-center text-gray-500 border border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500 hover:text-blue-500 transition-colors w-full sm:!w-[400px]">
-                    <UploadOutlined className="text-2xl mb-2" />
-                    <p className="text-center font-medium">
-                      Drop file or brows
-                    </p>
-                    <p className="text-xs text-center text-gray-400 mt-1">
-                      Format: .jpeg, .png & Max file size: 25 MB
-                    </p>
-                    <Button
-                      type="primary"
-                      size="small"
-                      className="mt-3 bg-blue-500"
-                    >
-                      Browse Files
-                    </Button>
-                  </div>
-                </Upload>
+              render={({ field }) => (
+                <>
+                  <Upload {...uploadProps} className="w-full">
+                    <div className="flex items-center flex-col justify-center text-gray-500 border border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500 hover:text-blue-500 transition-colors w-full sm:!w-[400px]">
+                      <UploadOutlined className="text-2xl mb-2" />
+                      <p className="text-center font-medium">
+                        Drop file or browse
+                      </p>
+                      <p className="text-xs text-center text-gray-400 mt-1">
+                        Format: .mp4, .webm & Max file size: 25 MB
+                      </p>
+                      <Button
+                        type="primary"
+                        size="small"
+                        className="mt-3 bg-blue-500"
+                      >
+                        Browse Files
+                      </Button>
+                    </div>
+                  </Upload>
+
+                  {/* Video Preview Section */}
+                  {videoPreview && (
+                    <div className="mt-4">
+                      <video
+                        controls
+                        src={videoPreview}
+                        className="w-full rounded-lg"
+                        style={{ maxHeight: '200px' }}
+                      />
+                      <Button
+                        danger
+                        onClick={() => {
+                          setVideoPreview(null);
+                          setValue('video', null);
+                        }}
+                        className="mt-2"
+                        size="small"
+                      >
+                        Remove Video
+                      </Button>
+                    </div>
+                  )}
+                </>
               )}
             />
           </div>

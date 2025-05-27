@@ -4,9 +4,11 @@ import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
 import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadCloud } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
 
@@ -22,8 +24,8 @@ const addTopicValidationSchema = z.object({
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => file.size <= 10 * 1024 * 1024, // 10MB
-      'Video must be less than 10MB'
+      (file) => file.size <= 15 * 1024 * 1024, // 10MB
+      'Video must be less than 15MB'
     )
     .refine(
       (file) => ['video/mp4', 'video/webm'].includes(file.type),
@@ -36,6 +38,8 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
   const [description, setDescription] = useState('');
   const [showError, setShowError] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const chapterId = searchParams.get('chapterId');
 
   const isEditorEmpty = (html: string) => {
     const textContent = html.replace(/<[^>]*>/g, '').trim();
@@ -49,15 +53,57 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
     }
   };
 
-  const handleSubmit = (data: any, reset: any) => {
+  const [createStep] = useCreateStepMutation();
+
+  const handleSubmit = async (data: any, reset: any) => {
     if (isEditorEmpty(description)) {
       setShowError(true);
       return;
     }
-    // Handle adding a new topic
-    console.log('New topic data:', data);
-    reset();
-    router.push(`/dashboard/classes/add-topic?step=${currentStep + 1}`);
+
+    const formData = new FormData();
+    formData.append('file', data.topicVideo);
+    formData.append(
+      'data',
+      JSON.stringify({
+        stepName: data.topicName,
+        stepDescription: description,
+      })
+    );
+
+    const payload = {
+      data: formData,
+      stepNumber:
+        currentStep === 1
+          ? 'one'
+          : currentStep === 2
+          ? 'two'
+          : currentStep === 3
+          ? 'three'
+          : currentStep === 4
+          ? 'four'
+          : currentStep === 5
+          ? 'five'
+          : currentStep === 6
+          ? 'six'
+          : currentStep === 7
+          ? 'seven'
+          : currentStep === 8
+          ? 'eight'
+          : '',
+      chapterId: chapterId,
+    };
+    const res = await handleAsyncWithToast(async () => {
+      return createStep(payload);
+    });
+    if (res?.data?.success) {
+      reset();
+      router.push(
+        `/dashboard/classes/add-topic?step=${
+          currentStep + 1
+        }&chapterId=${chapterId}`
+      );
+    }
   };
   return (
     <div className='min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-100"'>
@@ -85,7 +131,7 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
               placeHolder="Topic description"
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             /> */}
-            <p className="mb-2 text-base">Blog Description</p>
+            <p className="mb-2 text-base">Topic Description</p>
             <RichTextEditor content={description} onChange={onChange} />
             {showError && isEditorEmpty(description) && (
               <p className="text-red-500 text-base mt-2">

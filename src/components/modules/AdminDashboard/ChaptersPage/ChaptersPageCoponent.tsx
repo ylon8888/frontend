@@ -50,12 +50,12 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
     formData.append('data', JSON.stringify(rest));
     formData.append('file', chapterBanner);
     const res = await handleAsyncWithToast(async () => {
-      return createChapter({data: formData, subjectId: subjectId});
+      return createChapter({ data: formData, subjectId: subjectId });
     });
     if (res?.data?.success) {
       setShowAddNewChapterModal(false);
       reset();
-      router.push('/dashboard/classes/add-topic?step=1');
+      router.push(`/dashboard/classes/add-topic?step=1&chapterId=${res?.data?.data?.chapter?.id}`);
     }
   };
 
@@ -152,7 +152,11 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
                     <span className="text-sm font-medium text-gray-700">
                       Objective:
                     </span>{' '}
-                    {chapter?.chapterDescription}
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: chapter?.chapterDescription,
+                      }}
+                    />
                   </p>
                 </div>
 

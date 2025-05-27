@@ -1,12 +1,21 @@
 'use client';
 import RichTextEditor from '@/components/shared/rich-text-editor';
+import Loading from '@/components/ui/core/Loading/Loading';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormExcelUpload from '@/components/ui/core/MyForm/MyFormExcelUpload/MyFormExcelUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
 import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
+import { cn } from '@/lib/utils';
+import {
+  useCreateStepMutation,
+  useDisableQuizMutation,
+  useGetAllQuizSetByChapterQuery,
+} from '@/redux/features/step/step.admin.api';
+import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { use, useState } from 'react';
 import { z } from 'zod';
 
 const addQuizSetValidationSchema = z.object({
@@ -98,6 +107,8 @@ const quizQuestions = [
 const QuizSet = ({ currentStep }: { currentStep: number }) => {
   const [description, setDescription] = useState('');
   const [showError, setShowError] = useState(false);
+  const searchParams = useSearchParams();
+  const chapterId = searchParams.get('chapterId');
 
   const [isQuizSetFormOpen, setIsQuizSetFormOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
@@ -107,16 +118,55 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
   );
   const [seeAddedQuiz, setSeeAddedQuiz] = useState(false);
 
-  const handleSubmit = (data: any, reset: any) => {
+  const [createStep] = useCreateStepMutation();
+  const [disableQuiz] = useDisableQuizMutation();
+
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllQuizSetByChapterQuery(chapterId);
+
+  const quizSets = response?.data?.quizes || [];
+
+  const handleSubmit = async (data: any, reset: any) => {
     if (isEditorEmpty(description)) {
       setShowError(true);
       return;
     }
-    // Handle adding a new topic
-    console.log('New topic data:', data);
-    reset();
-    setIsQuizSetFormOpen(false);
-    setIsSeeAllOpen(true);
+    const payload = {
+      questionType: data.setName,
+      questionDescription: description,
+    };
+    const res = await handleAsyncWithToast(async () => {
+      return createStep({
+        data: payload,
+        stepNumber:
+          currentStep === 1
+            ? 'one'
+            : currentStep === 2
+            ? 'two'
+            : currentStep === 3
+            ? 'three'
+            : currentStep === 4
+            ? 'four'
+            : currentStep === 5
+            ? 'five'
+            : currentStep === 6
+            ? 'six'
+            : currentStep === 7
+            ? 'seven'
+            : currentStep === 8
+            ? 'eight'
+            : '',
+        chapterId: chapterId,
+      });
+    });
+    if (res?.data?.success) {
+      reset();
+      setIsQuizSetFormOpen(false);
+      setIsSeeAllOpen(true);
+    }
   };
 
   const handleQuizUpload = (data: any, reset: any) => {
@@ -138,6 +188,8 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
       setShowError(false);
     }
   };
+
+  if (isLoading || isFetching) return <Loading />;
 
   return (
     <>
@@ -198,7 +250,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                 />
               </div> */}
               <div className="mb-4">
-                <p className="mb-2 text-base">Blog Description</p>
+                <p className="mb-2 text-base">Topic Description</p>
                 <RichTextEditor content={description} onChange={onChange} />
                 {showError && isEditorEmpty(description) && (
                   <p className="text-red-500 text-base mt-2">
@@ -223,22 +275,30 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
               All Quiz Set
             </h1>
             <div className="space-y-6 mb-6">
-              {quizLevels.map((level) => (
+              <div className="text-orange-500 text-sm font-medium mb-3">
+                Already Added Quiz
+              </div>
+              {quizSets?.map((level: any) => (
                 <div
                   key={level.id}
-                  className="border-b pb-6 last:border-b-0 last:pb-0"
+                  className={cn(
+                    'border-b pb-6 last:border-b-0 shadow-sm p-4 rounded-md relative'
+                  )}
                 >
-                  <div className="text-orange-500 text-sm font-medium mb-1">
-                    Already Added Quiz
-                  </div>
-
+                  {level.isDisable && (
+                    <div className="absolute inset-0 bg-white/70 z-20 rounded-md flex items-center justify-center"></div>
+                  )}
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {level.title}
+                        {level.questionType}
                       </h3>
                       <p className="text-gray-600 text-sm mb-3">
-                        {level.description}
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: level.questionDescription,
+                          }}
+                        />
                       </p>
 
                       <button
@@ -246,12 +306,13 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                           setIsSeeAllOpen(false);
                           setIsUploadFileOpen(true);
                         }}
-                        className="px-4 cursor-pointer py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                        disabled={level.isDisable}
+                        className="px-4 cursor-pointer py-2 border disabled:cursor-not-allowed border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
                       >
                         Upload Quiz
                       </button>
                     </div>
-                    <div className="relative">
+                    <div className="relative z-30">
                       <button
                         onClick={() =>
                           setDropdownOpen((prev) => ({
@@ -312,12 +373,18 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                           </button>
                           <button
                             className="block cursor-pointer w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
-                            onClick={() => {
+                            onClick={async () => {
                               // handle disable set
                               setDropdownOpen({});
+                              await handleAsyncWithToast(async () => {
+                                return disableQuiz({
+                                  data: { isDisable: !level.isDisable },
+                                  quizId: level.id,
+                                });
+                              });
                             }}
                           >
-                            Disable Set
+                            {level.isDisable ? 'Enable Set' : 'Disable Set'}
                           </button>
                         </div>
                       )}
@@ -406,7 +473,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
         <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
           <div className="w-full max-w-3xl bg-white rounded-lg shadow-sm p-8">
             <div className="mb-6 flex justify-between gap-5 items-center">
-              <div className='flex-1'>
+              <div className="flex-1">
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">
                   Easy Quiz Step
                 </h1>

@@ -21,7 +21,7 @@ const chapterApi = baseApi.injectEndpoints({
     }),
 
     createChapter: builder.mutation({
-      query: ({data, subjectId}) => {
+      query: ({ data, subjectId }) => {
         return {
           url: `chapter/${subjectId}`,
           method: 'POST',
@@ -53,4 +53,4 @@ const chapterApi = baseApi.injectEndpoints({
   }),
 });
 
-export const {useGetAllChapterQuery, useCreateChapterMutation} = chapterApi;
+export const { useGetAllChapterQuery, useCreateChapterMutation } = chapterApi;
