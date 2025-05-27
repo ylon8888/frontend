@@ -41,11 +41,31 @@ const stepApi = baseApi.injectEndpoints({
       providesTags: ['step'],
     }),
 
+    getAllQuizQuestionByQuizSet: builder.query({
+      query: (quizSetId) => {
+        return {
+          url: `step/quiz-question/${quizSetId}`,
+          method: 'GET',
+        };
+      },
+      providesTags: ['step'],
+    }),
+
     disableQuiz: builder.mutation({
       query: ({ data, quizId }) => {
         return {
           url: `step/disable-quiz/${quizId}`,
           method: 'PATCH',
+          body: data,
+        };
+      },
+      invalidatesTags: ['step'],
+    }),
+    uploadQuizFile: builder.mutation({
+      query: ({ data, quizId }) => {
+        return {
+          url: `step/quiz/${quizId}`,
+          method: 'POST',
           body: data,
         };
       },
@@ -64,5 +84,10 @@ const stepApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateStepMutation, useGetAllQuizSetByChapterQuery, useDisableQuizMutation } =
-  stepApi;
+export const {
+  useCreateStepMutation,
+  useGetAllQuizSetByChapterQuery,
+  useDisableQuizMutation,
+  useGetAllQuizQuestionByQuizSetQuery,
+  useUploadQuizFileMutation,
+} = stepApi;

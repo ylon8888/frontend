@@ -4,18 +4,19 @@ import Loading from '@/components/ui/core/Loading/Loading';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
 import MyFormExcelUpload from '@/components/ui/core/MyForm/MyFormExcelUpload/MyFormExcelUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
 import { cn } from '@/lib/utils';
 import {
   useCreateStepMutation,
   useDisableQuizMutation,
+  useGetAllQuizQuestionByQuizSetQuery,
   useGetAllQuizSetByChapterQuery,
+  useUploadQuizFileMutation,
 } from '@/redux/features/step/step.admin.api';
 import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSearchParams } from 'next/navigation';
-import { use, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 import { z } from 'zod';
 
 const addQuizSetValidationSchema = z.object({
@@ -48,67 +49,154 @@ export const addQuizUploadValidationSchema = z.object({
     ),
 });
 
-const quizLevels = [
-  {
-    id: 'easy',
-    title: 'Easy Quiz Step',
-    description:
-      "Think you're an expert? This category will really test your understanding of the material. Prepare for tough questions!",
-    isSelected: true,
-  },
-  {
-    id: 'medium',
-    title: 'Medium Quiz Step',
-    description:
-      "Think you're an expert? This category will really test your understanding of the material. Prepare for tough questions!",
-    isSelected: false,
-  },
-  {
-    id: 'hard',
-    title: 'Hard Quiz Step',
-    description:
-      "Think you're an expert? This category will really test your understanding of the material. Prepare for tough questions!",
-    isSelected: false,
-  },
-];
+// const quizQuestions = [
+//   {
+//     id: '01',
+//     question: "What does the term 'photosynthesis' mean?",
+//     options: [
+//       'Making with water',
+//       'Making with light',
+//       'Making with carbon dioxide',
+//       'Making with chlorophyll',
+//     ],
+//     selectedOption: null,
+//   },
+//   {
+//     id: '02',
+//     question: 'What are the three main inputs required for photosynthesis?',
+//     options: [
+//       'Glucose, water, and oxygen',
+//       'Oxygen, glucose, and chlorophyll',
+//       'Water, carbon dioxide, and sunlight',
+//       'Chlorophyll, water, and carbon dioxide',
+//     ],
+//     selectedOption: null,
+//   },
+//   {
+//     id: '03',
+//     question:
+//       'What is the name of the green pigment that captures energy from sunlight?',
+//     options: ['Stomata', 'Glucose', 'Chlorophyll', 'Chloroplasts'],
+//     selectedOption: null,
+//   },
+// ];
 
-const quizQuestions = [
-  {
-    id: '01',
-    question: "What does the term 'photosynthesis' mean?",
-    options: [
-      'Making with water',
-      'Making with light',
-      'Making with carbon dioxide',
-      'Making with chlorophyll',
-    ],
-    selectedOption: null,
-  },
-  {
-    id: '02',
-    question: 'What are the three main inputs required for photosynthesis?',
-    options: [
-      'Glucose, water, and oxygen',
-      'Oxygen, glucose, and chlorophyll',
-      'Water, carbon dioxide, and sunlight',
-      'Chlorophyll, water, and carbon dioxide',
-    ],
-    selectedOption: null,
-  },
-  {
-    id: '03',
-    question:
-      'What is the name of the green pigment that captures energy from sunlight?',
-    options: ['Stomata', 'Glucose', 'Chlorophyll', 'Chloroplasts'],
-    selectedOption: null,
-  },
-];
+type QuizQuestion = {
+  id: string;
+  questionText: string;
+  optionA: string;
+  optionB: string;
+  optionC: string;
+  optionD: string;
+  correctOption?: 'optionA' | 'optionB' | 'optionC' | 'optionD'; // Optional field for correct answer
+  explanation?: string; // Optional field for explanation
+};
+
+type SeeAddedQuizBySetComponentProps = {
+  quizSetId: string;
+  setSeeAddedQuiz: any;
+  setIsSeeAllOpen: any;
+};
+
+const SeeAddedQuizBySetComponent: React.FC<SeeAddedQuizBySetComponentProps> = ({
+  quizSetId,
+  setSeeAddedQuiz,
+  setIsSeeAllOpen,
+}) => {
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllQuizQuestionByQuizSetQuery(quizSetId);
+
+  const quizQuestions: QuizQuestion[] = response?.data?.stepEightQuizzes || [];
+
+  if (isLoading || isFetching) return <Loading />;
+
+  return (
+    <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl bg-white rounded-lg shadow-sm p-8">
+        <div className="mb-6 flex justify-between gap-5 items-center">
+          <div className="flex-1">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              {response?.data?.questionType}
+            </h1>
+            <p className="text-gray-600">
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: response?.data?.questionDescription,
+                }}
+              />
+            </p>
+          </div>
+          <MyButton
+            onClick={() => {
+              setSeeAddedQuiz(false);
+              setIsSeeAllOpen(true);
+            }}
+            label="< Back"
+            className="!text-gray-500 !bg-slate-400 !border-0"
+          />
+        </div>
+
+        <div className="mb-6">
+          {/* <h2 className="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">
+            Part 1: Photosynthesis
+          </h2> */}
+
+          <div className="space-y-6">
+            {quizQuestions?.map((question: QuizQuestion, idx: number) => (
+              <div
+                key={question?.id}
+                className="border border-gray-200 rounded-lg p-6"
+              >
+                <h3 className="text-gray-800 font-medium mb-4">
+                  Quiz -{idx + 1} {question?.questionText}
+                </h3>
+
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 cursor-pointer border-gray-300`}
+                    ></div>
+                    <span className="text-gray-700">{question?.optionA}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 cursor-pointer border-gray-300`}
+                    ></div>
+                    <span className="text-gray-700">{question?.optionB}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 cursor-pointer border-gray-300`}
+                    ></div>
+                    <span className="text-gray-700">{question?.optionC}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <div
+                      className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 cursor-pointer border-gray-300`}
+                    ></div>
+                    <span className="text-gray-700">{question?.optionD}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const QuizSet = ({ currentStep }: { currentStep: number }) => {
+  const router = useRouter();
   const [description, setDescription] = useState('');
   const [showError, setShowError] = useState(false);
   const searchParams = useSearchParams();
   const chapterId = searchParams.get('chapterId');
+  const [quizSetIdForUpload, setQuizSetIdForUpload] = useState('');
+  const [quizSetIdForWatch, setQuizSetIdForWatch] = useState('');
 
   const [isQuizSetFormOpen, setIsQuizSetFormOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
@@ -169,12 +257,23 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
     }
   };
 
-  const handleQuizUpload = (data: any, reset: any) => {
+  const [uploadQuiz] = useUploadQuizFileMutation();
+
+  const handleQuizUpload = async (data: any, reset: any) => {
     // Handle uploading quiz file
-    console.log('Quiz file data:', data);
-    reset();
-    setIsUploadFileOpen(false);
-    setIsSeeAllOpen(true);
+    const formData = new FormData();
+    formData.append('quiz', data.quizFile);
+    const res = await handleAsyncWithToast(async () => {
+      return uploadQuiz({
+        data: formData,
+        quizId: quizSetIdForUpload,
+      });
+    });
+    if (res?.data?.success) {
+      reset();
+      setIsUploadFileOpen(false);
+      setIsSeeAllOpen(true);
+    }
   };
 
   const isEditorEmpty = (html: string) => {
@@ -239,16 +338,6 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                   inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
-
-              {/* <div className="mb-4">
-                <MyFormTextArea
-                  label="Description"
-                  // value={preAddedClassData.classDescription}
-                  name="setDescription"
-                  placeHolder="Topic description"
-                  inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
-              </div> */}
               <div className="mb-4">
                 <p className="mb-2 text-base">Topic Description</p>
                 <RichTextEditor content={description} onChange={onChange} />
@@ -258,8 +347,22 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                   </p>
                 )}
               </div>
-              <div className="mb-4">
+              <div className="mb-4 space-y-4">
                 <MyButton type="submit" label="Create Quiz Set" fullWidth />
+                {quizSets?.length > 0 ? (
+                  <MyButton
+                    onClick={() => {
+                      setIsQuizSetFormOpen(false);
+                      setIsSeeAllOpen(true);
+                    }}
+                    type="submit"
+                    label="See Added Sets >"
+                    className="!bg-slate-400"
+                    fullWidth
+                  />
+                ) : (
+                  ''
+                )}
               </div>
             </MyFormWrapper>
           </div>
@@ -305,6 +408,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                         onClick={() => {
                           setIsSeeAllOpen(false);
                           setIsUploadFileOpen(true);
+                          setQuizSetIdForUpload(level.id);
                         }}
                         disabled={level.isDisable}
                         className="px-4 cursor-pointer py-2 border disabled:cursor-not-allowed border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
@@ -367,6 +471,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                               setDropdownOpen({});
                               setIsSeeAllOpen(false);
                               setSeeAddedQuiz(true);
+                              setQuizSetIdForWatch(level.id);
                             }}
                           >
                             See Quiz Question
@@ -393,14 +498,32 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                 </div>
               ))}
             </div>
-            <MyButton
-              onClick={() => {
-                setIsSeeAllOpen(false);
-                setIsQuizSetFormOpen(true);
-              }}
-              fullWidth
-              label="Create Another Quiz Set"
-            />
+            <div className="space-y-3">
+              <MyButton
+                onClick={() => {
+                  setIsSeeAllOpen(false);
+                  setIsQuizSetFormOpen(true);
+                }}
+                fullWidth
+                label="Create Another Quiz Set"
+              />
+              {quizSets?.length > 0 ? (
+                <MyButton
+                  onClick={() => {
+                    router.push(
+                      `/dashboard/classes/add-topic?step=${
+                        currentStep + 1
+                      }&chapterId=${chapterId}`
+                    );
+                  }}
+                  className="!bg-slate-400"
+                  fullWidth
+                  label="Next step >"
+                />
+              ) : (
+                ''
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -459,6 +582,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                   onClick={() => {
                     setIsUploadFileOpen(false);
                     setIsSeeAllOpen(true);
+                    setQuizSetIdForUpload('');
                   }}
                   label="< Back"
                   className="!text-gray-500 !bg-slate-400 !border-0"
@@ -470,71 +594,11 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
         </div>
       )}
       {seeAddedQuiz && (
-        <div className="min-h-[calc(100vh-200px)] flex items-center justify-center p-4">
-          <div className="w-full max-w-3xl bg-white rounded-lg shadow-sm p-8">
-            <div className="mb-6 flex justify-between gap-5 items-center">
-              <div className="flex-1">
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  Easy Quiz Step
-                </h1>
-                <p className="text-gray-600">
-                  Start with the basics! This category will help you get
-                  familiar with the concepts and prepare you for more
-                  challenging questions.
-                </p>
-              </div>
-              <MyButton
-                onClick={() => {
-                  setSeeAddedQuiz(false);
-                  setIsSeeAllOpen(true);
-                }}
-                label="< Back"
-                className="!text-gray-500 !bg-slate-400 !border-0"
-              />
-            </div>
-
-            <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b">
-                Part 1: Photosynthesis
-              </h2>
-
-              <div className="space-y-6">
-                {quizQuestions?.map((question) => (
-                  <div
-                    key={question.id}
-                    className="border border-gray-200 rounded-lg p-6"
-                  >
-                    <h3 className="text-gray-800 font-medium mb-4">
-                      Quiz -{question.id} {question.question}
-                    </h3>
-
-                    <div className="space-y-3">
-                      {question.options.map((option, index) => (
-                        <div key={index} className="flex items-center">
-                          <div
-                            // onClick={() =>
-                            //   handleOptionSelect(question.id, index)
-                            // }
-                            className={`w-5 h-5 rounded-full border flex items-center justify-center mr-3 cursor-pointer ${
-                              question.selectedOption === index
-                                ? 'border-gray-500'
-                                : 'border-gray-300'
-                            }`}
-                          >
-                            {question.selectedOption === index && (
-                              <div className="w-2.5 h-2.5 rounded-full bg-gray-500"></div>
-                            )}
-                          </div>
-                          <span className="text-gray-700">{option}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <SeeAddedQuizBySetComponent
+          quizSetId={quizSetIdForWatch}
+          setSeeAddedQuiz={setSeeAddedQuiz}
+          setIsSeeAllOpen={setIsSeeAllOpen}
+        />
       )}
     </>
   );

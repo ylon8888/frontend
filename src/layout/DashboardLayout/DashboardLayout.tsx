@@ -120,7 +120,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           </Space>
         }
       >
-        <SideMenu role={role as string} handleLogout={handleLogout} />
+        <SideMenu role={'ADMIN'} handleLogout={handleLogout} />
       </Drawer>
       {/* Mobile menu end */}
 

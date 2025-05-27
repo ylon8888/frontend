@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadCloud } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const addTopicValidationSchema = z.object({
@@ -90,6 +91,8 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
           ? 'seven'
           : currentStep === 8
           ? 'eight'
+          : currentStep === 9
+          ? 'nine'
           : '',
       chapterId: chapterId,
     };
@@ -98,11 +101,16 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
     });
     if (res?.data?.success) {
       reset();
-      router.push(
-        `/dashboard/classes/add-topic?step=${
-          currentStep + 1
-        }&chapterId=${chapterId}`
-      );
+      if (currentStep > 0 && currentStep < 9) {
+        router.push(
+          `/dashboard/classes/add-topic?step=${
+            currentStep + 1
+          }&chapterId=${chapterId}`
+        );
+      } else {
+        toast.success('All Topics added successfully');
+        router.push('/dashboard/classes');
+      }
     }
   };
   return (
@@ -156,7 +164,12 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
               </div>
             </MyFormVideoUpload>
           </div>
-          <MyButton label="Next Step" type="submit" fullWidth isArrow />
+          <MyButton
+            label={currentStep > 0 && currentStep < 9 ? 'Next Step' : 'Finish'}
+            type="submit"
+            fullWidth
+            isArrow
+          />
         </MyFormWrapper>
       </div>
     </div>

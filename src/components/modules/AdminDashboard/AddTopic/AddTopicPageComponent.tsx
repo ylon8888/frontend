@@ -9,6 +9,8 @@ import QuizSet from './QuizSet/QuizSet';
 export default function AddTopicPageComponent() {
   const params = useSearchParams();
   const currentStep = Number(params.get("step")) || 1;
+
+
   return (
     <>
       {currentStep === 1 && <AddLessonPage currentStep={currentStep} />}
