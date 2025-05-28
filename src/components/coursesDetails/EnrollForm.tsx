@@ -3,21 +3,22 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useEnrollCourseMutation } from "@/redux/features/course/course";
+import { toast } from "sonner";
 
 const EnrollForm = () => {
   const [formData, setFormData] = useState({
     name: "",
-    mobile: "",
-    email: "",
-    terms: false,
+    phoneNumber: "",
   });
   const [errors, setErrors] = useState({
     name: "",
-    mobile: "",
-    email: "",
-    terms: "",
+    phoneNumber: "",
   });
+
+  const id = window.location.pathname.split("/")[2];
+  console.log(id);
+  const [enrollCourse, { isLoading }] = useEnrollCourseMutation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -32,23 +33,12 @@ const EnrollForm = () => {
   };
 
   // Special handler for the Checkbox component
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      terms: checked,
-    }));
-    if (errors.terms) {
-      setErrors((prev) => ({ ...prev, terms: "" }));
-    }
-  };
 
   const validateForm = () => {
     let valid = true;
     const newErrors = {
       name: "",
-      mobile: "",
-      email: "",
-      terms: "",
+      phoneNumber: "",
     };
 
     if (!formData.name.trim()) {
@@ -56,24 +46,11 @@ const EnrollForm = () => {
       valid = false;
     }
 
-    if (!formData.mobile.trim()) {
-      newErrors.mobile = "Mobile number is required";
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = "Mobile number is required";
       valid = false;
-    } else if (!/^\+?[\d\s-]{10,}$/.test(formData.mobile)) {
-      newErrors.mobile = "Please enter a valid mobile number";
-      valid = false;
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-      valid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address";
-      valid = false;
-    }
-
-    if (!formData.terms) {
-      newErrors.terms = "You must accept the terms and conditions";
+    } else if (!/^\+?[\d\s-]{10,}$/.test(formData.phoneNumber)) {
+      newErrors.phoneNumber = "Please enter a valid mobile number";
       valid = false;
     }
 
@@ -85,9 +62,25 @@ const EnrollForm = () => {
     e.preventDefault();
     if (validateForm()) {
       console.log("Form submitted:", formData);
-      // Here you would typically send the data to your backend
-    } else {
-      console.log("Form validation failed");
+
+      try {
+        enrollCourse({ data: formData, id })
+          .unwrap()
+          .then((response) => {
+            toast.success(response?.message);
+            setFormData({
+              name: "",
+              phoneNumber: "",
+            });
+          })
+          .catch((error) => {
+            toast.error(error?.data?.message);
+            console.error("Enrollment failed:", error);
+          });
+      } catch (error) {
+        console.error("Error during enrollment:", error);
+      }
+      console.log("Form data is valid, ready to submit:", formData);
     }
   };
 
@@ -132,54 +125,15 @@ const EnrollForm = () => {
           </Label>
           <Input
             id="mobile"
-            name="mobile"
-            value={formData.mobile}
+            name="phoneNumber" // ✅ match the state key here
+            value={formData.phoneNumber}
             onChange={handleInputChange}
             placeholder="+880 1678901747"
             className="w-full"
           />
-          {errors.mobile && (
-            <p className="text-red-500 text-sm">{errors.mobile}</p>
-          )}
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="email" className="font-montserrat">
-            Email
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleInputChange}
-            placeholder="ui.saifur.info@gmail.com"
-            className="w-full"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm">{errors.email}</p>
-          )}
-        </div>
-
-        <div className="flex items-start space-x-2 pt-2">
-          <Checkbox
-            id="terms"
-            checked={formData.terms}
-            onCheckedChange={handleCheckboxChange}
-          />
-
-          <p className="text-sm leading-tight">
-            By enrolling, you agree to our{" "}
-            <span className="font-semibold underline underline-offset-2">
-              Terms of Service
-            </span>{" "}
-            and{" "}
-            <span className="font-semibold underline underline-offset-2">
-              Privacy Policy
-            </span>
-          </p>
-          {errors.terms && (
-            <p className="text-red-500 text-sm">{errors.terms}</p>
+          {errors.phoneNumber && (
+            <p className="text-red-500 text-sm">{errors.phoneNumber}</p>
           )}
         </div>
 

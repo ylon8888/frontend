@@ -32,8 +32,29 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getChapters: builder.query({
+      query: (id) => ({
+        url: `/subject/subject-wise-chapter/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    enrollCourse: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/course/course-enroll/${id}`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
   }),
 });
 
-export const { useGetSingleCourseQuery, useGetSingleCourseDetailsQuery } =
-  courseApi;
+export const {
+  useGetSingleCourseQuery,
+  useGetSingleCourseDetailsQuery,
+  useEnrollCourseMutation,
+  useGetChaptersQuery,
+} = courseApi;

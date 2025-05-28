@@ -5,7 +5,7 @@ import Image from "next/image";
 import bg from "@/assets/courses/hero-bg.png";
 import banner from "@/assets/class.png";
 
-const CourseOutlineHero = () => {
+const CourseOutlineHero = ({ chapters }: { chapters: any }) => {
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,7 +27,6 @@ const CourseOutlineHero = () => {
       },
     },
   };
-
   return (
     <section className="relative overflow-hidden">
       {/* Background Image */}
@@ -53,15 +52,15 @@ const CourseOutlineHero = () => {
           >
             <motion.p
               variants={itemVariants}
-              className="text-secondary mb-5 max-w-lg"
+              className="text-secondary mb-5 max-w-lg uppercase"
             >
-              Class 11
+              {chapters?.class?.className}
             </motion.p>
             <motion.h1
               variants={itemVariants}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold font-montserrat"
             >
-              Science - Biology
+              {chapters?.subjectName}
             </motion.h1>
           </motion.div>
 
@@ -74,7 +73,7 @@ const CourseOutlineHero = () => {
           >
             <div className="relative w-full sm:w-[80vw] lg:w-[648px] h-[364px] rounded-3xl">
               <Image
-                src={banner}
+                src={chapters?.banner || banner}
                 alt="Learning Platform Banner"
                 fill
                 className="object-contain rounded-3xl"

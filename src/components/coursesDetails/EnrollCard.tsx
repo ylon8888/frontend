@@ -6,6 +6,7 @@ import EnrollForm from "./EnrollForm";
 import Link from "next/link";
 
 const EnrollCard = ({ courseDetail }: any) => {
+  const id = window.location.pathname.split("/")[2];
   console.log(courseDetail);
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
@@ -50,7 +51,7 @@ const EnrollCard = ({ courseDetail }: any) => {
           <EnrollForm />
         </Modal>
         <Link
-          href={`${1}/chapters`}
+          href={`${id}/chapters`}
           className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"
         >
           View Course
@@ -60,7 +61,7 @@ const EnrollCard = ({ courseDetail }: any) => {
       <div className="space-y-3">
         <div className="flex items-center ">
           <span className="text-secondary mr-2">►</span>
-          Total 10 Chapter
+          Total {courseDetail?.data?.chapterCount} Chapter
         </div>
         <div className="flex items-center ">
           <span className="text-secondary mr-2">►</span>
