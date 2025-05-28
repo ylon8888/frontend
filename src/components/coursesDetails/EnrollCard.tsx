@@ -5,7 +5,8 @@ import Modal from "../shared/Testimonials/SharedModal";
 import EnrollForm from "./EnrollForm";
 import Link from "next/link";
 
-const EnrollCard = () => {
+const EnrollCard = ({ courseDetail }: any) => {
+  console.log(courseDetail);
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
       <Image
@@ -17,7 +18,7 @@ const EnrollCard = () => {
       />
 
       <h2 className="text-3xl font-montserrat font-medium mb-2">
-        Science - Biology
+        {courseDetail?.data?.course?.subjectName}
       </h2>
 
       <div className="flex items-center gap-5 mb-4">
@@ -25,12 +26,16 @@ const EnrollCard = () => {
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              className="w-4 h-4 mr-1 fill-yellow-400 text-yellow-400"
+              className={`w-4 h-4 mr-1 ${
+                i < Math.round(courseDetail?.data?.averageRating || 0)
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "fill-gray-300 text-gray-300"
+              }`}
             />
           ))}
         </div>
-        <p className=" text-sm">
-          5.0 Star <span className="text-gray-600">(150 Review)</span>
+        <p className="text-sm">
+          {courseDetail?.data?.averageRating?.toFixed(1)} Rating
         </p>
       </div>
 

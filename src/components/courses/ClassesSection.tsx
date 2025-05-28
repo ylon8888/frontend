@@ -3,7 +3,7 @@
 import { useState } from "react";
 import SectionHeader from "../shared/SectionHeader";
 import ClassCard from "../shared/cards/ClassCard";
-import { useGetSingleCourseQuery } from "@/redux/features/course/coure";
+import { useGetSingleCourseQuery } from "@/redux/features/course/course";
 import Loading from "../ui/core/Loading/Loading";
 // import { classData } from "@/lib/ClassData";
 
@@ -69,23 +69,30 @@ const ClassesSection = ({
         </div>
 
         {/* Class Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {courseData
-            ?.slice(0, visibleCards)
-            ?.map((classItem: any, index: number) => (
-              <ClassCard
-                key={classItem?.index}
-                id={classItem?.id}
-                subject={classItem?.subjectName}
-                count={classItem?._count?.chapters}
-                image={classItem?.banner}
-                index={index}
-                description={classItem?.subjectDescription}
-                chapters={classItem?._count?.chapters}
-                textColor={textColor}
-              />
-            ))}
-        </div>
+        {/* Class Cards Grid or No Data Message */}
+        {courseData && courseData.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {courseData
+              .slice(0, visibleCards)
+              .map((classItem: any, index: number) => (
+                <ClassCard
+                  key={classItem?.id || index}
+                  id={classItem?.id}
+                  subject={classItem?.subjectName}
+                  count={classItem?._count?.chapters}
+                  image={classItem?.banner}
+                  index={index}
+                  description={classItem?.subjectDescription}
+                  chapters={classItem?._count?.chapters}
+                  textColor={textColor}
+                />
+              ))}
+          </div>
+        ) : (
+          <div className="text-center text-orange-500 mt-6 text-lg">
+            No subjects found for this class.
+          </div>
+        )}
 
         {/* Button to load more cards */}
         <div className="flex justify-center mt-8">

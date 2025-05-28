@@ -9,8 +9,8 @@ import React from "react";
 const Courses = () => {
   return (
     <div>
-      {/* <CoursesHero />
-      <ExpectfromPodcastClasses /> */}
+      <CoursesHero />
+      {/*   <ExpectfromPodcastClasses /> */}
       <CoursesPage />
       <Testimonials />
       <Faq />
