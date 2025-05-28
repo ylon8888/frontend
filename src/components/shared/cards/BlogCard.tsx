@@ -4,17 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { SquareArrowOutUpRight } from "lucide-react";
-
-export interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  image: string;
-  uploadDate: string;
-}
+import { IBlog } from "@/components/modules/AdminDashboard/Blogs/BlogsPageComponent";
 
 interface BlogCardProps {
-  blog: BlogPost;
+  blog: IBlog;
   index: number;
 }
 
@@ -37,12 +30,14 @@ const BlogCard = ({ blog, index }: BlogCardProps) => {
       </div>
       <div className="p-5">
         <p className="text-sm text-gray-800 mb-2">
-          Uploaded Date: {blog?.uploadDate}
+          Uploaded Date: {blog?.updatedAt}
         </p>
         <h3 className="font-montserrat text-2xl font-semibold text-gray-900 mb-2 line-clamp-2 h-20">
           {blog?.title}
         </h3>
-        <p className="text-gray-800 mb-4 line-clamp-3 h-24">{blog?.content}</p>
+        <p className="text-gray-800 mb-4 line-clamp-3 h-24">
+          {blog?.description}
+        </p>
         <Link
           href={`/blog/${blog?.id}`}
           className="inline-flex items-center text-secondary hover:text-secondary font-medium hover:font-semibold hover:underline"

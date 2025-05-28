@@ -1,16 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { blogData } from "@/lib/BlogData";
 import BlogCard from "../shared/cards/BlogCard";
+import { useGetAllBlogQuery } from "@/redux/features/blog/blog.admin.api";
+import Loading from "../ui/core/Loading/Loading";
+import { IBlog } from "../modules/AdminDashboard/Blogs/BlogsPageComponent";
+import { Pagination } from "antd";
 
 const Blogs = () => {
-  const [visibleBlogs, setVisibleBlogs] = useState(9);
+  // const [visibleBlogs, setVisibleBlogs] = useState(9);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [objectQuery, setObjectQuery] = useState([
+    {
+      name: "page",
+      value: page,
+    },
+    {
+      name: "pageSize",
+      value: pageSize,
+    },
+  ]);
 
-  const loadMoreBlogs = () => {
-    setVisibleBlogs((prev) => Math.min(prev + 3, blogData.length));
+  // Handle pagination changes
+  const handlePaginationChange = (page: number, pageSize: number) => {
+    setPage(page);
+    setPageSize(pageSize);
   };
+
+  useEffect(() => {
+    setObjectQuery([
+      {
+        name: "page",
+        value: page,
+      },
+      {
+        name: "pageSize",
+        value: pageSize,
+      },
+    ]);
+  }, [page, pageSize]);
+
+  const {
+    data: getAllBlogResponse,
+    isLoading,
+    isFetching,
+  } = useGetAllBlogQuery(objectQuery);
+
+  const blogsData: IBlog[] = getAllBlogResponse?.data?.data || [];
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
+  if (getAllBlogResponse?.data?.data?.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-[300px]">
+        <h2 className="text-2xl font-bold">No Blogs Found</h2>
+      </div>
+    );
+  }
 
   const container = {
     hidden: { opacity: 0 },
@@ -22,6 +71,7 @@ const Blogs = () => {
     },
   };
 
+  console.log(blogsData);
   return (
     <div className="py-16 ">
       <div className="container max-w-[1320px] mx-auto px-4">
@@ -31,26 +81,20 @@ const Blogs = () => {
           initial="hidden"
           animate="show"
         >
-          {blogData.slice(0, visibleBlogs).map((blog, index) => (
-            <BlogCard key={blog.id} blog={blog} index={index} />
+          {blogsData?.slice(0, 9)?.map((blog: IBlog, idx: number) => (
+            <BlogCard key={idx} blog={blog} index={idx} />
           ))}
         </motion.div>
-
-        {visibleBlogs < blogData.length && (
-          <motion.div
-            className="mt-12 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-          >
-            <button
-              onClick={loadMoreBlogs}
-              className="bg-secondary hover:bg-secondary text-white font-medium py-3 px-6 rounded-md transition-colors"
-            >
-              More Blog
-            </button>
-          </motion.div>
-        )}
+        <div className="p-4 w-full flex justify-center items-center mt-6">
+          <Pagination
+            current={page}
+            pageSize={pageSize}
+            total={getAllBlogResponse?.data?.meta?.total}
+            // total={20}
+            onChange={handlePaginationChange}
+            className="custom-pagination"
+          />
+        </div>
       </div>
     </div>
   );

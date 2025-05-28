@@ -1,4 +1,4 @@
-import { baseApi } from '../../api/baseApi';
+import { baseApi } from "../../api/baseApi";
 
 const blogApiForAdmin = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -12,51 +12,56 @@ const blogApiForAdmin = baseApi.injectEndpoints({
         }
         return {
           url: `blog`,
-          method: 'GET',
+          method: "GET",
           params: params,
         };
       },
-      providesTags: ['blog'],
+      providesTags: ["blog"],
     }),
     getSingleBlog: builder.query({
       query: (id) => ({
         url: `blog/${id}`,
-        method: 'GET',
+        method: "GET",
       }),
-      providesTags: ['blog'],
+      providesTags: ["blog"],
     }),
 
     createBlog: builder.mutation({
       query: (data) => {
         return {
-          url: 'blog',
-          method: 'POST',
+          url: "blog",
+          method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ['blog'],
+      invalidatesTags: ["blog"],
     }),
 
     updateBlog: builder.mutation({
       query: (data) => {
         return {
           url: `blog/${data?.id}`,
-          method: 'POST',
+          method: "POST",
           body: data?.formData,
         };
       },
-      invalidatesTags: ['blog'],
+      invalidatesTags: ["blog"],
     }),
     deleteBlog: builder.mutation({
       query: (id) => {
         return {
           url: `blog/${id}`,
-          method: 'DELETE',
+          method: "DELETE",
         };
       },
-      invalidatesTags: ['blog'],
+      invalidatesTags: ["blog"],
     }),
   }),
 });
 
-export const { useCreateBlogMutation, useGetAllBlogQuery, useGetSingleBlogQuery, useDeleteBlogMutation } = blogApiForAdmin;
+export const {
+  useCreateBlogMutation,
+  useGetAllBlogQuery,
+  useGetSingleBlogQuery,
+  useDeleteBlogMutation,
+} = blogApiForAdmin;
