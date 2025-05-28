@@ -6,7 +6,7 @@ interface FeedbackCardProps {
   feedback: string;
   name: string;
   position: string;
-  avatarUrl: string;
+  avatarUrl: string | null;
 }
 
 export default function FeedbackCard({
@@ -49,12 +49,18 @@ export default function FeedbackCard({
       {/* Author Section */}
       <div className="bg-primary p-6 flex items-center">
         <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white mr-4">
-          <Image
-            src={'https://res.cloudinary.com/du68mtlti/image/upload/v1747739861/Image_placehlder_1_dlhezc.png'}
-            alt={name}
-            fill
-            className="object-cover"
-          />
+        {
+          avatarUrl ? (
+            <Image
+              src={avatarUrl?.includes("localhost") ? avatarUrl?.replace("localhost", "10.0.10.33") : avatarUrl}
+              alt="Avatar"
+              layout="fill"
+              objectFit="cover"
+            />
+          ) : (
+            <div className="w-full h-full bg-gray-300" />
+          )
+        }
         </div>
         <div>
           <h3 className="text-white font-medium text-lg">{name}</h3>

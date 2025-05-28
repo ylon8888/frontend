@@ -1,5 +1,8 @@
 'use client';
 
+import Loading from '@/components/ui/core/Loading/Loading';
+import { useGetStatsQuery } from '@/redux/features/student/student.api';
+
 // Map of icon names to their components
 const iconMap = {
   users: (
@@ -140,35 +143,79 @@ type StatCardData = {
   icon: keyof typeof iconMap;
 };
 
-// Example usage
-const statData: StatCardData[] = [
-  { id: 1, value: '15,642', label: 'Total Students', icon: 'users' },
-  { id: 2, value: '12', label: 'Total Courses', icon: 'graduationCap' },
-  { id: 3, value: '256', label: 'New Enrollments', icon: 'userPlus' },
-  { id: 4, value: '98%', label: 'Correct Answer Rate', icon: 'lightbulb' },
-];
+type DashboardStats = {
+  student: number;
+  totalCourse: number;
+  newEnroll: number;
+  correctAnswer: number;
+};
 
 const Stats = () => {
+  const { data: response, isLoading, isFetching } = useGetStatsQuery(undefined);
+
+  const stats = response?.data as DashboardStats;
+
+  // Example usage
+  const statData: StatCardData[] = [
+    {
+      id: 1,
+      value: String(stats?.student),
+      label: 'Total Students',
+      icon: 'users',
+    },
+    {
+      id: 2,
+      value: String(stats?.totalCourse),
+      label: 'Total Courses',
+      icon: 'graduationCap',
+    },
+    {
+      id: 3,
+      value: String(stats?.newEnroll),
+      label: 'New Enrollments',
+      icon: 'userPlus',
+    },
+    {
+      id: 4,
+      value: `${String(stats?.correctAnswer?.toFixed(2))}%`,
+      label: 'Correct Answer Rate',
+      icon: 'lightbulb',
+    },
+  ];
+
+
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statData.map((stat) => {
-          return (
-            <div
-              key={stat.id}
-              className="bg-white rounded-lg shadow-sm p-6 flex flex-col"
-            >
-              <div className="flex items-center gap-3">
-                {iconMap[stat.icon]}
-
-                <span className="text-3xl font-bold text-gray-900">
-                  {stat.value}
+        {isLoading || isFetching
+          ? Array.from({ length: 4 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-lg shadow-sm p-6 flex flex-col animate-pulse"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                  <div className="h-8 w-20 bg-gray-200 rounded" />
+                </div>
+                <div className="h-4 w-32 bg-gray-200 rounded mt-2" />
+              </div>
+            ))
+          : statData.map((stat) => (
+              <div
+                key={stat.id}
+                className="bg-white rounded-lg shadow-sm p-6 flex flex-col"
+              >
+                <div className="flex items-center gap-3">
+                  {iconMap[stat.icon]}
+                  <span className="text-3xl font-bold text-gray-900">
+                    {stat.value}
+                  </span>
+                </div>
+                <span className="text-gray-500 mt-2 text-base">
+                  {stat.label}
                 </span>
               </div>
-              <span className="text-gray-500 mt-2 text-base">{stat.label}</span>
-            </div>
-          );
-        })}
+            ))}
       </div>
     </div>
   );

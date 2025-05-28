@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
-import { ChevronDown } from "lucide-react";
-import React, { useEffect, useState } from "react";
+'use client';
+import { useGetParticipationRateGraphQuery } from '@/redux/features/student/student.api';
+import { ChevronDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import {
   LineChart as Chart,
   Line,
@@ -11,59 +12,77 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 // Monthly Data (Each Month of the Year)
 const monthlyData = [
-  { name: "Jan", rate: 10 },
-  { name: "Feb", rate: 20 },
-  { name: "Mar", rate: 30 },
-  { name: "Apr", rate: 40 },
-  { name: "May", rate: 55 },
-  { name: "Jun", rate: 70 },
-  { name: "Jul", rate: 80 },
-  { name: "Aug", rate: 90 },
-  { name: "Sep", rate: 100 },
-  { name: "Oct", rate: 110 },
-  { name: "Nov", rate: 125 },
-  { name: "Dec", rate: 140 },
+  { name: 'Jan', rate: 10 },
+  { name: 'Feb', rate: 20 },
+  { name: 'Mar', rate: 30 },
+  { name: 'Apr', rate: 40 },
+  { name: 'May', rate: 55 },
+  { name: 'Jun', rate: 70 },
+  { name: 'Jul', rate: 80 },
+  { name: 'Aug', rate: 90 },
+  { name: 'Sep', rate: 100 },
+  { name: 'Oct', rate: 110 },
+  { name: 'Nov', rate: 125 },
+  { name: 'Dec', rate: 140 },
 ];
 
 // Quarterly Data (Summarized Per Quarter)
 const quarterlyData = [
-  { name: "Q1", rate: 60 }, // Jan - Mar
-  { name: "Q2", rate: 30 }, // Apr - Jun
-  { name: "Q3", rate: 70 }, // Jul - Sep
-  { name: "Q4", rate: 45 }, // Oct - Dec
+  { name: 'Q1', rate: 60 }, // Jan - Mar
+  { name: 'Q2', rate: 30 }, // Apr - Jun
+  { name: 'Q3', rate: 70 }, // Jul - Sep
+  { name: 'Q4', rate: 45 }, // Oct - Dec
 ];
 
 // Yearly Data (Summarized Per Year)
 const yearlyData = [
-  { name: "2020", rate: 400 },
-  { name: "2021", rate: 550 },
-  { name: "2022", rate: 700 },
-  { name: "2023", rate: 900 },
-  { name: "2024", rate: 1100 },
-  { name: "2025", rate: 1250 },
+  { name: '2020', rate: 400 },
+  { name: '2021', rate: 550 },
+  { name: '2022', rate: 700 },
+  { name: '2023', rate: 900 },
+  { name: '2024', rate: 1100 },
+  { name: '2025', rate: 1250 },
 ];
 
 // Time period options for the dropdown
-const timePeriods = ["Monthly", "Quarterly", "Yearly"];
+const timePeriods = ['Monthly', 'Quarterly', 'Yearly'];
 
 const LineChart = () => {
   //   const monthlyData = salesStats.monthlyData;
   //   const quarterlyData = salesStats.quarterlyData;
   //   const yearlyData = salesStats.yearlyData;
 
-  const [selectedPeriod, setSelectedPeriod] = useState("Monthly");
+  const [selectedPeriod, setSelectedPeriod] = useState('Monthly');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
+  const [objectQuery, setObjectQuery] = useState<any[]>([
+    {
+      name: 'period',
+      value: selectedPeriod,
+    },
+  ]);
+
+  useEffect(() => {
+    if (selectedPeriod) {
+      setObjectQuery([{ name: 'period', value: selectedPeriod }]);
+    }
+  }, [selectedPeriod]);
+
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetParticipationRateGraphQuery(objectQuery);
 
   // Determine which data to use based on selection
   const chartData =
-    selectedPeriod === "Monthly"
+    selectedPeriod === 'Monthly'
       ? monthlyData
-      : selectedPeriod === "Quarterly"
+      : selectedPeriod === 'Quarterly'
       ? quarterlyData
       : yearlyData;
 
@@ -74,7 +93,9 @@ const LineChart = () => {
   return (
     <div className="w-full h-fit">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-medium text-gray-900">Overall Graph</h2>
+        <h2 className="text-2xl font-medium text-gray-900">
+          Participation Rate
+        </h2>
         <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -96,8 +117,8 @@ const LineChart = () => {
                       }}
                       className={`block cursor-pointer w-full text-left px-4 py-2 text-sm ${
                         selectedPeriod === period
-                          ? "bg-gray-100 text-gray-900"
-                          : "text-gray-700 hover:bg-gray-50"
+                          ? 'bg-gray-100 text-gray-900'
+                          : 'text-gray-700 hover:bg-gray-50'
                       }`}
                     >
                       {period}
@@ -110,7 +131,7 @@ const LineChart = () => {
         </div>
       </div>
 
-      {isRendered && (
+      {isRendered && !isLoading && !isFetching && response?.data && (
         <div className="w-full xs:w-full h-[350px] xs:h-[450px] -ml-6">
           <ResponsiveContainer width="100%" height="100%">
             <Chart
@@ -126,9 +147,9 @@ const LineChart = () => {
               />
               <Tooltip
                 contentStyle={{
-                  borderRadius: "6px",
-                  backgroundColor: "#3B3333",
-                  color: "#fff",
+                  borderRadius: '6px',
+                  backgroundColor: '#3B3333',
+                  color: '#fff',
                 }}
               />
               <Legend />

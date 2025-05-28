@@ -128,6 +128,14 @@ const BlogsPageComponent = () => {
     return (
       <div className="flex justify-center items-center h-[300px]">
         <h2 className="text-2xl font-bold">No Blogs Found</h2>
+        <div className="flex justify-center items-center mt-4">
+          <MyButton
+            onClick={() => router.push('/dashboard/blogs/create-blog')}
+            label="Add New Blog"
+            customIcon={<PlusIcon className="w-5 h-5 text-white" />}
+            iconPosition="left"
+          />
+        </div>
       </div>
     );
   }

@@ -1,40 +1,72 @@
 /* eslint-disable @next/next/no-img-element */
+import { UserProfile } from '@/types/UserProfile';
+import Link from 'next/link';
 import React from 'react';
 
-export const FrameByAnima = () => {
+export const FrameByAnima = ({ studentData }: { studentData: UserProfile }) => {
   // Personal information data
   const personalInfo = [
-    { label: 'Student Name:', value: 'Saifur Rahman' },
-    { label: 'Enroll Date:', value: 'March 12, 2025' },
-    { label: 'Contact Number:', value: '+880 1567808747' },
-    { label: 'Email Address:', value: 'ux.saifur.info@gmail.com' },
+    {
+      label: 'Student Name:',
+      value: studentData?.firstName + ' ' + studentData?.lastName || 'N/A',
+    },
+    // { label: 'Enroll Date:', value: 'March 12, 2025' },
+    // {
+    //   label: 'Contact Number:',
+    //   value:
+    //     studentData?.studentProfiles?.gurdianContact[0]?.gurdianNumber || 'N/A',
+    // },
+    { label: 'Email Address:', value: studentData?.email || 'N/A' },
   ];
 
   // Social profile data
-  const socialProfiles = [
-    { label: 'Facebook:', value: 'www.facebook.com', isLink: true },
-    { label: 'Instagram:', value: 'www.instagram.com', isLink: true },
-  ];
+  const socialProfiles = (
+    studentData?.studentProfiles?.socialProfile || []
+  ).map((profile) => ({
+    label: profile?.socialMedia || 'Social Media',
+    value: profile?.socialLink || 'N/A',
+    isLink: !!profile?.socialLink,
+  }));
 
   // Guardian contact data
-  const guardianInfo = [
-    { label: 'Guardian Number:', value: '+880 1567808747' },
-    { label: 'Guardian Email:', value: 'ux.saifur.info@gmail.com' },
-  ];
+  const guardianInfo = (studentData?.studentProfiles?.gurdianContact || []).map(
+    (contact) => ({
+      label: contact?.gurdianName,
+      value: contact?.gurdianNumber || 'N/A',
+    })
+  );
 
   // Skills data
-  const skills = ['UI/UX Designer', 'Font-end Developer'];
+  const skills = (studentData?.studentProfiles?.skill || []).map(
+    (skill) => skill?.skillName
+  );
 
   // Professional experience data
-  const professionalExp = [
-    { label: 'Company Name:', value: 'SM Technology' },
-    { label: 'Position:', value: 'uxdesigner' },
-    { label: 'Start date:', value: 'Merch 12, 2020' },
-    { label: 'End date:', value: 'Merch 12, 2025' },
-  ];
+  const professionalExp = (
+    studentData?.studentProfiles?.experience || []
+  ).flatMap((ex) => [
+    {
+      label: 'Company Name:',
+      value: ex?.companyName || 'N/A',
+    },
+    {
+      label: 'Designation:',
+      value: ex?.position || 'N/A',
+    },
+    {
+      label: 'Start Date:',
+      value: ex?.startDate || 'N/A',
+    },
+    {
+      label: 'End Date:',
+      value: ex?.endDate || 'N/A',
+    },
+  ]);
 
   // Hobbies data
-  const hobbies = ['Travelling'];
+  const hobbies = (studentData?.studentProfiles?.hobbies || []).map(
+    (hobby) => hobby.name
+  );
 
   return (
     <div className="flex flex-col md:flex-row items-start gap-6 relative self-stretch w-full flex-[0_0_auto]">
@@ -56,7 +88,7 @@ export const FrameByAnima = () => {
                 <div className="relative w-full flex justify-center md:justify-start">
                   <div className="w-[180px] h-[180px] md:w-[234px] md:h-[234px] rounded-full overflow-hidden">
                     <img
-                      src="/student.png"
+                      src={studentData?.studentProfiles?.profileImage}
                       alt="Profile picture"
                       className="w-full h-full object-cover"
                     />
@@ -107,13 +139,21 @@ export const FrameByAnima = () => {
                   <br />
                 </span>
                 {item.isLink ? (
-                  <span className="text-[#00bbff] underline text-base md:text-lg tracking-[0.10px] leading-[28.8px]">
+                  <Link
+                    href={item.value}
+                    target="_blank"
+                    className="text-[#00bbff] underline text-base md:text-lg tracking-[0.10px] leading-[28.8px]"
+                  >
                     {item.value}
-                  </span>
+                  </Link>
                 ) : (
-                  <span className="text-base md:text-lg tracking-[0.10px] leading-[28.8px]">
+                  <Link
+                    href={item.value}
+                    target="_blank"
+                    className="text-base md:text-lg tracking-[0.10px] leading-[28.8px]"
+                  >
                     {item.value}
-                  </span>
+                  </Link>
                 )}
               </div>
             ))}
