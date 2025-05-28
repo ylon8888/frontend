@@ -3,6 +3,16 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/hooks";
+import { JwtPayload } from "jwt-decode";
+import { setUser } from "@/redux/features/auth/authSlice";
+import { verifyToken } from "@/utils/verifyToken";
+interface DecodedUser extends JwtPayload {
+  role: string; // Add role explicitly
+}
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +20,15 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-
+  // Define the expected response type for login
+  interface LoginResponse {
+    success: boolean;
+    message: string;
+    data?: any;
+  }
+  const [login] = useLoginMutation();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -23,8 +41,31 @@ const LoginPage = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("Login attempt:", formData);
+    try {
+      const res = await login(formData);
+      console.log("=== ADMIN LOGIN RESPONSE ===", res?.data?.success);
+
+      if (res?.data?.success == true) {
+        router.push("/");
+      }
+
+      if (res?.data?.success) {
+        const user = (await verifyToken(
+          res?.data?.data?.accessToken
+        )) as DecodedUser;
+        await dispatch(
+          setUser({
+            user: user,
+            access_token: res?.data?.data?.accessToken,
+            refresh_token: res?.data?.data?.refreshToken,
+          })
+        );
+      }
+    } catch (error) {
+      console.log("=== ADMIN LOGIN ERROR ===", error);
+    }
     // Handle login logic here
   };
 

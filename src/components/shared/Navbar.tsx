@@ -1,16 +1,50 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { Search, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { ProgressProvider } from '@bprogress/next/app';
+import { useState, useRef, useEffect } from "react";
+import { Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { ProgressProvider } from "@bprogress/next/app";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
+import Swal from "sweetalert2";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   // const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectCurrentUser);
+  console.log(user);
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Log out",
+    });
+    if (result.isConfirmed) {
+      try {
+        await dispatch(logout());
+        Swal.fire({
+          title: "Logged out!",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      } catch (error) {
+        console.error("Logout failed:", error);
+        Swal.fire({
+          title: "Error!",
+          text: "Logout failed. Please try again.",
+          icon: "error",
+        });
+      }
+    }
+  };
 
   // Focus search input when opened
   useEffect(() => {
@@ -22,29 +56,21 @@ const Navbar = () => {
   // Close search on escape key
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsSearchOpen(false);
       }
     };
 
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
   }, []);
-
-  // Sample courses for dropdown
-  // const courses = [
-  //   { name: "Web Development", href: "#" },
-  //   { name: "Data Science", href: "#" },
-  //   { name: "Mobile Development", href: "#" },
-  //   { name: "UI/UX Design", href: "/asdasd" },
-  // ];
 
   // Navigation links
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Courses', href: '/courses' },
-    { name: 'Blog', href: '/blog' },
-    { name: 'About Us', href: '/about' },
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Blog", href: "/blog" },
+    { name: "About Us", href: "/about" },
   ];
 
   return (
@@ -86,46 +112,6 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
-
-            {/* <div className="relative">
-            <div className="flex items-center">
-              <Link href="/courses" className="text-white hover:text-secondary">
-                Courses
-              </Link>
-              <button
-                onClick={() => setIsCoursesOpen(!isCoursesOpen)}
-                onBlur={() => setTimeout(() => setIsCoursesOpen(false), 100)}
-                className="ml-1 text-white hover:text-secondary"
-              >
-                {" "}
-                <ChevronDown className="h-5 w-5" />
-              </button>
-            </div>
-
-            <AnimatePresence>
-              {isCoursesOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute z-20 mt-2 w-48 rounded-md bg-white shadow-lg"
-                >
-                  <div className="py-1">
-                    {courses.map((course, index) => (
-                      <Link
-                        key={index}
-                        href={course.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        {course.name}
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div> */}
           </div>
 
           {/* Mobile Navigation */}
@@ -133,7 +119,7 @@ const Navbar = () => {
             {isMobileMenuOpen && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
+                animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
                 className="absolute top-16 left-0 right-0 bg-[#1e2130] z-20 md:hidden"
@@ -149,14 +135,24 @@ const Navbar = () => {
                       {link.name}
                     </Link>
                   ))}
-
-                  <Link
-                    href="/"
-                    className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Login Now
-                  </Link>
+                  {user?.id ? (
+                    <div className="hidden lg:flex items-center space-x-8">
+                      <Link
+                        href="/login"
+                        className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Login Now
+                      </Link>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleLogout}
+                      className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
+                    >
+                      Logout
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -176,7 +172,7 @@ const Navbar = () => {
                 {isSearchOpen && (
                   <motion.div
                     initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: '250px' }}
+                    animate={{ opacity: 1, width: "250px" }}
                     exit={{ opacity: 0, width: 0 }}
                     transition={{ duration: 0.3 }}
                     className="absolute right-0 top-0 flex items-center"
@@ -198,12 +194,23 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            <Link
-              href="/login"
-              className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
-            >
-              Login Now
-            </Link>
+            {user?.id ? (
+              <div className="hidden lg:flex items-center space-x-8">
+                <Link
+                  href="/login"
+                  className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
+                >
+                  Login Now
+                </Link>
+              </div>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
+              >
+                Logout
+              </button>
+            )}
           </div>
 
           {/* Mobile Search */}
@@ -222,7 +229,7 @@ const Navbar = () => {
           {isSearchOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
+              animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
               className="md:hidden px-4 pt-4"
