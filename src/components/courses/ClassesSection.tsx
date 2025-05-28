@@ -3,17 +3,32 @@
 import { useState } from "react";
 import SectionHeader from "../shared/SectionHeader";
 import ClassCard from "../shared/cards/ClassCard";
-import { classData } from "@/lib/ClassData";
+import { useGetSingleCourseQuery } from "@/redux/features/course/coure";
+import Loading from "../ui/core/Loading/Loading";
+// import { classData } from "@/lib/ClassData";
 
 interface ClassesSectionProps {
   title: string;
   badge: string;
-  grade: "9" | "10" | "11" | "12";
+  grade?: number | string;
+  classData: any;
+  id: string;
 }
 
-const ClassesSection = ({ title, badge, grade }: ClassesSectionProps) => {
+const ClassesSection = ({
+  id,
+  title,
+  badge,
+  grade,
+  classData,
+}: ClassesSectionProps) => {
   const [visibleCards, setVisibleCards] = useState(3);
 
+  const { data: courseDatas, isLoading } = useGetSingleCourseQuery(id);
+
+  const courseData = courseDatas?.data?.singleClass?.subjects;
+  console.log(courseData);
+  // console.log(classData?.subjects?.map((item: any) => item));
   const loadMoreCards = () => {
     setVisibleCards((prevVisibleCards) => prevVisibleCards + 3);
   };
@@ -21,20 +36,23 @@ const ClassesSection = ({ title, badge, grade }: ClassesSectionProps) => {
   // Dynamic background color and text color based on grade
   const getBackgroundColor = (grade: string) => {
     switch (grade) {
-      case "9":
-        return { bgColor: "bg-primary", textColor: "text-white" }; // Dark teal, white text
-      case "10":
-        return { bgColor: "bg-white", textColor: "text-black" }; // White background, black text
-      case "11":
-        return { bgColor: "bg-[#F5F5F5]", textColor: "text-black" }; // Light grey background, black text
-      case "12":
-        return { bgColor: "bg-white", textColor: "text-black" }; // White background, black text
+      case "class 9":
+        return { bgColor: "bg-primary", textColor: "text-white" };
+      case "class 10":
+        return { bgColor: "bg-white", textColor: "text-black" };
+      case "class 11":
+        return { bgColor: "bg-[#F5F5F5]", textColor: "text-black" };
+      case "class 12":
+        return { bgColor: "bg-white", textColor: "text-black" };
       default:
-        return { bgColor: "bg-white", textColor: "text-black" }; // Default white background, black text
+        return { bgColor: "bg-white", textColor: "text-black" };
     }
   };
+  const { bgColor, textColor } = getBackgroundColor(badge);
 
-  const { bgColor, textColor } = getBackgroundColor(grade);
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <section className={`py-16 ${bgColor}`}>
@@ -52,24 +70,26 @@ const ClassesSection = ({ title, badge, grade }: ClassesSectionProps) => {
 
         {/* Class Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {classData[grade]?.slice(0, visibleCards).map((classItem, index) => (
-            <ClassCard
-              key={index}
-              id={classItem?.id}
-              subject={classItem?.subject}
-              count={classItem?.count}
-              image={classItem?.image}
-              index={index}
-              description={classItem?.description}
-              chapters={classItem?.chapters}
-              textColor={textColor}
-            />
-          ))}
+          {courseData
+            ?.slice(0, visibleCards)
+            ?.map((classItem: any, index: number) => (
+              <ClassCard
+                key={classItem?.index}
+                id={classItem?.id}
+                subject={classItem?.subjectName}
+                count={classItem?._count?.chapters}
+                image={classItem?.banner}
+                index={index}
+                description={classItem?.subjectDescription}
+                chapters={classItem?._count?.chapters}
+                textColor={textColor}
+              />
+            ))}
         </div>
 
         {/* Button to load more cards */}
         <div className="flex justify-center mt-8">
-          {visibleCards < classData[grade]?.length && (
+          {visibleCards < classData["subjects"]?.length && (
             <button
               onClick={loadMoreCards}
               className="bg-secondary hover:bg-secondary/80 text-white font-semibold font-montserrat py-3 px-10 rounded-xl transition-colors"

@@ -1,0 +1,31 @@
+import { baseApi } from "../../api/baseApi";
+
+const courseApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    //     getAllCourse: builder.query({
+    //       query: (data) => {
+    //         const params = new URLSearchParams();
+    //         if (data?.queryObj) {
+    //           data?.queryObj.forEach((item: any) => {
+    //             params.append(item.name, item.value as string);
+    //           });
+    //         }
+    //         return {
+    //           url: `course`,
+    //           method: "GET",
+    //           params: params,
+    //         };
+    //       },
+    //       providesTags: ["course"],
+    //     }),
+    getSingleCourse: builder.query({
+      query: (id) => ({
+        url: `/class/class-wise-chapter/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+  }),
+});
+
+export const { useGetSingleCourseQuery } = courseApi;
