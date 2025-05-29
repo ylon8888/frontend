@@ -5,10 +5,17 @@ import Steps from "./Steps";
 import StepOne from "./chapterContents/StepOne";
 import StepTwo from "./chapterContents/StepTwo";
 import StepThree from "./chapterContents/StepThree";
+import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 
 const STORAGE_KEY = "chapter_progress";
 
 const ChapterLayout = () => {
+  const id = window.location.pathname.split("/")[4];
+  console.log(id);
+
+  const { data } = useGetCoursesOfChapterQuery(id);
+  console.log(data);
+
   // Initialize state with value from localStorage or default to 0
   const [currentStepIndex, setCurrentStepIndex] = useState(() => {
     if (typeof window !== "undefined") {

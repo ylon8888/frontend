@@ -63,7 +63,6 @@ import Link from "next/link";
 // ];
 
 const ChapterModules = ({ chapters }: { chapters: any }) => {
-  console.log("chapters", chapters);
   const [expandedChapter, setExpandedChapter] = useState(1);
   const [completedChapters, setCompletedChapters] = useState<number[]>([1]); //
 
@@ -84,14 +83,14 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
     }
   };
 
-  const completeChapter = (chapterId: number) => {
-    if (!completedChapters.includes(chapterId)) {
-      setCompletedChapters([...completedChapters, chapterId]);
-    }
-    // Automatically collapse the current chapter
-    setExpandedChapter(0);
-  };
-
+  // const completeChapter = (chapterId: number) => {
+  //   if (!completedChapters.includes(chapterId)) {
+  //     setCompletedChapters([...completedChapters, chapterId]);
+  //   }
+  //   // Automatically collapse the current chapter
+  //   setExpandedChapter(0);
+  // };
+  console.log(chapters?.chapters?.map((chapter: any) => chapter?.id));
   return (
     <div className="bg-white container max-w-[1320px] mx-auto px-6 py-8 rounded-lg shadow-sm">
       <div className="mb-6">
@@ -110,69 +109,78 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
       </div>
 
       {/* Chapter modules content */}
-      <div className="mt-8 space-y-4">
-        {chapters?.chapters?.map((chapter: any) => {
-          const isUnlocked =
-            chapter.sLNumber === 1 ||
-            completedChapters.includes(chapter.id - 1);
-          const isActive = expandedChapter === chapter.id;
-          const isCompleted = completedChapters.includes(chapter.id);
-
-          return (
-            <motion.div
-              key={chapter.id}
-              className={`border rounded-lg overflow-hidden transition-all duration-200 ${
-                isCompleted
-                  ? "border-green-500 shadow-md"
-                  : isActive
-                  ? "border-orange-500 shadow-md"
-                  : "border-gray-200"
-              } ${!isUnlocked ? "opacity-70" : ""}`}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              whileHover={isUnlocked ? { scale: 1.005 } : {}}
-            >
+      <Link
+        href={`/courses/${
+          chapters?.subject?.id
+        }/chapters/${chapters?.chapters?.map((chapter: any) => chapter?.id)}`}
+      >
+        <div className="mt-8 space-y-4">
+          {chapters?.chapters?.map((chapter: any) => {
+            const isUnlocked =
+              chapter.sLNumber === 1 ||
+              completedChapters.includes(chapter.id - 1);
+            const isActive = expandedChapter === chapter.id;
+            const isCompleted = completedChapters.includes(chapter.id);
+            return (
               <motion.div
-                className={`flex justify-between items-start p-4 ${
-                  isUnlocked ? "cursor-pointer" : "cursor-not-allowed"
-                }`}
-                onClick={() => isUnlocked && toggleChapter(chapter.id)}
-                whileTap={isUnlocked ? { scale: 0.98 } : {}}
+                key={chapter.id}
+                className={`border rounded-lg overflow-hidden transition-all duration-200 ${
+                  isCompleted
+                    ? "border-green-500 shadow-md"
+                    : isActive
+                    ? "border-orange-500 shadow-md"
+                    : "border-gray-200"
+                } ${!isUnlocked ? "opacity-70" : ""}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                whileHover={isUnlocked ? { scale: 1.005 } : {}}
               >
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-montserrat text-xl font-semibold">
-                      Chapter {chapter?.sLNumber}: {chapter?.chapterName}
-                    </h2>
-                    {isCompleted && (
-                      <span className="flex items-center gap-1 text-sm text-green-600">
-                        <Check size={16} />
-                        Completed
-                      </span>
+                <motion.div
+                  className={`flex justify-between items-start p-4 ${
+                    isUnlocked ? "cursor-pointer" : "cursor-not-allowed"
+                  }`}
+                  onClick={() => isUnlocked && toggleChapter(chapter.id)}
+                  whileTap={isUnlocked ? { scale: 0.98 } : {}}
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <h2 className="font-montserrat text-xl font-semibold">
+                        Chapter {chapter?.sLNumber}: {chapter?.chapterName}
+                      </h2>
+                      {isCompleted && (
+                        <span className="flex items-center gap-1 text-sm text-green-600">
+                          <Check size={16} />
+                          Completed
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-gray-600 text-sm flex gap-2">
+                      <span className="font-medium">Objective:</span>{" "}
+                      <p
+                        dangerouslySetInnerHTML={{
+                          __html: chapter?.chapterDescription,
+                        }}
+                      />
+                    </p>
+                  </div>
+                  <div className="flex items-center">
+                    {!isUnlocked && (
+                      <CiLock size={20} className="text-gray-400" />
+                    )}
+                    {expandedChapter === chapter.id ? (
+                      <ChevronUp className="text-secondary" />
+                    ) : (
+                      <ChevronDown
+                        className={
+                          isUnlocked ? "text-gray-600" : "text-gray-400"
+                        }
+                      />
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm">
-                    <span className="font-medium">Objective:</span>{" "}
-                    {chapter?.chapterDescription}
-                  </p>
-                </div>
-                <div className="flex items-center">
-                  {!isUnlocked && (
-                    <CiLock size={20} className="text-gray-400" />
-                  )}
-                  {expandedChapter === chapter.id ? (
-                    <ChevronUp className="text-secondary" />
-                  ) : (
-                    <ChevronDown
-                      className={isUnlocked ? "text-gray-600" : "text-gray-400"}
-                    />
-                  )}
-                </div>
-              </motion.div>
-
-              {/* <AnimatePresence>
-                {expandedChapter === chapter.id && (
+                </motion.div>
+                {/* <AnimatePresence>
+                {expandedChapter === chapter?.id && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
@@ -182,7 +190,7 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                   >
                     <Link href={`/courses/${1}/chapters/${chapter.id}`}>
                       <div className="p-4 border-t border-gray-200 bg-gray-50">
-                        {chapter.hasImage && (
+                        {chapter?.thumbnail && (
                           <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -214,10 +222,11 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                   </motion.div>
                 )}
               </AnimatePresence> */}
-            </motion.div>
-          );
-        })}
-      </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </Link>
     </div>
   );
 };

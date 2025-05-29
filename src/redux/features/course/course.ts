@@ -39,6 +39,13 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getCoursesOfChapter: builder.query({
+      query: (id) => ({
+        url: `chapter/chapter-wise-steps/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
     enrollCourse: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -65,7 +72,8 @@ const courseApi = baseApi.injectEndpoints({
 export const {
   useGetSingleCourseQuery,
   useGetSingleCourseDetailsQuery,
+  useGetChaptersQuery,
+  useGetCoursesOfChapterQuery,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,
-  useGetChaptersQuery,
 } = courseApi;

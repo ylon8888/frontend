@@ -62,9 +62,13 @@ const CourseDetailsHero = ({ courseDetail }: any) => {
             >
               {courseDetail?.data?.course?.subjectName}
             </motion.h1>
-            <motion.p variants={itemVariants} className="mb-8 max-w-3xl">
-              {courseDetail?.data?.course?.subjectDescription}
-            </motion.p>
+            <motion.p
+              variants={itemVariants}
+              className="mb-8 max-w-3xl"
+              dangerouslySetInnerHTML={{
+                __html: courseDetail?.data?.course?.subjectDescription,
+              }}
+            />
           </motion.div>
         </div>
       </div>
