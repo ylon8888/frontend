@@ -90,7 +90,6 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
   //   // Automatically collapse the current chapter
   //   setExpandedChapter(0);
   // };
-  console.log(chapters?.chapters?.map((chapter: any) => chapter?.id));
   return (
     <div className="bg-white container max-w-[1320px] mx-auto px-6 py-8 rounded-lg shadow-sm">
       <div className="mb-6">
@@ -109,32 +108,31 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
       </div>
 
       {/* Chapter modules content */}
-      <Link
-        href={`/courses/${
-          chapters?.subject?.id
-        }/chapters/${chapters?.chapters?.map((chapter: any) => chapter?.id)}`}
-      >
-        <div className="mt-8 space-y-4">
-          {chapters?.chapters?.map((chapter: any) => {
-            const isUnlocked =
-              chapter.sLNumber === 1 ||
-              completedChapters.includes(chapter.id - 1);
-            const isActive = expandedChapter === chapter.id;
-            const isCompleted = completedChapters.includes(chapter.id);
-            return (
-              <motion.div
-                key={chapter.id}
-                className={`border rounded-lg overflow-hidden transition-all duration-200 ${
-                  isCompleted
-                    ? "border-green-500 shadow-md"
-                    : isActive
-                    ? "border-orange-500 shadow-md"
-                    : "border-gray-200"
-                } ${!isUnlocked ? "opacity-70" : ""}`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-                whileHover={isUnlocked ? { scale: 1.005 } : {}}
+
+      <div className="mt-8 space-y-4">
+        {chapters?.chapters?.map((chapter: any) => {
+          const isUnlocked =
+            chapter.sLNumber === 1 ||
+            completedChapters.includes(chapter.id - 1);
+          const isActive = expandedChapter === chapter.id;
+          const isCompleted = completedChapters.includes(chapter.id);
+          return (
+            <motion.div
+              key={chapter.id}
+              className={`border rounded-lg overflow-hidden transition-all duration-200 ${
+                isCompleted
+                  ? "border-green-500 shadow-md"
+                  : isActive
+                  ? "border-orange-500 shadow-md"
+                  : "border-gray-200"
+              } ${!isUnlocked ? "opacity-70" : ""}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              whileHover={isUnlocked ? { scale: 1.005 } : {}}
+            >
+              <Link
+                href={`/courses/${chapters?.subject?.id}/chapters/${chapter?.id}`}
               >
                 <motion.div
                   className={`flex justify-between items-start p-4 ${
@@ -179,7 +177,8 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                     )}
                   </div>
                 </motion.div>
-                {/* <AnimatePresence>
+              </Link>
+              {/* <AnimatePresence>
                 {expandedChapter === chapter?.id && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
@@ -222,11 +221,10 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                   </motion.div>
                 )}
               </AnimatePresence> */}
-              </motion.div>
-            );
-          })}
-        </div>
-      </Link>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 };

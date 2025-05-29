@@ -1,8 +1,9 @@
 "use client";
 
+import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 import { T_Step } from "@/types/Common";
 import { ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface StepsProps {
   currentStepIndex: number;
@@ -12,78 +13,85 @@ interface StepsProps {
 }
 
 const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
-  const [steps, setSteps] = useState<T_Step[]>([
+  const id = window.location.pathname.split("/")[4];
+
+  const { data } = useGetCoursesOfChapterQuery(id);
+  const chapterData = data?.data?.chapters?.[0];
+  console.log("step one", chapterData?.stepOne?.stepName);
+
+  // utils/getFakeSteps.ts or define in same file above the component
+
+  // utils/getStepsFromChapter.ts
+
+  const getFakeSteps = (chapterData: any): T_Step[] => [
     {
-      id: "1",
+      id: chapterData?.stepOne?.id || "1",
       number: "01",
       title: "Watch the Video or Read Topic",
-      description: "Photosynthesis and the Carbon Cycle",
+      description: chapterData?.stepOne?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "2",
+      id: chapterData?.stepTwo?.id || "2",
       number: "02",
       title: "Listen to the Podcast",
-      description: "Carbon Cycle & Climate Change",
+      description: chapterData?.stepTwo?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "3",
+      id: chapterData?.stepThree?.id || "3",
       number: "03",
       title: "Watch the Video or Read Topic",
-      description:
-        "Briefing Document: Photosynthesis, Carbon Cycle, and Climate Change",
+      description: chapterData?.stepThree?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "4",
+      id: chapterData?.stepFour?.id || "4",
       number: "04",
       title: "Watch the Video or Read Topic",
-      description: "Photosynthesis and Plant Biology",
+      description: chapterData?.stepFour?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "5",
+      id: chapterData?.stepFive?.id || "5",
       number: "05",
       title: "Watch the Video or Quiz Test",
-      description: "Test Your Knowledge",
+      description: chapterData?.stepFive?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "6",
+      id: chapterData?.stepSix?.id || "6",
       number: "06",
-      title: "Watch the Video or Read Topic",
-      description: "Review Key Terms or Key Word",
+      title: "Review Key Terms or Key Words",
+      description: chapterData?.stepSix?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "7",
+      id: chapterData?.stepSeven?.id || "7",
       number: "07",
       title: "Watch the Story",
-      description: "Impact of Photosynthesis and the Carbon Cycle",
+      description: chapterData?.stepSeven?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "8",
+      id: chapterData?.stepEight?.id || "8",
       number: "08",
       title: "Final Quiz",
-      description:
-        "Photosynthesis, Carbon Cycle, and Climate Change: Student answer a lot of questions and get the results",
+      description: chapterData?.stepEight?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "9",
+      id: chapterData?.stepNine?.id || "9",
       number: "09",
-      title: "Watch the Video or Read Topic",
-      description: "Critical Thinking Questions",
+      title: "Critical Thinking Questions",
+      description: chapterData?.stepNine?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: "10",
+      id: chapterData?.stepTen?.id || "10",
       number: "10",
       title: "Feedback and Track Progress",
-      description:
-        "Review your quiz results and get feedback on areas you need to improve. Track your overall progress to ensure you're mastering each topic.",
+      description: chapterData?.stepTen?.stepName || "-",
       isCompleted: false,
     },
     {
@@ -91,11 +99,19 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
       number: "🌟",
       title: "Finish Chapter 01 Unlock Next Chapter",
       description:
-        "After you'll watch a comprehensive video Chapter that introduces the topic. This video covers all the problem core concepts clearly.",
+        "After you'll watch a comprehensive video Chapter that introduces the topic. This video covers all the core concepts clearly.",
       isCompleted: false,
       isLast: true,
     },
-  ]);
+  ];
+
+  const [steps, setSteps] = useState<T_Step[]>([]);
+
+  useEffect(() => {
+    if (chapterData) {
+      setSteps(getFakeSteps(chapterData));
+    }
+  }, [chapterData]);
 
   // Mark step as completed when moving to next step
   const handleNextWithCompletion = () => {
