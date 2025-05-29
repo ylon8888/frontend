@@ -100,6 +100,8 @@ export const baseApi = createApi({
     "subject",
     "chapter",
     "step",
+    "feedback",
+    "student",
     "course",
   ],
   endpoints: () => ({}),
