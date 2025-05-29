@@ -102,6 +102,7 @@ body,
 /* Change the color of the pagination items */
 .custom-pagination .ant-pagination-item {
   color: #0b7077; /* Default item color */
+  transition: .3s ease-in-out all;
 }
 
 /* Change color of previous and next buttons */

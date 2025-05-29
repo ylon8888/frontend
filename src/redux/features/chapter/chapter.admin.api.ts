@@ -12,11 +12,42 @@ const chapterApi = baseApi.injectEndpoints({
       providesTags: ['chapter'],
     }),
 
+    getAllStudentByChapter: builder.query({
+      query: ({ objectQuery, chapterId }) => {
+        const params = new URLSearchParams();
+        if (objectQuery) {
+          objectQuery?.forEach((item: any) => {
+            params.append(item?.name, item?.value as string);
+          });
+        }
+        return {
+          url: `course/chapter-enroll-student/${chapterId}`,
+          method: 'GET',
+          params: params,
+        };
+      },
+      providesTags: ['chapter'],
+    }),
+
     getSingleChapter: builder.query({
       query: (id) => ({
         url: `chapter/${id}`,
         method: 'GET',
       }),
+      providesTags: ['chapter'],
+    }),
+
+    getStudentAnalysisReportByChapter: builder.query({
+      query: (data) => {
+        const params = new URLSearchParams();
+        params.append('chapterId', data?.chapterId);
+        params.append('studentId', data?.studentId);
+        return {
+          url: `course/chapter-quiz-details`,
+          method: 'GET',
+          params: params,
+        };
+      },
       providesTags: ['chapter'],
     }),
 
@@ -53,4 +84,9 @@ const chapterApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllChapterQuery, useCreateChapterMutation } = chapterApi;
+export const {
+  useGetAllChapterQuery,
+  useCreateChapterMutation,
+  useGetAllStudentByChapterQuery,
+  useGetStudentAnalysisReportByChapterQuery,
+} = chapterApi;

@@ -48,6 +48,22 @@ const studentAdminApi = baseApi.injectEndpoints({
       },
       providesTags: ['student'],
     }),
+    getOverallGraph: builder.query({
+      query: (data) => {
+        const params = new URLSearchParams();
+        if (data) {
+          data?.forEach((item: any) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: `student/overall-graph`,
+          method: 'GET',
+          params: params,
+        };
+      },
+      providesTags: ['student'],
+    }),
   }),
 });
 
@@ -56,4 +72,5 @@ export const {
   useGetSingleStudentQuery,
   useGetStatsQuery,
   useGetParticipationRateGraphQuery,
+  useGetOverallGraphQuery,
 } = studentAdminApi;

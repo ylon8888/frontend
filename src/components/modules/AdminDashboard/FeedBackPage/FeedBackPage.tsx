@@ -161,7 +161,7 @@ const FeedBackPageComponent = () => {
                 padding: '7px',
                 borderRadius: '8px',
               }}
-              placeholder="Search Order by Date"
+              placeholder="Search by Date"
               onChange={onChange}
             />
           </div>

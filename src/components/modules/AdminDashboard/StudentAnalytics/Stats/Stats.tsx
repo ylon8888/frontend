@@ -1,5 +1,6 @@
 'use client';
 
+
 // Map of icon names to their components
 const iconMap = {
   rate: (
@@ -74,7 +75,7 @@ const iconMap = {
       </defs>
     </svg>
   ),
-  userPlus: (
+  right: (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -95,24 +96,63 @@ const iconMap = {
       </defs>
     </svg>
   ),
+  wrong: (
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+>
+  <path
+    d="M12 2C6.47 2 2 6.47 2 12C2 17.53 6.47 22 12 22C17.53 22 22 17.53 22 12C22 6.47 17.53 2 12 2ZM16.36 16.36C15.93 16.79 15.24 16.79 14.81 16.36L12 13.55L9.19 16.36C8.76 16.79 8.07 16.79 7.64 16.36C7.21 15.93 7.21 15.24 7.64 14.81L10.45 12L7.64 9.19C7.21 8.76 7.21 8.07 7.64 7.64C8.07 7.21 8.76 7.21 9.19 7.64L12 10.45L14.81 7.64C15.24 7.21 15.93 7.21 16.36 7.64C16.79 8.07 16.79 8.76 16.36 9.19L13.55 12L16.36 14.81C16.79 15.24 16.79 15.93 16.36 16.36Z"
+    fill="#0B7077"
+  />
+</svg>
+  ),
 };
 
-// Define the type after `iconMap` is declared
-type StatCardData = {
-  id: number;
-  value: string;
-  label: string;
-  icon: keyof typeof iconMap;
-};
+const Stats = ({ apiResponse }: { apiResponse: any }) => {
+  // Define the StatCardData type
+  type StatCardData = {
+    id: number;
+    value: string;
+    label: string;
+    icon: keyof typeof iconMap;
+  };
 
-// Example usage
-const statData: StatCardData[] = [
-  { id: 1, value: '15%', label: 'Class Participation Rate', icon: 'rate' },
-  { id: 2, value: '12', label: 'Quiz Practiced', icon: 'graduationCap' },
-  { id: 3, value: '25%', label: 'Correct Answer Rate', icon: 'userPlus' },
-];
+  // Function to transform your API response to StatCardData format
+  function transformToStatCards(apiData: any): StatCardData[] {
+    return [
+      {
+        id: 1,
+        value: `${apiData.courseEnroll.correctRate}%`,
+        label: 'Correct Answer Rate',
+        icon: 'rate',
+      },
+      {
+        id: 2,
+        value: apiData.courseEnroll.quizPracticed.toString(),
+        label: 'Quiz Practiced',
+        icon: 'graduationCap',
+      },
+      {
+        id: 3,
+        value: apiData.courseEnroll.correctQuiz.toString(),
+        label: 'Correct Quizzes',
+        icon: 'right',
+      },
+      {
+        id: 4,
+        value: apiData.courseEnroll.wrongQuiz.toString(),
+        label: 'Wrong Quizzes',
+        icon: 'wrong',
+      },
+    ];
+  }
 
-const Stats = () => {
+  const statData: StatCardData[] = transformToStatCards(apiResponse);
+
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

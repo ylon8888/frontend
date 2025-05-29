@@ -1,21 +1,14 @@
 'use client';
 import { DataTable } from '@/components/shared/core/DataTable/DataTable';
+import Loading from '@/components/ui/core/Loading/Loading';
+import { useGetAllStudentByChapterQuery } from '@/redux/features/chapter/chapter.admin.api';
+import { Chapter, CourseEnroll } from '@/types/StudentByChapter';
 import { Pagination } from 'antd';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-
-type Student = {
-  id: string | number;
-  enrollDate: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  courseClass: string;
-  action: string[];
-};
+import { useEffect, useState } from 'react';
 
 // Sample data for the student list
-const students: Student[] = [
+const students: any[] = [
   {
     id: 1,
     enrollDate: 'March 12, 2025',
@@ -98,6 +91,16 @@ const AllStudentByChapterPageComponent = ({
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const router = useRouter();
+  const [objectQuery, setObjectQuery] = useState([
+    {
+      name: 'page',
+      value: page,
+    },
+    {
+      name: 'limit',
+      value: pageSize,
+    },
+  ]);
 
   // Handle pagination changes
   const handlePaginationChange = (page: number, pageSize: number) => {
@@ -105,37 +108,79 @@ const AllStudentByChapterPageComponent = ({
     setPageSize(pageSize);
   };
 
+  useEffect(() => {
+    setObjectQuery([
+      {
+        name: 'page',
+        value: page,
+      },
+      {
+        name: 'limit',
+        value: pageSize,
+      },
+    ]);
+  }, [page, pageSize]);
+
+  const {
+    data: response,
+    isLoading,
+    isFetching,
+  } = useGetAllStudentByChapterQuery({
+    objectQuery,
+    chapterId,
+  });
+
+  const data: Chapter = response?.data?.data[0] || {};
+  const students: CourseEnroll[] = data?.subject?.courseEnrolls || [];
+
   // Define columns for the table
   const columns = [
     {
       header: 'Enroll Date',
-      accessor: (Student: Student) => Student.enrollDate,
+      accessor: (student: CourseEnroll) => {
+        const dateStr = student.createdAt;
+        if (!dateStr) return '';
+        const date = new Date(dateStr);
+        const options: Intl.DateTimeFormatOptions = {
+          weekday: 'short',
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        };
+        // Format: Mon25 Jun, 2025
+        const parts = date
+          .toLocaleDateString('en-US', options)
+          .replace(',', '')
+          .split(' ');
+        // parts: [Mon, 06, Jun, 2025]
+        if (parts.length < 4) return dateStr;
+        return `${parts[0]}${parts[1]} ${parts[2]}, ${parts[3]}`;
+      },
     },
-    { header: 'Name', accessor: (Student: Student) => Student.name },
-    { header: 'Email', accessor: (Student: Student) => Student.email },
+    { header: 'Name', accessor: (student: CourseEnroll) => student.name },
+    {
+      header: 'Email',
+      accessor: (student: CourseEnroll) => student.user.email,
+    },
     {
       header: 'Phone Number',
-      accessor: (Student: Student) => Student.phoneNumber,
-    },
-    {
-      header: 'Course Class',
-      accessor: (Student: Student) => Student.courseClass,
+      accessor: (student: CourseEnroll) => student.phoneNumber,
     },
   ];
 
   // Handle row click
-  const handleRowClick = (Student: Student) => {
-    console.log('Row clicked:', Student);
+  const handleRowClick = (student: any) => {
+    console.log('Row clicked:', student);
   };
 
   // Render actions menu
-  const renderActions = (Student: Student, closeMenu: () => void) => {
+  const renderActions = (student: CourseEnroll, closeMenu: () => void) => {
     return (
       <>
         <button
           onClick={() => {
             router.push(
-              `/dashboard/classes/student-analytics/?studentId=${Student.id}&chapterId=${chapterId}`
+              `/dashboard/classes/student-analytics/?studentId=${student.id}&chapterId=${chapterId}`
             );
             closeMenu();
           }}
@@ -147,10 +192,12 @@ const AllStudentByChapterPageComponent = ({
     );
   };
 
+  if (isLoading || isFetching) return <Loading />;
+
   return (
     <div>
       <DataTable
-        title="Chapter 1: Cell Structure and Function Enroll Student"
+        title={`Chapter ${data?.sLNumber}: ${data?.chapterName}`}
         data={students}
         columns={columns}
         keyField="id"
@@ -161,8 +208,8 @@ const AllStudentByChapterPageComponent = ({
         <Pagination
           current={page}
           pageSize={pageSize}
-          // total={getAllBlogResponse?.data?.meta?.total}
-          total={20}
+          total={response?.data?.meta?.total}
+          // total={20}
           onChange={handlePaginationChange}
           className="custom-pagination"
           // showSizeChanger

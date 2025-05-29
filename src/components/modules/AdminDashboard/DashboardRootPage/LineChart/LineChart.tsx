@@ -2,7 +2,7 @@
 'use client';
 import { useGetParticipationRateGraphQuery } from '@/redux/features/student/student.api';
 import { ChevronDown } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   LineChart as Chart,
   Line,
@@ -14,48 +14,9 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-// Monthly Data (Each Month of the Year)
-const monthlyData = [
-  { name: 'Jan', rate: 10 },
-  { name: 'Feb', rate: 20 },
-  { name: 'Mar', rate: 30 },
-  { name: 'Apr', rate: 40 },
-  { name: 'May', rate: 55 },
-  { name: 'Jun', rate: 70 },
-  { name: 'Jul', rate: 80 },
-  { name: 'Aug', rate: 90 },
-  { name: 'Sep', rate: 100 },
-  { name: 'Oct', rate: 110 },
-  { name: 'Nov', rate: 125 },
-  { name: 'Dec', rate: 140 },
-];
-
-// Quarterly Data (Summarized Per Quarter)
-const quarterlyData = [
-  { name: 'Q1', rate: 60 }, // Jan - Mar
-  { name: 'Q2', rate: 30 }, // Apr - Jun
-  { name: 'Q3', rate: 70 }, // Jul - Sep
-  { name: 'Q4', rate: 45 }, // Oct - Dec
-];
-
-// Yearly Data (Summarized Per Year)
-const yearlyData = [
-  { name: '2020', rate: 400 },
-  { name: '2021', rate: 550 },
-  { name: '2022', rate: 700 },
-  { name: '2023', rate: 900 },
-  { name: '2024', rate: 1100 },
-  { name: '2025', rate: 1250 },
-];
-
-// Time period options for the dropdown
 const timePeriods = ['Monthly', 'Quarterly', 'Yearly'];
 
 const LineChart = () => {
-  //   const monthlyData = salesStats.monthlyData;
-  //   const quarterlyData = salesStats.quarterlyData;
-  //   const yearlyData = salesStats.yearlyData;
-
   const [selectedPeriod, setSelectedPeriod] = useState('Monthly');
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isRendered, setIsRendered] = useState(false);
@@ -78,13 +39,53 @@ const LineChart = () => {
     isFetching,
   } = useGetParticipationRateGraphQuery(objectQuery);
 
-  // Determine which data to use based on selection
-  const chartData =
-    selectedPeriod === 'Monthly'
-      ? monthlyData
-      : selectedPeriod === 'Quarterly'
-      ? quarterlyData
-      : yearlyData;
+  // Get the data object from response or empty object if not available
+  const data = response?.data || {};
+
+  // Calculate max value for dynamic Y-axis domain
+  const maxDataValue = useMemo(() => {
+    if (!data || Object.keys(data).length === 0) return 0;
+    return Math.max(...Object.values(data).map(Number));
+  }, [data]);
+
+  // Calculate nice step for Y-axis ticks
+  const yAxisStep = useMemo(() => {
+    if (maxDataValue <= 0) return 10; // Default step if no data
+    const step = Math.ceil(maxDataValue / 5); // Aim for about 5 ticks
+    return Math.max(10, step); // Minimum step of 10
+  }, [maxDataValue]);
+
+  // Format Y-axis ticks
+  const formatYAxisTick = (value: number) => {
+    return `${value}%`; // Add percentage sign
+  };
+
+  // Transform data based on selected period
+  const transformData = () => {
+    if (!data || Object.keys(data).length === 0) return [];
+
+    if (selectedPeriod === 'Monthly') {
+      return Object.entries(data).map(([key, value]) => {
+        const month = key.split(' ')[0];
+        const shortMonth = month.substring(0, 3);
+        return {
+          name: shortMonth,
+          rate: value,
+        };
+      });
+    }
+
+    if (selectedPeriod === 'Yearly' || selectedPeriod === 'Quarterly') {
+      return Object.entries(data).map(([key, value]) => ({
+        name: key,
+        rate: value,
+      }));
+    }
+
+    return [];
+  };
+
+  const chartData = transformData();
 
   useEffect(() => {
     setIsRendered(true);
@@ -131,7 +132,7 @@ const LineChart = () => {
         </div>
       </div>
 
-      {isRendered && !isLoading && !isFetching && response?.data && (
+      {isRendered && !isLoading && !isFetching && (
         <div className="w-full xs:w-full h-[350px] xs:h-[450px] -ml-6">
           <ResponsiveContainer width="100%" height="100%">
             <Chart
@@ -142,8 +143,11 @@ const LineChart = () => {
               <XAxis dataKey="name" stroke="#B0B0B0" />
               <YAxis
                 stroke="#B0B0B0"
-                // tickFormatter={(tick) => `${tick}%`} // Display Y-axis as percentage
-                // domain={[0, 100]} // Y-axis range from 0 to 100
+                domain={[0, Math.max(100, maxDataValue + yAxisStep)]} // Ensure minimum 0-100% range
+                tickCount={6} // Approximate number of ticks
+                tickFormatter={formatYAxisTick}
+                interval="preserveStartEnd" // Ensures first and last ticks are shown
+                width={40} // Fixed width for Y-axis labels
               />
               <Tooltip
                 contentStyle={{
@@ -159,9 +163,22 @@ const LineChart = () => {
                 stroke="#0B7077"
                 strokeWidth={3}
                 dot={{ r: 0 }}
+                activeDot={{ r: 6 }}
               />
             </Chart>
           </ResponsiveContainer>
+        </div>
+      )}
+
+      {(isLoading || isFetching) && (
+        <div className="w-full h-[350px] flex items-center justify-center">
+          <p>Loading data...</p>
+        </div>
+      )}
+
+      {!isLoading && !isFetching && chartData.length === 0 && (
+        <div className="w-full h-[350px] flex items-center justify-center">
+          <p>No data available</p>
         </div>
       )}
     </div>

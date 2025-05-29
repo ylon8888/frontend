@@ -182,10 +182,13 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
 
                   <div className="flex flex-col items-start gap-1.5 w-full">
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Chapter - 12
+                      Total Chapter - {response?.data?.totalChapter}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
-                      Total Enrolled Student - 200
+                      Total Enrolled Student - {response?.data?.enrollStudent}
+                    </p>
+                    <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
+                      Total Lesson - {response?.data?.lesson}
                     </p>
                   </div>
                 </div>
