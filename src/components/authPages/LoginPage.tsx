@@ -10,6 +10,7 @@ import { useAppDispatch } from "@/redux/hooks";
 import { JwtPayload } from "jwt-decode";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { verifyToken } from "@/utils/verifyToken";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 interface DecodedUser extends JwtPayload {
   role: string; // Add role explicitly
 }
@@ -26,7 +27,7 @@ const LoginPage = () => {
     message: string;
     data?: any;
   }
-  const [login] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleInputChange = (e: any) => {
@@ -159,7 +160,7 @@ const LoginPage = () => {
             onClick={handleSubmit}
             className="w-full bg-secondary hover:bg-secondary/80 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Log in
+            {isLoading ? <ButtonLoading /> : " Log in"}
           </button>
         </div>
 

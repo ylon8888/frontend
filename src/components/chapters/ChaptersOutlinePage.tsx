@@ -8,7 +8,6 @@ import { useGetChaptersQuery } from "@/redux/features/course/course";
 const CourseOutlinePage = () => {
   const id = window.location.pathname.split("/")[2];
   const { data: chapter } = useGetChaptersQuery(id);
-  console.log(chapter);
 
   return (
     <div>

@@ -5,8 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEnrollCourseMutation } from "@/redux/features/course/course";
 import { toast } from "sonner";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
-const EnrollForm = () => {
+const EnrollForm = ({ setEnrollData }: any) => {
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -17,7 +19,6 @@ const EnrollForm = () => {
   });
 
   const id = window.location.pathname.split("/")[2];
-  console.log(id);
   const [enrollCourse, { isLoading }] = useEnrollCourseMutation();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,39 +59,27 @@ const EnrollForm = () => {
     return valid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Form submitted:", formData);
+    if (!validateForm()) return;
+    const res = await handleAsyncWithToast(async () => {
+      return enrollCourse({ data: formData, id });
+    });
 
-      try {
-        enrollCourse({ data: formData, id })
-          .unwrap()
-          .then((response) => {
-            toast.success(response?.message);
-            setFormData({
-              name: "",
-              phoneNumber: "",
-            });
-          })
-          .catch((error) => {
-            toast.error(error?.data?.message);
-            console.error("Enrollment failed:", error);
-          });
-      } catch (error) {
-        console.error("Error during enrollment:", error);
-      }
-      console.log("Form data is valid, ready to submit:", formData);
+    if (res?.data?.success) {
+      console.log(res);
+      setEnrollData(res?.data);
+      setFormData({
+        name: "",
+        phoneNumber: "",
+      });
     }
   };
 
   return (
     <div className="w-full">
       <div className="mb-6">
-        <h2
-          className="text-3xl font-montserrat font-semibold mb-6 font-montserrat"
-          //   className="text-2xl font-bold mb-2"
-        >
+        <h2 className="text-3xl font-montserrat font-semibold mb-6 font-montserrat">
           Enroll Now
         </h2>
         <p className="mb-4">
@@ -125,7 +114,7 @@ const EnrollForm = () => {
           </Label>
           <Input
             id="mobile"
-            name="phoneNumber" // ✅ match the state key here
+            name="phoneNumber"
             value={formData.phoneNumber}
             onChange={handleInputChange}
             placeholder="+880 1678901747"
@@ -142,7 +131,7 @@ const EnrollForm = () => {
           className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-md transition-colors disabled:opacity-50"
           disabled={Object.values(errors).some(Boolean)}
         >
-          Submit to verify
+          {isLoading ? <ButtonLoading /> : "Submit to verify"}
         </button>
       </form>
     </div>

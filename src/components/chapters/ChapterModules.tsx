@@ -3,73 +3,73 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { CiLock } from "react-icons/ci";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import img from "@/assets/thumbnail.png";
 // Dummy data for chapters
-const chaptersData = [
-  {
-    id: 1,
-    title: "Cell Structure and Function",
-    objective:
-      "Understanding the basic unit of life: Cells, and the various organelles involved in cell activities.",
-    instructor: "Saifur Rahman",
-    hasImage: true,
-    imageUrl: img,
-    imageAlt: "Cell Structure Diagram",
-    isLocked: false,
-    warningText: "Complete each nine steps to unlock your Next Chapter 2!",
-  },
-  {
-    id: 2,
-    title: "Transport in Plants and Animals",
-    objective:
-      "The processes of transpiration, osmosis, and circulation in both plants and animals.",
-    instructor: "Saifur Rahman",
-    hasImage: false,
-    isLocked: true,
-    warningText: "",
-  },
-  {
-    id: 3,
-    title: "Human Physiology",
-    objective:
-      "Detailed study of the human body, including the digestive, respiratory, circulatory, excretory, and nervous systems.",
-    instructor: "Saifur Rahman",
-    hasImage: false,
-    isLocked: true,
-    warningText: "",
-  },
-  {
-    id: 4,
-    title: "Genetics and Heredity",
-    objective:
-      "Understanding the principles of inheritance, genetic variation, and Mendelian genetics.",
-    instructor: "Saifur Rahman",
-    hasImage: false,
-    isLocked: true,
-    warningText: "",
-  },
-  {
-    id: 5,
-    title: "Evolution and Natural Selection",
-    objective:
-      "Exploring Darwin's theory of evolution and the mechanisms of natural selection.",
-    instructor: "Saifur Rahman",
-    hasImage: false,
-    isLocked: true,
-    warningText: "",
-  },
-];
+// const chaptersData = [
+//   {
+//     id: 1,
+//     title: "Cell Structure and Function",
+//     objective:
+//       "Understanding the basic unit of life: Cells, and the various organelles involved in cell activities.",
+//     instructor: "Saifur Rahman",
+//     hasImage: true,
+//     imageUrl: img,
+//     imageAlt: "Cell Structure Diagram",
+//     isLocked: false,
+//     warningText: "Complete each nine steps to unlock your Next Chapter 2!",
+//   },
+//   {
+//     id: 2,
+//     title: "Transport in Plants and Animals",
+//     objective:
+//       "The processes of transpiration, osmosis, and circulation in both plants and animals.",
+//     instructor: "Saifur Rahman",
+//     hasImage: false,
+//     isLocked: true,
+//     warningText: "",
+//   },
+//   {
+//     id: 3,
+//     title: "Human Physiology",
+//     objective:
+//       "Detailed study of the human body, including the digestive, respiratory, circulatory, excretory, and nervous systems.",
+//     instructor: "Saifur Rahman",
+//     hasImage: false,
+//     isLocked: true,
+//     warningText: "",
+//   },
+//   {
+//     id: 4,
+//     title: "Genetics and Heredity",
+//     objective:
+//       "Understanding the principles of inheritance, genetic variation, and Mendelian genetics.",
+//     instructor: "Saifur Rahman",
+//     hasImage: false,
+//     isLocked: true,
+//     warningText: "",
+//   },
+//   {
+//     id: 5,
+//     title: "Evolution and Natural Selection",
+//     objective:
+//       "Exploring Darwin's theory of evolution and the mechanisms of natural selection.",
+//     instructor: "Saifur Rahman",
+//     hasImage: false,
+//     isLocked: true,
+//     warningText: "",
+//   },
+// ];
 
 const ChapterModules = ({ chapters }: { chapters: any }) => {
-  console.log(chapters);
+  console.log("chapters", chapters);
   const [expandedChapter, setExpandedChapter] = useState(1);
   const [completedChapters, setCompletedChapters] = useState<number[]>([1]); //
 
   const toggleChapter = (chapterId: number) => {
     // Only allow toggle if chapter is not locked
-    const chapter = chaptersData.find((c) => c.id === chapterId);
+    const chapter = chapters?.find((c: any) => c?.id === chapterId);
     if (
       !chapter ||
       (chapterId !== 1 && !completedChapters.includes(chapterId - 1))
@@ -108,9 +108,10 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
 
       {/* Chapter modules content */}
       <div className="mt-8 space-y-4">
-        {chaptersData.map((chapter) => {
+        {chapters?.chapters?.map((chapter: any) => {
           const isUnlocked =
-            chapter.id === 1 || completedChapters.includes(chapter.id - 1);
+            chapter.sLNumber === 1 ||
+            completedChapters.includes(chapter.id - 1);
           const isActive = expandedChapter === chapter.id;
           const isCompleted = completedChapters.includes(chapter.id);
 
@@ -139,7 +140,7 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <h2 className="font-montserrat text-xl font-semibold">
-                      Chapter {chapter.id}: {chapter.title}
+                      Chapter {chapter?.sLNumber}: {chapter?.chapterName}
                     </h2>
                     {isCompleted && (
                       <span className="flex items-center gap-1 text-sm text-green-600">
@@ -150,25 +151,12 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                   </div>
                   <p className="text-gray-600 text-sm">
                     <span className="font-medium">Objective:</span>{" "}
-                    {chapter.objective}
+                    {chapter?.chapterDescription}
                   </p>
                 </div>
                 <div className="flex items-center">
                   {!isUnlocked && (
-                    <svg
-                      className="w-5 h-5 text-gray-400 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                    <CiLock size={20} className="text-gray-400" />
                   )}
                   {expandedChapter === chapter.id ? (
                     <ChevronUp className="text-secondary" />
@@ -180,7 +168,7 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                 </div>
               </motion.div>
 
-              <AnimatePresence>
+              {/* <AnimatePresence>
                 {expandedChapter === chapter.id && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
@@ -199,8 +187,8 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                             className="mt-4 bg-gray-200 rounded-lg p-4 flex justify-center"
                           >
                             <Image
-                              src={chapter.imageUrl!}
-                              alt={chapter.imageAlt!}
+                              src={chapter?.thumbnail!}
+                              alt={chapter?.chapterName!}
                               width={1000}
                               height={1000}
                               className="w-[875px] h-[542px]  object-contain"
@@ -222,7 +210,7 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
                     </Link>
                   </motion.div>
                 )}
-              </AnimatePresence>
+              </AnimatePresence> */}
             </motion.div>
           );
         })}

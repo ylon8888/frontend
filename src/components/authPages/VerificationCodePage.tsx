@@ -8,6 +8,7 @@ import { verifyToken } from "@/utils/verifyToken";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { JwtPayload } from "jwt-decode";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 interface DecodedUser extends JwtPayload {
   role: string; // Add role explicitly
@@ -19,7 +20,7 @@ const VerificationCodePage = () => {
   const searchParams = useSearchParams();
   const email =
     searchParams.get("email") || searchParams.get("reset-email") || ""; // Get email from query params, default to empty string if not found
-  const [otp] = useOtpMutation();
+  const [otp, { isLoading }] = useOtpMutation();
   const router = useRouter();
 
   const dispatch = useAppDispatch();
@@ -156,7 +157,7 @@ const VerificationCodePage = () => {
             onClick={handleSubmit}
             className="mx-auto block text-center w-full bg-secondary hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-secondary focus:ring-offset-2"
           >
-            Submit
+            {isLoading ? <ButtonLoading /> : "Submit"}
           </button>
         </div>
       </div>

@@ -134,7 +134,14 @@ const Navbar = () => {
                       {link.name}
                     </Link>
                   ))}
-                  {user?.id ? (
+                  {user ? (
+                    <button
+                      onClick={handleLogout}
+                      className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
+                    >
+                      Logout
+                    </button>
+                  ) : (
                     <div className="hidden lg:flex items-center space-x-8">
                       <Link
                         href="/login"
@@ -144,13 +151,6 @@ const Navbar = () => {
                         Login Now
                       </Link>
                     </div>
-                  ) : (
-                    <button
-                      onClick={handleLogout}
-                      className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
-                    >
-                      Logout
-                    </button>
                   )}
                 </div>
               </motion.div>
@@ -193,7 +193,14 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
 
-            {user?.id ? (
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
+              >
+                Logout
+              </button>
+            ) : (
               <div className="hidden lg:flex items-center space-x-8">
                 <Link
                   href="/login"
@@ -202,13 +209,6 @@ const Navbar = () => {
                   Login Now
                 </Link>
               </div>
-            ) : (
-              <button
-                onClick={handleLogout}
-                className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
-              >
-                Logout
-              </button>
             )}
           </div>
 

@@ -1,13 +1,34 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Modal from "../shared/Testimonials/SharedModal";
 import EnrollForm from "./EnrollForm";
 import Link from "next/link";
+import EnrollOtp from "./EnrollOtp";
+
+type EnrollData = {
+  success?: boolean;
+  // add other properties as needed
+};
 
 const EnrollCard = ({ courseDetail }: any) => {
+  const [enrollFormOpen, setEnrollFormOpen] = useState(false);
+  const [otpOpen, setOtpOpen] = useState(false);
+  const [enrollData, setEnrollData] = useState<{ success?: boolean }>({});
+
+  // Simulate enrollData success changing (replace with your actual logic)
+  // For example, this could come from a form submission handler that sets enrollData
+  useEffect(() => {
+    if (enrollData?.success === true) {
+      setEnrollFormOpen(false);
+      setOtpOpen(true);
+    }
+  }, [enrollData]);
   const id = window.location.pathname.split("/")[2];
-  console.log(courseDetail);
+  // console.log(courseDetail);
+
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
       <Image
@@ -47,9 +68,22 @@ const EnrollCard = ({ courseDetail }: any) => {
               Enroll Now
             </button>
           }
+          open={enrollFormOpen}
+          onOpenChange={setEnrollFormOpen}
+          title="Enroll Form"
         >
-          <EnrollForm />
+          <EnrollForm setEnrollData={setEnrollData} />
         </Modal>
+
+        <Modal
+          trigger={null} // no trigger, controlled programmatically
+          open={otpOpen}
+          onOpenChange={setOtpOpen}
+          title="Enter OTP"
+        >
+          <EnrollOtp />
+        </Modal>
+
         <Link
           href={`${id}/chapters`}
           className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"

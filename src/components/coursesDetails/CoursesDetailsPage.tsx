@@ -42,6 +42,9 @@ const CoursesDetailsPage = () => {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+  if (isLoading) {
+    return <Loading />;
+  }
 
   if (!courseDetail) {
     return (
@@ -49,9 +52,6 @@ const CoursesDetailsPage = () => {
         No Data Found
       </div>
     );
-  }
-  if (isLoading) {
-    return <Loading />;
   }
 
   return (

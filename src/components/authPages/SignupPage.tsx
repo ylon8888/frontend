@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRegisterMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +19,7 @@ const SignupPage = () => {
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-  const [register] = useRegisterMutation();
+  const [register, { isLoading }] = useRegisterMutation();
   const router = useRouter();
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -237,7 +238,7 @@ const SignupPage = () => {
             onClick={handleSubmit}
             className="w-full bg-secondary hover:bg-secondary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-secondary focus:ring-offset-2"
           >
-            Sign Up
+            {isLoading ? <ButtonLoading /> : "Sign Up"}
           </button>
         </div>
 

@@ -49,6 +49,16 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
+    verifyEnroll: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/course/verify-enrollment`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
   }),
 });
 
@@ -56,5 +66,6 @@ export const {
   useGetSingleCourseQuery,
   useGetSingleCourseDetailsQuery,
   useEnrollCourseMutation,
+  useVerifyEnrollMutation,
   useGetChaptersQuery,
 } = courseApi;

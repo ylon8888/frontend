@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 interface T_Response {
   success: boolean;
@@ -14,7 +15,7 @@ interface T_Response {
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState("");
-  const [forgetPassword] = useForgotPasswordMutation();
+  const [forgetPassword, { isLoading }] = useForgotPasswordMutation();
   const router = useRouter();
 
   const handleEmailChange = (e: any) => {
@@ -100,7 +101,7 @@ const ForgetPasswordPage = () => {
             onClick={handleSubmit}
             className="mx-auto block text-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Send Code
+            {isLoading ? <ButtonLoading /> : "Send Code"}
           </button>
         </div>
       </div>

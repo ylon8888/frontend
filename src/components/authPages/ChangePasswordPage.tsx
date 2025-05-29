@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 const ChangePasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -14,7 +15,7 @@ const ChangePasswordPage = () => {
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-  const [resetPassword] = useResetPasswordMutation();
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const router = useRouter();
@@ -187,7 +188,7 @@ const ChangePasswordPage = () => {
             onClick={handleResetPassword}
             className="mx-auto block text-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Reset Password
+            {isLoading ? <ButtonLoading /> : "Reset Password"}
           </button>
         </div>
       </div>
