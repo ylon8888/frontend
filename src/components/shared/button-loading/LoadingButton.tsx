@@ -1,7 +1,7 @@
 export const ButtonLoading: React.FC = () => {
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center gap-4">
         {" "}
         <svg
           className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"

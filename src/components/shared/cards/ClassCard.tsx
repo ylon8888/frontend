@@ -46,7 +46,10 @@ const ClassCard = ({
           <h3 className="text-2xl font-semibold mb-1 font-montserrat ">
             {subject}
           </h3>
-          <p className="mb-2">{description}</p>
+          <p
+            className="mb-2"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
           {/* Display number of chapters */}
         </div>
       </Link>

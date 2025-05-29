@@ -101,9 +101,12 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
         <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-gray-900">
           {chapters?.subject?.subjectName}
         </h1>
-        <p className="text-gray-600 leading-relaxed">
-          {chapters?.subject?.subjectDescription}
-        </p>
+        <p
+          className="text-gray-600 leading-relaxed"
+          dangerouslySetInnerHTML={{
+            __html: chapters?.subject?.subjectDescription,
+          }}
+        />
       </div>
 
       {/* Chapter modules content */}

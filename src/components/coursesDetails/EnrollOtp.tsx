@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useVerifyEnrollMutation } from "@/redux/features/course/course";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { ButtonLoading } from "../shared/button-loading/LoadingButton";
+import { useRouter } from "next/navigation";
 
 const EnrollOtp = () => {
   const [isPasting, setIsPasting] = useState(false);
@@ -19,7 +20,8 @@ const EnrollOtp = () => {
     otp: "",
   });
 
-  const id = window.location.pathname.split("/")[2];
+  const subjectId = window.location.pathname.split("/")[2];
+  const router = useRouter();
   const [enrollCourse, { isLoading }] = useVerifyEnrollMutation();
 
   const handleDigitChange = (index: number, value: string) => {
@@ -83,18 +85,19 @@ const EnrollOtp = () => {
 
     const otp = otpDigits.join("");
     const res = await handleAsyncWithToast(async () => {
-      return enrollCourse({ otp, id });
+      return enrollCourse({ otp, subjectId });
     });
 
-    if (res?.success) {
+    if (res?.data?.success) {
       setOtpDigits(["", "", "", "", "", ""]);
+      router.push(`/courses/${subjectId}/chapters`);
     }
   };
 
   const handleResendCode = async () => {
     await handleAsyncWithToast(async () => {
       // You might need to adjust this based on your API
-      return enrollCourse({ data: { resend: true }, id });
+      return enrollCourse({ data: { resend: true }, subjectId });
     });
   };
 
