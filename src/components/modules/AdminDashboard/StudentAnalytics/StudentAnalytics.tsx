@@ -56,10 +56,7 @@ const StudentAnalyticsComponent = () => {
           ) : (
             Object.keys(baseData).length > 0 && (
               <LineChart
-                correctQuiz={baseData?.courseEnroll?.correctQuiz}
-                wrongQuiz={baseData?.courseEnroll?.wrongQuiz}
-                correctRate={baseData?.courseEnroll?.correctRate}
-                practicedQuiz={baseData?.courseEnroll?.quizPracticed}
+                performanceData={baseData?.courseEnroll?.performanceData}
               />
             )
           )}
@@ -104,7 +101,16 @@ const StudentAnalyticsComponent = () => {
                       quizResult?.stepEightQuiz?.optionC,
                       quizResult?.stepEightQuiz?.optionD,
                     ],
-                    selectedAnswer: quizResult?.selectedOption === "OptionA" ? 0 : quizResult?.selectedOption === "OptionB" ? 1 : quizResult?.selectedOption === "OptionC" ? 2 : quizResult?.selectedOption === "OptionD" ? 3 : null,
+                    selectedAnswer:
+                      quizResult?.selectedOption === 'OptionA'
+                        ? 0
+                        : quizResult?.selectedOption === 'OptionB'
+                        ? 1
+                        : quizResult?.selectedOption === 'OptionC'
+                        ? 2
+                        : quizResult?.selectedOption === 'OptionD'
+                        ? 3
+                        : null,
                   })
                 )}
                 defaultOpen={true}

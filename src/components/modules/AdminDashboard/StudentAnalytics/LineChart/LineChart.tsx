@@ -12,24 +12,7 @@ import {
   YAxis,
 } from 'recharts';
 
-const LineChart = ({
-  correctQuiz,
-  wrongQuiz,
-  correctRate,
-  practicedQuiz,
-}: {
-  correctQuiz: number;
-  wrongQuiz: number;
-  correctRate: number;
-  practicedQuiz: number;
-}) => {
-  const performanceData = [
-    { name: 'Week 1', correct: correctQuiz * 0.2, wrong: wrongQuiz * 0.2 },
-    { name: 'Week 2', correct: correctQuiz * 0.4, wrong: wrongQuiz * 0.4 },
-    { name: 'Week 3', correct: correctQuiz * 0.6, wrong: wrongQuiz * 0.6 },
-    { name: 'Week 4', correct: correctQuiz, wrong: wrongQuiz },
-  ];
-
+const LineChart = ({ performanceData }: { performanceData: any[] }) => {
   return (
     <div className="w-full h-fit">
       <div className="flex justify-between items-center mb-6">

@@ -126,7 +126,7 @@ const Stats = ({ apiResponse }: { apiResponse: any }) => {
     return [
       {
         id: 1,
-        value: `${apiData.courseEnroll.correctRate}%`,
+        value: `${apiData.courseEnroll.correctRate ?? 0}%`,
         label: 'Correct Answer Rate',
         icon: 'rate',
       },
