@@ -74,8 +74,8 @@ const StepTwo = () => {
               <Play className="w-12 h-12 text-white bg-secondary/70 rounded-full p-3" />
             </div>
           </div>
-          <h3 className="mt-2 text-lg font-semibold font-montserrat">
-            {stepTwoData?.title}
+          <h3 className="mt-2 text-xl font-semibold font-montserrat">
+            {stepTwoData?.podcastName}
           </h3>
         </div>
       </div>

@@ -10,7 +10,6 @@ const StepThree = () => {
   const id = window.location.pathname.split("/")[4];
   const { data } = useGetCoursesOfChapterQuery(id);
   const stepThreeData = data?.data?.chapters?.[0]?.stepThree;
-  console.log(stepThreeData, "stepThreeData");
 
   // Function to play video
   const playVideo = () => setActiveVideoUrl(stepThreeData?.stepVideo);

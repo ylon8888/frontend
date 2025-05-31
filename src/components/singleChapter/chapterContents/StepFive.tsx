@@ -3,17 +3,21 @@
 import { useState } from "react";
 import { Play, X } from "lucide-react";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/step-accordian";
 
 const StepFive = () => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
-
   const id = window.location.pathname.split("/")[4];
   const { data } = useGetCoursesOfChapterQuery(id);
-  const stepFourData = data?.data?.chapters?.[0]?.stepFour;
-  console.log(stepFourData, "stepFourData");
-
+  const stepFiveData = data?.data?.chapters?.[0]?.stepFive;
+  console.log(stepFiveData, "stepFiveData");
   // Function to play video
-  const playVideo = () => setActiveVideoUrl(stepFourData?.stepVideo);
+  const playVideo = () => setActiveVideoUrl(stepFiveData?.stepVideo);
 
   const closeVideo = () => {
     setActiveVideoUrl(null);
@@ -44,11 +48,34 @@ const StepFive = () => {
       </div>
 
       {/* Document Content */}
-      <div className="bg-white rounded-lg p-8 border border-primary shadow-xl">
+      <div className="bg-white rounded-lg p-8 border border-primary shadow-xl space-y-6">
         {/* Content Sections */}
-        <div
-          dangerouslySetInnerHTML={{ __html: stepFourData?.stepDescription }}
-        />
+        <h2 className="font-semibold text-2xl font-montserrat">
+          Question Answer
+        </h2>
+
+        <div className="bg-white overflow-hidden">
+          <Accordion type="multiple" className="w-full space-y-3">
+            {stepFiveData?.questionAnswer.map((item: any, index: number) => (
+              <AccordionItem
+                key={`qa-${index}`}
+                value={`qa-${index}`}
+                className="border"
+              >
+                <AccordionTrigger className="px-6 py-6 text-left transition-colors duration-200">
+                  <span className="text-gray-800">{item?.question}</span>
+                </AccordionTrigger>
+                <AccordionContent className="rounded-b-2xl bg-orange-100/30 px-4 py-2 pb-6">
+                  <div className="border-gray-50">
+                    <p className="text-gray-700 leading-relaxed mt-3">
+                      {item?.answer}
+                    </p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </div>
 
       {/* YouTube Player Modal */}
