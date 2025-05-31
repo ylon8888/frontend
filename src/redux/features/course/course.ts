@@ -46,6 +46,15 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    giveChapterFeedback: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/course/course-review/${id}`,
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
     enrollCourse: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -74,6 +83,7 @@ export const {
   useGetSingleCourseDetailsQuery,
   useGetChaptersQuery,
   useGetCoursesOfChapterQuery,
+  useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,
 } = courseApi;
