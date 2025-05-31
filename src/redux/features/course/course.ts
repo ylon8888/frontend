@@ -46,6 +46,24 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getQuizByType: builder.query({
+      query: (id) => ({
+        url: `/step/quiz-question/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    submitQuiz: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/step/submit-quiz/${id}`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
+
     giveChapterFeedback: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -83,6 +101,8 @@ export const {
   useGetSingleCourseDetailsQuery,
   useGetChaptersQuery,
   useGetCoursesOfChapterQuery,
+  useGetQuizByTypeQuery,
+  useSubmitQuizMutation,
   useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,

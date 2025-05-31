@@ -60,7 +60,11 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       if (data?.success) {
         const user = (api.getState() as RootState).auth.user;
         api.dispatch(
-          setUser({ user, token: data.data.token, refresh_token: refreshToken })
+          setUser({
+            user,
+            access_token: data.data.accessToken,
+            refresh_token: refreshToken,
+          })
         );
 
         // Retry the original query with the new token
