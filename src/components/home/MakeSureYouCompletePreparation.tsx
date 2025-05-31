@@ -84,11 +84,11 @@ const MakeSureYouCompletePreparation = () => {
             <TabsList className="grid grid-cols-4 w-full max-w-md">
               {allClass.map((classItem: any) => (
                 <TabsTrigger
-                  key={classItem.id}
-                  value={classItem.className}
+                  key={classItem?.id}
+                  value={classItem?.className}
                   className="data-[state=active]:bg-gray-800 border data-[state=active]:text-white uppercase"
                 >
-                  {classItem.className}
+                  {classItem?.className}
                 </TabsTrigger>
               ))}
             </TabsList>

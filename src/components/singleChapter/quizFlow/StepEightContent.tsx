@@ -10,12 +10,14 @@ type StepEightContentProps = {
   selectedAnswers: Record<string, string>;
   handleAnswerChange: (questionId: string, answer: string) => void;
   handleSubmit: (quizId: string) => void;
+  loading: boolean;
 };
 
 const StepEightContent: React.FC<StepEightContentProps> = ({
   selectedAnswers,
   handleAnswerChange,
   handleSubmit,
+  loading,
 }) => {
   const id = window.location.pathname.split("/")[4];
   const { data } = useGetCoursesOfChapterQuery(id);
@@ -29,13 +31,9 @@ const StepEightContent: React.FC<StepEightContentProps> = ({
   return (
     <div>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList>
+        <TabsList className="bg-white border-1 rounded-md mb-4">
           {stepEightData.map((item: any) => (
-            <TabsTrigger
-              key={item.id}
-              value={item.id}
-              className="flex items-center gap-2"
-            >
+            <TabsTrigger key={item.id} value={item.id} className="">
               {item.questionType}
             </TabsTrigger>
           ))}
@@ -47,6 +45,7 @@ const StepEightContent: React.FC<StepEightContentProps> = ({
               selectedAnswers={selectedAnswers}
               handleAnswerChange={handleAnswerChange}
               handleSubmit={() => handleSubmit(item.id)}
+              loading={loading}
             />
           </TabsContent>
         ))}

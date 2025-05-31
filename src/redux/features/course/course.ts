@@ -63,6 +63,13 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
+    getQuizResults: builder.query({
+      query: (id) => ({
+        url: `/step/quiz-result/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
 
     giveChapterFeedback: builder.mutation({
       query: ({ data, id }) => {
@@ -103,6 +110,7 @@ export const {
   useGetCoursesOfChapterQuery,
   useGetQuizByTypeQuery,
   useSubmitQuizMutation,
+  useGetQuizResultsQuery,
   useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,

@@ -2,12 +2,14 @@
 import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useGetQuizByTypeQuery } from "@/redux/features/course/course";
+import { ButtonLoading } from "@/components/shared/button-loading/LoadingButton";
 
 type QuizQuestionProps = {
   quizId: string;
   selectedAnswers: Record<string, string>;
   handleAnswerChange: (questionId: string, option: string) => void;
   handleSubmit: () => void;
+  loading: boolean;
 };
 
 const QuizQuestions: React.FC<QuizQuestionProps> = ({
@@ -15,6 +17,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
   selectedAnswers,
   handleAnswerChange,
   handleSubmit,
+  loading,
 }) => {
   const { data: quiz, isLoading } = useGetQuizByTypeQuery(quizId);
 
@@ -95,7 +98,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
           disabled={!hasAnsweredQuestions}
           className="px-8 py-2 bg-secondary text-primary-foreground rounded-md hover:bg-secondary/90 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          SUBMIT NOW
+          {loading ? <ButtonLoading /> : "Submit Answers"}
         </button>
       </div>
     </div>
