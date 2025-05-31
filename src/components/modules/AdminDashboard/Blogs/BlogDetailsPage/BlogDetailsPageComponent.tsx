@@ -24,11 +24,7 @@ const BlogDetailsPageComponent = ({ blogId }: { blogId: string }) => {
       <div className="relative w-full h-[400px] mb-8 rounded-lg overflow-hidden">
         {blog?.image ? (
           <Image
-            src={
-              blog?.image?.includes('localhost')
-                ? blog?.image?.replace('localhost', '10.0.10.33')
-                : blog?.image
-            }
+            src={blog.image}
             alt={blog?.title}
             fill
             className="object-cover"

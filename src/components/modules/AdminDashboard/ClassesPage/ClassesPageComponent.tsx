@@ -13,6 +13,9 @@ export type TClass = {
   isDeleted: boolean;
   createdAt: string; // or Date if you're converting it
   updatedAt: string; // or Date
+  totalSubjects: number;
+  totalChapters: number;
+  lessons: number;
 };
 
 const ClassesPageComponent = () => {
@@ -122,17 +125,17 @@ const ClassesPageComponent = () => {
                     </svg>
                   </div>
 
-                  {/* <div className="flex flex-col items-start gap-1.5 w-full">
+                  <div className="flex flex-col items-start gap-1.5 w-full">
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Subject - {classItem.subjects}
+                      Total Subject - {classItem.totalSubjects}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Chapter - {classItem.chapters}
+                      Total Chapter - {classItem.totalChapters}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
                       Total Lesson - {classItem.lessons}
                     </p>
-                  </div> */}
+                  </div>
                 </div>
               </div>
             </div>

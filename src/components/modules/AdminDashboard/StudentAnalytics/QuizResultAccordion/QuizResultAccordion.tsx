@@ -47,7 +47,7 @@ export default function QuizResultAccordion({
               isOpen ? "border-orange-200 text-orange-500" : "border-gray-200 text-gray-700"
             } rounded-md flex items-center space-x-2 hover:bg-gray-50 transition-colors`}
           >
-            <span>See Wrong Answer</span>
+            <span>See Quiz Answer</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}

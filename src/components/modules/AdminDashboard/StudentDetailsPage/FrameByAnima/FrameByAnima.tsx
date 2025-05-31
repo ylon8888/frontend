@@ -87,11 +87,28 @@ export const FrameByAnima = ({ studentData }: { studentData: UserProfile }) => {
                 </span>
                 <div className="relative w-full flex justify-center md:justify-start">
                   <div className="w-[180px] h-[180px] md:w-[234px] md:h-[234px] rounded-full overflow-hidden">
-                    <img
-                      src={studentData?.studentProfiles?.profileImage}
-                      alt="Profile picture"
-                      className="w-full h-full object-cover"
-                    />
+                    {studentData?.studentProfiles?.profileImage ? (
+                      <img
+                        src={studentData?.studentProfiles?.profileImage}
+                        alt="Profile picture"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 animate-pulse">
+                        <svg
+                          className="w-16 h-16 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 64 64"
+                        >
+                          <circle cx="32" cy="24" r="16" strokeWidth="4" />
+                          <path
+                            d="M8 56c0-8.837 10.745-16 24-16s24 7.163 24 16"
+                            strokeWidth="4"
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

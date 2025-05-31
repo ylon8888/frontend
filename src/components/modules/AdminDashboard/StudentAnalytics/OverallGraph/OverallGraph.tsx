@@ -1,38 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { ChevronDown } from 'lucide-react';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
 
-// Fake data that matches the proportions in the image
-const data = [
-  { name: 'Class Time', value: 245, color: '#0b7077' }, // Teal color
-  { name: 'Correct Quiz', value: 130, color: '#fd661f' }, // Orange color
-  { name: 'Wrong Quiz', value: 45, color: '#82A5A8' }, // Gray/blue color
+
+export default function OverallGraph({correctQuiz, wrongQuiz}: {correctQuiz: number, wrongQuiz: number}) {
+  const data = [
+  { name: 'Correct Quiz', value: correctQuiz, color: '#fd661f' }, // Orange color
+  { name: 'Wrong Quiz', value: wrongQuiz, color: '#82A5A8' }, // Gray/blue color
 ];
-
-// Time period options for the dropdown
-const timePeriods = [
-  'Last 7 days',
-  'Last 30 days',
-  'Last 90 days',
-  'This year',
-];
-
-export default function OverallGraph() {
-  const [selectedPeriod, setSelectedPeriod] = useState('Last 7 days');
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  // Calculate total for percentage display if needed
-  const total = data.reduce((sum, entry) => sum + entry.value, 0);
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-medium text-gray-900">
-          Learning Time Graph
+          Quiz Overall
         </h2>
-        <div className="relative">
+        {/* <div className="relative">
           <button
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-2 bg-secondary hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer"
@@ -64,10 +46,10 @@ export default function OverallGraph() {
               </ul>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
 
-      <div className="h-64">
+      <div className="h-64 sm:w-[500px]">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
@@ -78,6 +60,9 @@ export default function OverallGraph() {
               outerRadius={120}
               paddingAngle={0}
               dataKey="value"
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={entry.color} />
@@ -87,13 +72,11 @@ export default function OverallGraph() {
         </ResponsiveContainer>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mt-4 text-center">
-        {data.map((item, idx: number) => (
-          <div key={item.name} className="flex flex-col items-center">
+      <div className="grid grid-cols-2 gap-4 mt-4 text-center">
+        {data?.map((item, idx: number) => (
+          <div key={idx} className="flex flex-col items-center">
             <span className="text-3xl font-bold" style={{ color: item.color }}>
-              {idx === 0
-                ? `${Math.floor(item.value / 60)} hr ${item.value % 60} min`
-                : item.value}{' '}
+              {item.value}
             </span>
             <span className="text-sm mt-1" style={{ color: item.color }}>
               {item.name}

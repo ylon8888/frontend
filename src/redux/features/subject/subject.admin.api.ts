@@ -27,7 +27,7 @@ const subjectApi = baseApi.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: ['subject'],
+      invalidatesTags: ['subject', 'class'],
     }),
 
     updateSubject: builder.mutation({
