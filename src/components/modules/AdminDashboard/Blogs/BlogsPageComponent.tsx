@@ -126,7 +126,7 @@ const BlogsPageComponent = () => {
   }
   if (getAllBlogResponse?.data?.data?.length === 0) {
     return (
-      <div className="flex justify-center items-center h-[300px]">
+      <div className="flex justify-center flex-col items-center h-[300px]">
         <h2 className="text-2xl font-bold">No Blogs Found</h2>
         <div className="flex justify-center items-center mt-4">
           <MyButton

@@ -159,30 +159,29 @@ const Stats = () => {
   const statData: StatCardData[] = [
     {
       id: 1,
-      value: String(stats?.student),
+      value: String(stats?.student ?? 0),
       label: 'Total Students',
       icon: 'users',
     },
     {
       id: 2,
-      value: String(stats?.totalCourse),
+      value: String(stats?.totalCourse ?? 0),
       label: 'Total Courses',
       icon: 'graduationCap',
     },
     {
       id: 3,
-      value: String(stats?.newEnroll),
+      value: String(stats?.newEnroll ?? 0),
       label: 'New Enrollments',
       icon: 'userPlus',
     },
     {
       id: 4,
-      value: `${String(stats?.correctAnswer?.toFixed(2))}%`,
+      value: `${String(stats?.correctAnswer?.toFixed(2) ?? 0)}%`,
       label: 'Correct Answer Rate',
       icon: 'lightbulb',
     },
   ];
-
 
   return (
     <div className="w-full">
@@ -200,7 +199,7 @@ const Stats = () => {
                 <div className="h-4 w-32 bg-gray-200 rounded mt-2" />
               </div>
             ))
-          : statData.map((stat) => (
+          : statData?.map((stat) => (
               <div
                 key={stat.id}
                 className="bg-white rounded-lg shadow-sm p-6 flex flex-col"
@@ -208,7 +207,7 @@ const Stats = () => {
                 <div className="flex items-center gap-3">
                   {iconMap[stat.icon]}
                   <span className="text-3xl font-bold text-gray-900">
-                    {stat.value}
+                    {stat.value ?? 'N/A'}
                   </span>
                 </div>
                 <span className="text-gray-500 mt-2 text-base">
