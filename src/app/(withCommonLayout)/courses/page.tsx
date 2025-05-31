@@ -10,7 +10,7 @@ const Courses = () => {
   return (
     <div>
       <CoursesHero />
-      <ExpectfromPodcastClasses />
+      {/*   <ExpectfromPodcastClasses /> */}
       <CoursesPage />
       <Testimonials />
       <Faq />

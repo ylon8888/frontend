@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import bg from "@/assets/courses/hero-bg.png";
 
-const CourseDetailsHero = () => {
+const CourseDetailsHero = ({ courseDetail }: any) => {
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -50,21 +50,25 @@ const CourseDetailsHero = () => {
             animate="visible"
             className="text-white col-span-2"
           >
-            <motion.p
+            {/* <motion.p
               variants={itemVariants}
               className="mb-4 text-secondary max-w-3xl font-montserrat font-semibold"
             >
               Class Name
-            </motion.p>
+            </motion.p> */}
             <motion.h1
               variants={itemVariants}
               className="text-4xl lg:text-6xl font-semibold font-montserrat mb-6 "
             >
-              Science - Biology
+              {courseDetail?.data?.course?.subjectName}
             </motion.h1>
-            <motion.p variants={itemVariants} className="mb-8 max-w-3xl">
-              Objective of the course
-            </motion.p>
+            <motion.p
+              variants={itemVariants}
+              className="mb-8 max-w-3xl"
+              dangerouslySetInnerHTML={{
+                __html: courseDetail?.data?.course?.subjectDescription,
+              }}
+            />
           </motion.div>
         </div>
       </div>

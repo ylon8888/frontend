@@ -1,11 +1,34 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Modal from "../shared/Testimonials/SharedModal";
 import EnrollForm from "./EnrollForm";
 import Link from "next/link";
+import EnrollOtp from "./EnrollOtp";
 
-const EnrollCard = () => {
+type EnrollData = {
+  success?: boolean;
+  // add other properties as needed
+};
+
+const EnrollCard = ({ courseDetail }: any) => {
+  const [enrollFormOpen, setEnrollFormOpen] = useState(false);
+  const [otpOpen, setOtpOpen] = useState(false);
+  const [enrollData, setEnrollData] = useState<{ success?: boolean }>({});
+
+  // Simulate enrollData success changing (replace with your actual logic)
+  // For example, this could come from a form submission handler that sets enrollData
+  useEffect(() => {
+    if (enrollData?.success === true) {
+      setEnrollFormOpen(false);
+      setOtpOpen(true);
+    }
+  }, [enrollData]);
+  const id = window.location.pathname.split("/")[2];
+  // console.log(courseDetail);
+
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
       <Image
@@ -17,7 +40,7 @@ const EnrollCard = () => {
       />
 
       <h2 className="text-3xl font-montserrat font-medium mb-2">
-        Science - Biology
+        {courseDetail?.data?.course?.subjectName}
       </h2>
 
       <div className="flex items-center gap-5 mb-4">
@@ -25,12 +48,16 @@ const EnrollCard = () => {
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              className="w-4 h-4 mr-1 fill-yellow-400 text-yellow-400"
+              className={`w-4 h-4 mr-1 ${
+                i < Math.round(courseDetail?.data?.averageRating || 0)
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "fill-gray-300 text-gray-300"
+              }`}
             />
           ))}
         </div>
-        <p className=" text-sm">
-          5.0 Star <span className="text-gray-600">(150 Review)</span>
+        <p className="text-sm">
+          {courseDetail?.data?.averageRating?.toFixed(1)} Rating
         </p>
       </div>
 
@@ -41,11 +68,24 @@ const EnrollCard = () => {
               Enroll Now
             </button>
           }
+          open={enrollFormOpen}
+          onOpenChange={setEnrollFormOpen}
+          title="Enroll Form"
         >
-          <EnrollForm />
+          <EnrollForm setEnrollData={setEnrollData} />
         </Modal>
+
+        <Modal
+          trigger={null} // no trigger, controlled programmatically
+          open={otpOpen}
+          onOpenChange={setOtpOpen}
+          title="Enter OTP"
+        >
+          <EnrollOtp />
+        </Modal>
+
         <Link
-          href={`${1}/chapters`}
+          href={`${id}/chapters`}
           className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"
         >
           View Course
@@ -55,7 +95,7 @@ const EnrollCard = () => {
       <div className="space-y-3">
         <div className="flex items-center ">
           <span className="text-secondary mr-2">►</span>
-          Total 10 Chapter
+          Total {courseDetail?.data?.chapterCount} Chapter
         </div>
         <div className="flex items-center ">
           <span className="text-secondary mr-2">►</span>

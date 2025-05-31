@@ -10,49 +10,39 @@ export const courseData = {
   steps: [
     {
       number: 1,
-      title: "Watch the Video - Photosynthesis and the Carbon Cycle",
-      duration: "15 mins",
+      title: "Watch the Video",
     },
     {
       number: 2,
-      title: "Listen to the Podcast - Carbon Cycle & Climate Change",
-      duration: "20 mins",
+      title: "Listen to the Podcast",
     },
     {
       number: 3,
-      title:
-        "Read the Briefing Document - Photosynthesis, Carbon Cycle, and Climate Change",
-      duration: "25 mins",
+      title: "Read the Briefing Document",
     },
     {
       number: 4,
-      title: "Watch the Video - Photosynthesis and Plant Biology",
-      duration: "18 mins",
+      title: "Watch the Video",
     },
     {
       number: 5,
       title: "Quiz - Test Your Knowledge",
-      duration: "10 mins",
     },
     {
       number: 6,
       title: "Review Key Terms",
-      duration: "15 mins",
     },
     {
       number: 7,
-      title: "Watch the Story - Impact of Photosynthesis and the Carbon Cycle",
-      duration: "12 mins",
+      title: "Watch the Story",
     },
     {
       number: 8,
-      title: "Final Quiz - Photosynthesis, Carbon Cycle, and Climate Change",
-      duration: "20 mins",
+      title: "Final Quiz",
     },
     {
       number: 9,
       title: "Critical Thinking - Apply What You've Learned",
-      duration: "30 mins",
     },
   ],
 

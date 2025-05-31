@@ -1,16 +1,29 @@
+"use client";
+
 import React from "react";
 import ClassesSection from "./ClassesSection";
-import { classData } from "@/lib/ClassData"; // Import your class data
+// import { classData } from "@/lib/ClassData";
+import { useGetAllClassQuery } from "@/redux/features/class/class.admin.api";
+import Loading from "../ui/core/Loading/Loading";
 
 const CoursesPage = () => {
+  const { data: classData, isLoading } = useGetAllClassQuery({});
+  const classId = classData?.data?.data;
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <div>
-      {Object.keys(classData).map((grade, index) => (
+      {classId.map((classes: any) => (
         <ClassesSection
-          key={index}
+          key={classes?.id}
           title={`Make sure you complete your preparation for the examination.`}
-          badge={`Classes ${grade}`}
-          grade={grade as "9" | "10" | "11" | "12"}
+          classData={classes}
+          badge={`${classes?.className}`}
+          id={classes?.id}
+          grade={classes}
         />
       ))}
     </div>

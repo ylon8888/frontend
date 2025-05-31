@@ -2,6 +2,10 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 const ChangePasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -11,7 +15,10 @@ const ChangePasswordPage = () => {
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-
+  const [resetPassword, { isLoading }] = useResetPasswordMutation();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const router = useRouter();
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -33,7 +40,7 @@ const ChangePasswordPage = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     // Validate passwords
     if (!formData.newPassword) {
       setPasswordError("New password is required");
@@ -52,6 +59,30 @@ const ChangePasswordPage = () => {
 
     // Send only the new password to console
     console.log("Password reset with:", formData.newPassword);
+    try {
+      const formDataToSend = {
+        email: email,
+        password: formData.newPassword,
+      };
+      const response = await resetPassword(formDataToSend).unwrap();
+      if (response?.success) {
+        // Handle successful password reset logic here
+        console.log("Password reset successful:", response.message);
+        toast.success(response.message);
+        router.push("/login"); // Redirect to login page after successful reset
+      } else {
+        // Handle error from the server
+        setPasswordError(response?.message || "Failed to reset password");
+      }
+    } catch (error) {
+      const errorMessage =
+        (typeof error === "object" && error !== null && "message" in error
+          ? (error as { message?: string }).message
+          : undefined) || "An error occurred while resetting the password";
+      toast.error(errorMessage);
+      console.error("Error resetting password:", error);
+      setPasswordError("An error occurred while resetting the password");
+    }
     // Handle password reset logic here
   };
 
@@ -62,7 +93,7 @@ const ChangePasswordPage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">LOOO</span>
+              <span className="text-4xl font-bold text-teal-600">LOGO</span>
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
           </div>
@@ -157,7 +188,7 @@ const ChangePasswordPage = () => {
             onClick={handleResetPassword}
             className="mx-auto block text-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Reset Password
+            {isLoading ? <ButtonLoading /> : "Reset Password"}
           </button>
         </div>
       </div>

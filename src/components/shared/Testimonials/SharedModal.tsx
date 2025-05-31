@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import {
   Dialog,
@@ -14,11 +12,20 @@ interface ModalProps {
   title?: string;
   children: React.ReactNode;
   className?: string;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-const Modal = ({ trigger, title, children, className }: ModalProps) => {
+const Modal = ({
+  trigger,
+  title,
+  children,
+  className,
+  open,
+  onOpenChange,
+}: ModalProps) => {
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className={cn("max-h-[90vh] overflow-y-auto", className)}>
         {title && (
@@ -34,7 +41,6 @@ const Modal = ({ trigger, title, children, className }: ModalProps) => {
 
 export default Modal;
 
-// Helper function to merge class names
 function cn(...classes: (string | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }

@@ -1,22 +1,47 @@
 "use client";
 
+import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { toast } from "sonner";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
+
+interface T_Response {
+  success: boolean;
+  message: string;
+  data?: any;
+}
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState("");
+  const [forgetPassword, { isLoading }] = useForgotPasswordMutation();
+  const router = useRouter();
 
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
   };
 
-  const handleSendCode = () => {
-    console.log("Send code to email:", email);
-    // Handle send code logic here
-  };
+  // const handleSendCode = () => {
+  //   console.log("Send code to email:", email);
+  //   // Handle send code logic here
+  // };
 
-  const handleLoginClick = () => {
-    console.log("Redirect to login page");
+  const handleSubmit = async () => {
+    try {
+      const res: T_Response = await forgetPassword({ email }).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push(
+          `/verification-code?reset-email=${encodeURIComponent(email)}`
+        );
+        // Handle successful code sending logic here
+      }
+    } catch (error) {
+      console.error("Error sending code:", error);
+      toast.error("Failed to send code. Please try again.");
+      // Handle error logic here, e.g., show a toast notification
+    }
     // Handle navigation to login page
   };
 
@@ -27,7 +52,7 @@ const ForgetPasswordPage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">LOOO</span>
+              <span className="text-4xl font-bold text-teal-600">LOGO</span>
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
           </div>
@@ -63,22 +88,21 @@ const ForgetPasswordPage = () => {
           {/* Remember Password Link */}
           <div className="text-left">
             <span className="text-gray-600">Remember the password? </span>
-            <button
-              onClick={handleLoginClick}
+            <Link
+              href="/login"
               className="text-teal-600 hover:text-teal-700 font-medium transition-colors hover:underline"
             >
               Login
-            </button>
+            </Link>
           </div>
 
           {/* Send Code Button */}
-          <Link
-            href="/verification-code"
-            onClick={handleSendCode}
+          <button
+            onClick={handleSubmit}
             className="mx-auto block text-center w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
-            Send Code
-          </Link>
+            {isLoading ? <ButtonLoading /> : "Send Code"}
+          </button>
         </div>
       </div>
     </div>

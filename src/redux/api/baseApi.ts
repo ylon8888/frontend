@@ -4,19 +4,19 @@ import {
   BaseQueryFn,
   FetchArgs,
   FetchBaseQueryError,
-} from '@reduxjs/toolkit/query/react';
-import { RootState } from '../store';
-import { logout, setUser } from '../features/auth/authSlice';
-import Swal from 'sweetalert2';
+} from "@reduxjs/toolkit/query/react";
+import { RootState } from "../store";
+import { logout, setUser } from "../features/auth/authSlice";
+import Swal from "sweetalert2";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
-  credentials: 'include',
+  credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const access_token = (getState() as RootState).auth.access_token;
-    headers.set('accept', 'application/json');
+    headers.set("accept", "application/json");
     if (access_token) {
-      headers.set('authorization', `${access_token}`);
+      headers.set("authorization", `${access_token}`);
     }
     return headers;
   },
@@ -47,10 +47,10 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}refresh-token`,
         {
-          method: 'POST',
-          credentials: 'include',
+          method: "POST",
+          credentials: "include",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             authorization: `${refreshToken}`,
           },
         }
@@ -67,12 +67,12 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         result = await baseQuery(args, api, extraOptions);
       } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Session Expired',
-          text: 'Please login again to continue',
+          icon: "error",
+          title: "Session Expired",
+          text: "Please login again to continue",
           showConfirmButton: false,
           showCancelButton: true,
-          cancelButtonText: 'Stay Logged Out',
+          cancelButtonText: "Stay Logged Out",
         }).then((result) => {
           if (result.isConfirmed) {
             api.dispatch(logout());
@@ -82,7 +82,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         });
       }
     } catch (error) {
-      console.error('Error during token refresh:', error);
+      console.error("Error during token refresh:", error);
     }
   }
 
@@ -90,8 +90,19 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 };
 
 export const baseApi = createApi({
-  reducerPath: 'baseApi',
+  reducerPath: "baseApi",
   baseQuery: baseQueryWithRefreshToken,
-  tagTypes: ['user', 'example', 'blog', 'class', 'subject', 'chapter', 'step', 'feedback', 'student'],
+  tagTypes: [
+    "user",
+    "example",
+    "blog",
+    "class",
+    "subject",
+    "chapter",
+    "step",
+    "feedback",
+    "student",
+    "course",
+  ],
   endpoints: () => ({}),
 });

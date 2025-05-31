@@ -1,7 +1,6 @@
 interface Step {
   number: number;
   title: string;
-  duration: string;
 }
 
 interface CourseContentProps {
@@ -29,9 +28,6 @@ const CourseContent = ({ steps }: CourseContentProps) => {
             </div>
             <div className="flex-grow">
               <p className="text-gray-800 font-medium">{step.title}</p>
-            </div>
-            <div className="flex-shrink-0">
-              <span className="text-sm text-gray-500">{step.duration}</span>
             </div>
           </div>
         ))}

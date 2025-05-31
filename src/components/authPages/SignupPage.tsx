@@ -3,6 +3,10 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +19,8 @@ const SignupPage = () => {
     confirmPassword: "",
   });
   const [passwordError, setPasswordError] = useState("");
-
+  const [register, { isLoading }] = useRegisterMutation();
+  const router = useRouter();
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -37,7 +42,7 @@ const SignupPage = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
       setPasswordError("Passwords do not match");
@@ -49,7 +54,6 @@ const SignupPage = () => {
       return;
     }
 
-    // Send form data with only password (not confirmPassword) to console
     const submitData = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -57,8 +61,22 @@ const SignupPage = () => {
       password: formData.password,
     };
 
-    console.log("Signup attempt:", submitData);
-    // Handle signup logic here
+    try {
+      const res = await register(submitData).unwrap();
+      if (res?.success) {
+        toast.success(res?.message);
+        router.push(
+          `/verification-code?email=${encodeURIComponent(formData.email)}`
+        );
+      } else {
+        setPasswordError(res?.message);
+        return;
+      }
+    } catch (error: any) {
+      // Handle registration error
+      toast.error(error?.data?.message);
+      console.error("Registration failed:", error);
+    }
   };
 
   return (
@@ -220,7 +238,7 @@ const SignupPage = () => {
             onClick={handleSubmit}
             className="w-full bg-secondary hover:bg-secondary-dark text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-secondary focus:ring-offset-2"
           >
-            Sign Up
+            {isLoading ? <ButtonLoading /> : "Sign Up"}
           </button>
         </div>
 

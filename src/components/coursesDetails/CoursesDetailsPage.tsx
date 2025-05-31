@@ -9,9 +9,16 @@ import CourseInstructor from "./CourseInstructor";
 import CourseDetails from "./CourseDetails";
 import FrequentlyAskedQuestions from "./FrequentlyAskedQuestions";
 import { courseData } from "@/lib/CourseData";
+import { useGetSingleCourseDetailsQuery } from "@/redux/features/course/course";
+import Loading from "../ui/core/Loading/Loading";
 
 const CoursesDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("instructor");
+  const id = window.location.pathname.split("/")[2];
+  console.log(id);
+
+  const { data, isLoading } = useGetSingleCourseDetailsQuery(id);
+  const courseDetail = data?.data;
 
   const tabs = [
     { id: "instructor", label: "Course Instructor", href: "#instructor" },
@@ -21,27 +28,37 @@ const CoursesDetailsPage = () => {
   ];
 
   const scrollToSection = (tabId: string) => {
-    setActiveTab(tabId); // Update the active tab state
+    setActiveTab(tabId);
 
-    // Find the section element by its id
     const element = document.getElementById(tabId);
+    const stickyHeader = document.querySelector(".sticky") as HTMLElement;
 
     if (element) {
-      // Adjust the offset for header height or other fixed elements
-      const yOffset = -80;
+      const yOffset = stickyHeader?.offsetHeight
+        ? -stickyHeader.offsetHeight - 10
+        : -80;
       const y =
         element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-
-      // Smooth scroll to the element
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (!courseDetail) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-center focus-within:text-gray-500 font-semibold text-2xl">
+        No Data Found
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
       {/* Banner Section - Fixed */}
       <div className="sticky top-0 z-10">
-        <CourseDetailsHero />
+        <CourseDetailsHero courseDetail={courseDetail} />
       </div>
 
       {/* Main Content Container */}
@@ -52,7 +69,7 @@ const CoursesDetailsPage = () => {
           <TabNavigation
             tabs={tabs}
             activeTab={activeTab}
-            onTabChange={scrollToSection} // Pass the scrollToSection function
+            onTabChange={scrollToSection}
           />
 
           <div className="mt-6 space-y-8">
@@ -77,7 +94,7 @@ const CoursesDetailsPage = () => {
 
         {/* Right Enroll Card - Fixed */}
         <div className="xl:w-lg w-full relative xl:sticky top-32 z-10 mb-40">
-          <EnrollCard />
+          <EnrollCard courseDetail={courseDetail} />
         </div>
       </div>
     </div>

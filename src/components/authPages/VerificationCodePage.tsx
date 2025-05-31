@@ -1,13 +1,30 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Check } from "lucide-react";
-import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useOtpMutation } from "@/redux/features/auth/authApi";
+import { toast } from "sonner";
+import { verifyToken } from "@/utils/verifyToken";
+import { setUser } from "@/redux/features/auth/authSlice";
+import { useAppDispatch } from "@/redux/hooks";
+import { JwtPayload } from "jwt-decode";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
+
+interface DecodedUser extends JwtPayload {
+  role: string; // Add role explicitly
+}
 
 const VerificationCodePage = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const searchParams = useSearchParams();
+  const email =
+    searchParams.get("email") || searchParams.get("reset-email") || ""; // Get email from query params, default to empty string if not found
+  const [otp, { isLoading }] = useOtpMutation();
+  const router = useRouter();
 
+  const dispatch = useAppDispatch();
+  // const email=
   const handleInputChange = (index: number, value: string) => {
     // Only allow single digit
     if (value.length > 1) return;
@@ -48,13 +65,47 @@ const VerificationCodePage = () => {
     inputRefs.current[focusIndex]?.focus();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const verificationCode = code.join("");
     if (verificationCode.length === 6) {
       console.log("Verification code:", verificationCode);
-      // Handle verification logic here
-    } else {
-      console.log("Please enter all 6 digits");
+      try {
+        otp({
+          email: email,
+          otp: verificationCode,
+        })
+          .unwrap()
+          .then((res) => {
+            if (res?.success) {
+              toast.success(res?.message);
+              if (searchParams.get("reset-email")) {
+                router.push("/change-password?email=" + email);
+              } else {
+                router.push("/");
+              }
+              if (res?.data?.success) {
+                const user = verifyToken(
+                  res?.data?.data?.accessToken
+                ) as DecodedUser;
+                dispatch(
+                  setUser({
+                    user: user,
+                    access_token: res?.data?.data?.accessToken,
+                    refresh_token: res?.data?.data?.refreshToken,
+                  })
+                );
+              }
+            } else {
+              console.error("OTP verification failed:", res?.message);
+            }
+          })
+          .catch((error) => {
+            toast.error(error?.data?.message);
+            console.error("Error verifying OTP:", error);
+          });
+      } catch (error) {
+        console.error("Error verifying OTP:", error);
+      }
     }
   };
 
@@ -65,16 +116,7 @@ const VerificationCodePage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">LOOO</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Success Icon */}
-        <div className="text-center">
-          <div className="flex items-center justify-center mb-6">
-            <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center">
-              <Check className="w-12 h-12 text-white" />
+              <span className="text-4xl font-bold text-teal-600">LOGO</span>
             </div>
           </div>
         </div>
@@ -111,13 +153,12 @@ const VerificationCodePage = () => {
 
           {/* Submit Button */}
 
-          <Link
-            href="/change-password"
+          <button
             onClick={handleSubmit}
             className="mx-auto block text-center w-full bg-secondary hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg transition-colors focus:ring-2 focus:ring-secondary focus:ring-offset-2"
           >
-            Submit
-          </Link>
+            {isLoading ? <ButtonLoading /> : "Submit"}
+          </button>
         </div>
       </div>
     </div>

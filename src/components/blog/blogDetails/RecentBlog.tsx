@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { blogData } from "@/lib/BlogData";
+// import { blogData } from "@/lib/BlogData";
 import BlogCard from "@/components/shared/cards/BlogCard";
 
 const RecentBlog = () => {
@@ -18,7 +18,7 @@ const RecentBlog = () => {
   return (
     <div className="bg-primary">
       <div className="container max-w-[1320px] mx-auto px-4 py-16 md:py-24">
-        <motion.div
+        {/* <motion.div
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           variants={container}
           initial="hidden"
@@ -27,7 +27,7 @@ const RecentBlog = () => {
           {blogData.slice(0, 3).map((blog, index) => (
             <BlogCard key={blog.id} blog={blog} index={index} />
           ))}
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
   );

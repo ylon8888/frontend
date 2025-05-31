@@ -32,7 +32,7 @@ const SectionHeader = ({
       {badge && (
         <div className={`text-xl font-montserrat mb-10 ${textColor}`}>
           <span className="text-xl">🎓</span>
-          <span>{badge}</span>
+          <span className="uppercase tracking-wider">{badge}</span>
         </div>
       )}
       <h2
