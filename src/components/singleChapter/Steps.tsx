@@ -17,7 +17,6 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
 
   const { data } = useGetCoursesOfChapterQuery(id);
   const chapterData = data?.data?.chapters?.[0];
-  console.log("step one", chapterData?.stepOne?.stepName);
 
   // utils/getFakeSteps.ts or define in same file above the component
 

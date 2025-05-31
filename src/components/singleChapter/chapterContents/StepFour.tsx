@@ -4,16 +4,16 @@ import { useState } from "react";
 import { Play, X } from "lucide-react";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 
-const StepThree = () => {
+const StepFour = () => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
 
   const id = window.location.pathname.split("/")[4];
   const { data } = useGetCoursesOfChapterQuery(id);
-  const stepThreeData = data?.data?.chapters?.[0]?.stepThree;
-  console.log(stepThreeData, "stepThreeData");
+  const stepFourData = data?.data?.chapters?.[0]?.stepFour;
+  console.log(stepFourData, "stepFourData");
 
   // Function to play video
-  const playVideo = () => setActiveVideoUrl(stepThreeData?.stepVideo);
+  const playVideo = () => setActiveVideoUrl(stepFourData?.stepVideo);
 
   const closeVideo = () => {
     setActiveVideoUrl(null);
@@ -45,7 +45,7 @@ const StepThree = () => {
       <div className="bg-white rounded-lg p-8 border border-primary shadow-xl">
         {/* Content Sections */}
         <div
-          dangerouslySetInnerHTML={{ __html: stepThreeData?.stepDescription }}
+          dangerouslySetInnerHTML={{ __html: stepFourData?.stepDescription }}
         />
       </div>
 
@@ -78,4 +78,4 @@ const StepThree = () => {
   );
 };
 
-export default StepThree;
+export default StepFour;
