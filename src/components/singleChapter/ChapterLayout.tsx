@@ -44,7 +44,6 @@ const ChapterLayout = () => {
     <StepNine key="stepNine" />,
     <StepTen key="stepTen" />,
     <StepEleven key="stepEleven" />,
-    // Add more components for each step...
   ];
 
   // Save to localStorage whenever currentStepIndex changes

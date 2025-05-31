@@ -65,6 +65,12 @@ const baseQueryWithRefreshToken: BaseQueryFn<
             access_token: data.data.accessToken,
             refresh_token: refreshToken,
           })
+
+          // setUser({
+          //       user: user,
+          //       access_token: res?.data?.data?.accessToken,
+          //       refresh_token: res?.data?.data?.refreshToken,
+          //     })
         );
 
         // Retry the original query with the new token

@@ -56,7 +56,7 @@ const Blogs = () => {
   if (getAllBlogResponse?.data?.data?.length === 0) {
     return (
       <div className="flex justify-center items-center h-[300px]">
-        <h2 className="text-2xl font-bold">No Blogs Found</h2>
+        <h2 className="text-5xl font-medium">No Blogs Found</h2>
       </div>
     );
   }
