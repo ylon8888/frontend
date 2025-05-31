@@ -31,8 +31,7 @@ const addTopicValidationSchema = z.object({
     .refine(
       (file) => ['video/mp4', 'video/webm'].includes(file.type),
       'Only MP4 or WebM videos are allowed'
-    )
-    .optional(),
+    ),
 });
 
 const AddLessonPage = ({ currentStep }: { currentStep: number }) => {

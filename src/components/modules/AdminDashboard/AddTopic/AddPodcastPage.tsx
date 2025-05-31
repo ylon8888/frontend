@@ -1,5 +1,6 @@
 'use client';
 import MyButton from '@/components/ui/core/MyButton/MyButton';
+import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
 import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
 import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
 import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
@@ -24,8 +25,8 @@ const addTopicValidationSchema = z.object({
     .refine(
       (file) => ['video/mp4', 'video/webm'].includes(file.type),
       'Only MP4 or WebM videos are allowed'
-    )
-    .optional(),
+    ),
+  thumbnail: z.instanceof(File),
 });
 
 const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
@@ -38,6 +39,7 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
   const handleSubmit = async (data: any, reset: any) => {
     const formData = new FormData();
     formData.append('poadcast', data.topicVideo);
+    formData.append('thumbnail', data?.thumbnail);
     formData.append(
       'data',
       JSON.stringify({
@@ -106,22 +108,22 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div> */}
-          <div className="mb-4">
-            {/* <MyFormImageUpload
-            name="topicBanner"
-            label="Display Image"
-            inputClassName="cursor-pointer"
-          >
-            <div className="flex items-center flex-col justify-center text-primary border border-dashed border-gray-300 rounded-lg p-5 cursor-pointer">
-              <UploadCloud className="w-5 h-5 mr-2" />
-              <span className="text-sm text-center font-medium">
-                Upload item image
-              </span>
-              <p className="mt-1 text-xs text-center text-gray-500">
-                PNG, JPG up to 3MB
-              </p>
-            </div>
-          </MyFormImageUpload> */}
+          <div className="space-y-4 mb-4">
+            <MyFormImageUpload
+              name="thumbnail"
+              label="Thumbnail"
+              inputClassName="cursor-pointer"
+            >
+              <div className="flex items-center flex-col justify-center text-primary border border-dashed border-gray-300 rounded-lg p-5 cursor-pointer">
+                <UploadCloud className="w-5 h-5 mr-2" />
+                <span className="text-sm text-center font-medium">
+                  Upload Podcast Thumbnail
+                </span>
+                <p className="mt-1 text-xs text-center text-gray-500">
+                  PNG, JPG up to 3MB
+                </p>
+              </div>
+            </MyFormImageUpload>
             <MyFormVideoUpload
               name="topicVideo"
               label="Upload Podcast"
