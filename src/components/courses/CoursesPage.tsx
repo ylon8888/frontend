@@ -8,6 +8,9 @@ import Loading from "../ui/core/Loading/Loading";
 
 const CoursesPage = () => {
   const { data: classData, isLoading } = useGetAllClassQuery({});
+
+  // console.log("classes", classData);
+
   const classId = classData?.data?.data;
 
   if (isLoading) {

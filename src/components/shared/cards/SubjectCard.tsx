@@ -2,16 +2,18 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Play } from "lucide-react";
+import Link from "next/link";
 
 export const SubjectCard = ({
+  id,
   subject,
-  count,
+  description,
   image,
   index,
 }: {
+  id: string;
   subject: string;
-  count: string;
+  description: string;
   image: string;
   index: number;
 }) => {
@@ -24,30 +26,26 @@ export const SubjectCard = ({
       whileHover={{ y: -5 }}
       className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 p-5"
     >
-      <div className="relative aspect-video">
-        <Image
-          src={image || "/placeholder.svg"}
-          alt={subject}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
-        <div className="absolute inset-0 bg-black/10 flex items-center justify-center group">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0.8 }}
-            whileHover={{ scale: 1, opacity: 1 }}
-            className="bg-orange-500 rounded-full p-3 cursor-pointer"
-          >
-            <Play className="h-6 w-6 text-white" fill="white" />
-          </motion.div>
+      <Link href={`/courses/${id}`}>
+        <div className="relative aspect-video">
+          <Image
+            src={image || "/placeholder.svg"}
+            alt={subject}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
-      </div>
-      <div className="p-5">
-        <h3 className="font-semibold font-montserrat text-xl mb-2">
-          {subject}
-        </h3>
-        <p className="text-gray-600">{count}</p>
-      </div>
+        <div className="p-5">
+          <h3 className="font-semibold font-montserrat text-xl mb-2">
+            {subject}
+          </h3>
+          <p
+            className="text-gray-600"
+            dangerouslySetInnerHTML={{ __html: description }}
+          />
+        </div>
+      </Link>
     </motion.div>
   );
 };

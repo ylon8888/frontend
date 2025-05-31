@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import bg from "@/assets/home/circle-bg.png";
 import SectionHeader from "../shared/SectionHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SubjectCard } from "../shared/cards/SubjectCard";
-import { classData } from "@/lib/ClassData";
+import { useGetAllClassQuery } from "@/redux/features/class/class.admin.api";
+import { useGetSingleCourseQuery } from "@/redux/features/course/course";
 
 const MakeSureYouCompletePreparation = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -17,6 +18,33 @@ const MakeSureYouCompletePreparation = () => {
   });
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
+
+  const { data: classesData } = useGetAllClassQuery({});
+  const allClass = classesData?.data?.data || [];
+
+  // Selected class state
+  const [selectedClassName, setSelectedClassName] = useState<
+    string | undefined
+  >(undefined);
+
+  // Default to first class
+  useEffect(() => {
+    if (allClass.length > 0 && !selectedClassName) {
+      setSelectedClassName(allClass[0].className);
+    }
+  }, [allClass, selectedClassName]);
+
+  // Get selected class ID
+  const selectedClass = allClass.find(
+    (cls: any) => cls.className === selectedClassName
+  );
+  const selectedId = selectedClass?.id;
+
+  // Fetch course subjects for selected class
+  const { data: courseData, isFetching } = useGetSingleCourseQuery(selectedId, {
+    skip: !selectedId,
+  });
+  const subjects = courseData?.data?.singleClass?.subjects || [];
 
   return (
     <section
@@ -47,37 +75,44 @@ const MakeSureYouCompletePreparation = () => {
         />
 
         {/* Tabs */}
-        <Tabs defaultValue="9" className="w-full">
+        <Tabs
+          value={selectedClassName}
+          onValueChange={setSelectedClassName}
+          className="w-full"
+        >
           <div className="flex justify-center mb-8">
             <TabsList className="grid grid-cols-4 w-full max-w-md">
-              {Object.keys(classData).map((classNum) => (
+              {allClass.map((classItem: any) => (
                 <TabsTrigger
-                  key={classNum}
-                  value={classNum}
-                  className="data-[state=active]:bg-gray-800  border  data-[state=active]:text-white"
+                  key={classItem.id}
+                  value={classItem.className}
+                  className="data-[state=active]:bg-gray-800 border data-[state=active]:text-white uppercase"
                 >
-                  {`Class ${classNum}`}
+                  {classItem.className}
                 </TabsTrigger>
               ))}
             </TabsList>
           </div>
 
           {/* Tab Content */}
-          {Object.entries(classData).map(([classNum, subjects]) => (
-            <TabsContent key={classNum} value={classNum} className="mt-0">
+          <TabsContent value={selectedClassName ?? ""} className="mt-0">
+            {isFetching ? (
+              <p className="text-center text-gray-600">Loading subjects...</p>
+            ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                 {subjects.map((subject: any, index: number) => (
                   <SubjectCard
                     key={index}
-                    subject={subject.subject}
-                    count={subject.count}
-                    image={subject.image}
+                    id={subject?.id}
+                    subject={subject?.subjectName}
+                    description={subject?.subjectDescription}
+                    image={subject?.banner}
                     index={index}
                   />
                 ))}
               </div>
-            </TabsContent>
-          ))}
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </section>
