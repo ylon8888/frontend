@@ -22,9 +22,11 @@ const StepThree = () => {
   return (
     <div className="flex flex-col space-y-6">
       {/* Title */}
-      <h2 className="text-2xl font-semibold font-montserrat">
-        {data?.data?.chapters?.[0]?.chapterName}
-      </h2>
+      <div className="bg-white rounded-lg px-6 py-6 shadow-sm">
+        <h2 className="font-semibold text-2xl font-montserrat">
+          {data?.data?.chapters?.[0]?.chapterName}
+        </h2>
+      </div>
 
       {/* Video Section */}
       <div
