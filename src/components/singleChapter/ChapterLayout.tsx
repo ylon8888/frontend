@@ -12,6 +12,7 @@ import StepSeven from "./chapterContents/StepSeven";
 import StepEight from "./chapterContents/StepEight";
 import StepNine from "./chapterContents/StepNine";
 import StepTen from "./chapterContents/StepTen";
+import StepEleven from "./chapterContents/StepEleven";
 // import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 
 const STORAGE_KEY = "chapter_progress";
@@ -42,6 +43,7 @@ const ChapterLayout = () => {
     <StepEight key="stepEight" />,
     <StepNine key="stepNine" />,
     <StepTen key="stepTen" />,
+    <StepEleven key="stepEleven" />,
     // Add more components for each step...
   ];
 

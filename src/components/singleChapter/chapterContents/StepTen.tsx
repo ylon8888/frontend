@@ -43,7 +43,7 @@ const StepTen = () => {
     const value = e.target.value;
     setMessage(value);
     setCharCount(value.length);
-    if (value.length >= 100) {
+    if (value.length >= 20) {
       setErrors((prev) => ({ ...prev, message: "" }));
     }
   };
@@ -55,9 +55,9 @@ const StepTen = () => {
       newErrors.rating = "Please select a rating";
     }
 
-    if (message.length < 100) {
-      newErrors.message = `Review must be at least 100 characters (${
-        100 - message.length
+    if (message.length < 20) {
+      newErrors.message = `Review must be at least 20 characters (${
+        20 - message.length
       } more needed)`;
     }
 
@@ -165,7 +165,7 @@ const StepTen = () => {
           <h2 className="font-semibold text-lg font-montserrat mb-2">
             Review this Chapter{" "}
             <span className="font-medium text-sm text-gray-600">
-              (Must be at Least 100 characters)
+              (Must be at Least 20 characters)
             </span>
           </h2>
 
@@ -179,16 +179,16 @@ const StepTen = () => {
             />
             <div className="flex justify-between items-center mt-2">
               <div className="text-sm text-gray-500">
-                {charCount}/100 characters minimum
+                {charCount}/20 characters minimum
               </div>
               <div
                 className={`text-sm ${
-                  charCount >= 100 ? "text-green-600" : "text-gray-500"
+                  charCount >= 20 ? "text-green-600" : "text-gray-500"
                 }`}
               >
-                {charCount >= 100
+                {charCount >= 20
                   ? "✓ Minimum reached"
-                  : `${100 - charCount} more needed`}
+                  : `${20 - charCount} more needed`}
               </div>
             </div>
           </div>
