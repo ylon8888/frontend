@@ -18,7 +18,7 @@ const questionAnswerSchema = z.object({
     .string()
     .min(1, 'Topic name is required')
     .max(50, 'Topic name must be less than 50 characters'),
-  video: z.any().optional(),
+  video: z.any(),
   questions: z.array(
     z.object({
       question: z.string().min(1, 'Question is required'),

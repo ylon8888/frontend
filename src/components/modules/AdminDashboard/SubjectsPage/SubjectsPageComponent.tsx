@@ -25,6 +25,11 @@ export type TSubject = {
   isVisible: boolean;
   createdAt: string; // or Date if you're converting to Date objects
   updatedAt: string; // or Date
+  _count: {
+    courseEnrolls: number;
+    chapters: number;
+  },
+  totalLessons: number;
 };
 
 const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
@@ -182,13 +187,13 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
 
                   <div className="flex flex-col items-start gap-1.5 w-full">
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6]">
-                      Total Chapter - {response?.data?.totalChapter}
+                      Total Chapter - {subject?._count?.chapters ?? 0}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
-                      Total Enrolled Student - {response?.data?.enrollStudent}
+                      Total Enrolled Student - {subject?._count?.courseEnrolls ?? 0}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
-                      Total Lesson - {response?.data?.lesson}
+                      Total Lesson - {subject?.totalLessons ?? 0}
                     </p>
                   </div>
                 </div>
