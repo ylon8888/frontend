@@ -1,9 +1,13 @@
 "use client";
 
-import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
+import {
+  useGetCoursesOfChapterQuery,
+  useHandleStepProgressMutation,
+} from "@/redux/features/course/course";
 import { T_Step } from "@/types/Common";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
+import StepsSkeleton from "../shared/skeleton/StepsSkeleton";
 
 interface StepsProps {
   currentStepIndex: number;
@@ -15,79 +19,78 @@ interface StepsProps {
 const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
   const id = window.location.pathname.split("/")[4];
 
-  const { data } = useGetCoursesOfChapterQuery(id);
+  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const chapterData = data?.data?.chapters?.[0];
 
-  // utils/getFakeSteps.ts or define in same file above the component
-
-  // utils/getStepsFromChapter.ts
+  const [stepProgress, { isLoading: isUpdatingProgress }] =
+    useHandleStepProgressMutation();
 
   const getFakeSteps = (chapterData: any): T_Step[] => [
     {
-      id: chapterData?.stepOne?.id || "1",
+      id: chapterData?.stepOne?.id,
       number: "01",
       title: "Watch the Video or Read Topic",
       description: chapterData?.stepOne?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepTwo?.id || "2",
+      id: chapterData?.stepTwo?.id,
       number: "02",
       title: "Listen to the Podcast",
       description: chapterData?.stepTwo?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepThree?.id || "3",
+      id: chapterData?.stepThree?.id,
       number: "03",
       title: "Watch the Video or Read Topic",
       description: chapterData?.stepThree?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepFour?.id || "4",
+      id: chapterData?.stepFour?.id,
       number: "04",
       title: "Watch the Video or Read Topic",
       description: chapterData?.stepFour?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepFive?.id || "5",
+      id: chapterData?.stepFive?.id,
       number: "05",
       title: "Watch the Video or Quiz Test",
       description: chapterData?.stepFive?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepSix?.id || "6",
+      id: chapterData?.stepSix?.id,
       number: "06",
       title: "Review Key Terms or Key Words",
       description: chapterData?.stepSix?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepSeven?.id || "7",
+      id: chapterData?.stepSeven?.id,
       number: "07",
       title: "Watch the Story",
       description: chapterData?.stepSeven?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepEight?.id || "8",
+      id: chapterData?.stepEight?.id,
       number: "08",
       title: "Final Quiz",
       description: chapterData?.stepEight?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepNine?.id || "9",
+      id: chapterData?.stepNine?.id,
       number: "09",
       title: "Critical Thinking Questions",
       description: chapterData?.stepNine?.stepName || "-",
       isCompleted: false,
     },
     {
-      id: chapterData?.stepTen?.id || "10",
+      id: chapterData?.stepTen?.id,
       number: "10",
       title: "Feedback and Track Progress",
       description: chapterData?.stepTen?.stepName || "-",
@@ -113,17 +116,48 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
   }, [chapterData]);
 
   // Mark step as completed when moving to next step
-  const handleNextWithCompletion = () => {
+  const handleNextWithCompletion = async () => {
     if (currentStepIndex < steps.length - 1) {
-      const updatedSteps = [...steps];
-      updatedSteps[currentStepIndex] = {
-        ...updatedSteps[currentStepIndex],
-        isCompleted: true,
-      };
-      setSteps(updatedSteps);
-      onNext();
+      try {
+        const currentStep = steps[currentStepIndex];
+
+        console.log(currentStep?.id);
+        // Prepare API payload
+        const progressData = {
+          chapterId: id,
+          stepId: currentStep?.id,
+          stepSerial: (currentStepIndex + 1).toString(),
+        };
+
+        // Call the API to track step progress
+        const response = await stepProgress(progressData);
+
+        // Update local state after successful API call
+        const updatedSteps = [...steps];
+        updatedSteps[currentStepIndex] = {
+          ...updatedSteps[currentStepIndex],
+          isCompleted: true,
+        };
+        setSteps(updatedSteps);
+
+        // Move to next step
+        onNext();
+      } catch (error) {
+        console.error("Failed to track step progress:", error);
+        const updatedSteps = [...steps];
+        updatedSteps[currentStepIndex] = {
+          ...updatedSteps[currentStepIndex],
+          isCompleted: true,
+        };
+        setSteps(updatedSteps);
+        onNext();
+      }
     }
   };
+
+  if (isLoading) {
+    return <StepsSkeleton />;
+  }
 
   return (
     <div className="flex flex-col">
@@ -180,13 +214,15 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
 
       <button
         onClick={handleNextWithCompletion}
-        disabled={currentStepIndex === steps.length - 1}
+        disabled={currentStepIndex === steps.length - 1 || isUpdatingProgress}
         className="mt-6 bg-secondary text-white py-3 px-4 rounded-md flex items-center justify-center disabled:opacity-50 hover:bg-secondary/90 transition-colors font-medium"
       >
-        {currentStepIndex === steps.length - 1
+        {isUpdatingProgress
+          ? "Saving Progress..."
+          : currentStepIndex === steps.length - 1
           ? "Chapter Complete"
           : "Next Step"}
-        {currentStepIndex < steps.length - 1 && (
+        {currentStepIndex < steps.length - 1 && !isUpdatingProgress && (
           <ChevronRight className="ml-1 h-4 w-4" />
         )}
       </button>

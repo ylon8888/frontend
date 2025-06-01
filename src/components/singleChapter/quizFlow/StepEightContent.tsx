@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuizQuestions from "../quizFlow/QuizQuestions";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
-import StepEightContentSkeleton from "@/components/shared/skeleton/StepSkeleton";
+import StepEightContentSkeleton from "@/components/shared/skeleton/StepEightContentSkeleton";
 
 type StepEightContentProps = {
   selectedAnswers: Record<string, string>;

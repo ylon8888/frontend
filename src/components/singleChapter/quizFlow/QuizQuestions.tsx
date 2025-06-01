@@ -3,7 +3,7 @@ import React from "react";
 import { CheckCircle2 } from "lucide-react";
 import { useGetQuizByTypeQuery } from "@/redux/features/course/course";
 import { ButtonLoading } from "@/components/shared/button-loading/LoadingButton";
-import Loading from "@/components/ui/core/Loading/Loading";
+import StepEightContentSkeleton from "@/components/shared/skeleton/StepEightContentSkeleton";
 
 type QuizQuestionProps = {
   quizId: string;
@@ -22,7 +22,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
 }) => {
   const { data: quiz, isLoading } = useGetQuizByTypeQuery(quizId);
 
-  if (isLoading) return <Loading />;
+  if (isLoading) return <StepEightContentSkeleton />;
   if (!quiz?.data) return <div>No quiz data available.</div>;
 
   const hasAnsweredQuestions = quiz.data.stepEightQuizzes?.some(
