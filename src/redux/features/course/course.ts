@@ -109,6 +109,15 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
+    resendOtp: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/course/resend-otp/${id}`,
+          method: "POST",
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
     getSingleCourseReviews: builder.query({
       query: (id) => ({
         url: `/course/course-review/${id}`,
@@ -131,5 +140,6 @@ export const {
   useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,
+  useResendOtpMutation,
   useGetSingleCourseReviewsQuery,
 } = courseApi;
