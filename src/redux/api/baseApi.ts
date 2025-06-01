@@ -45,7 +45,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
       // Make a request to refresh the token
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}refresh-token`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
         {
           method: "POST",
           credentials: "include",

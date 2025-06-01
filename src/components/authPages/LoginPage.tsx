@@ -43,10 +43,8 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async () => {
-    console.log("Login attempt:", formData);
     try {
       const res = await login(formData);
-      console.log("=== ADMIN LOGIN RESPONSE ===", res?.data?.success);
 
       if (res?.data?.success == true) {
         router.push("/");
