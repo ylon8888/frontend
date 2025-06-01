@@ -1,5 +1,6 @@
 // import Image from "next/image";
 // import img from "@/assets/content.png";
+import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 
 // Step data with HTML format
@@ -40,8 +41,12 @@ const StepOne = () => {
   //   getStepOneData();
 
   const id = window.location.pathname.split("/")[4];
-  const { data } = useGetCoursesOfChapterQuery(id);
+  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const stepOneData = data?.data?.chapters?.[0]?.stepOne;
+
+  if (isLoading) {
+    return <StepOneSkeleton />;
+  }
 
   return (
     <div className="flex flex-col gap-5 space-y-4">

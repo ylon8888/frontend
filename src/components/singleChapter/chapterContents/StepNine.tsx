@@ -3,12 +3,13 @@
 import { useState } from "react";
 import { Play, X } from "lucide-react";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
+import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 
 const StepNine = () => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
 
   const id = window.location.pathname.split("/")[4];
-  const { data } = useGetCoursesOfChapterQuery(id);
+  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const stepNineData = data?.data?.chapters?.[0]?.stepNine;
 
   // Function to play video
@@ -19,6 +20,10 @@ const StepNine = () => {
   const closeVideo = () => {
     setActiveVideoUrl(null);
   };
+
+  if (isLoading) {
+    return <StepOneSkeleton />;
+  }
 
   return (
     <div className="flex flex-col space-y-6">

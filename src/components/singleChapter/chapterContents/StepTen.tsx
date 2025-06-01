@@ -1,3 +1,4 @@
+import { ButtonLoading } from "@/components/shared/button-loading/LoadingButton";
 import {
   useGetCoursesOfChapterQuery,
   useGiveChapterFeedbackMutation,
@@ -9,7 +10,7 @@ import React, { useState } from "react";
 const StepTen = () => {
   const id = window.location.pathname.split("/")[4];
   const { data } = useGetCoursesOfChapterQuery(id);
-  const [submitFeedback] = useGiveChapterFeedbackMutation();
+  const [submitFeedback, { isLoading }] = useGiveChapterFeedbackMutation();
 
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -210,7 +211,7 @@ const StepTen = () => {
             onClick={handleSubmit}
             className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
-            Submit Review
+            {isLoading ? <ButtonLoading /> : "   Submit Review"}
           </button>
         </div>
       </div>

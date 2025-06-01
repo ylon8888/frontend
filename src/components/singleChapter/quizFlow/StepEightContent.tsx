@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuizQuestions from "../quizFlow/QuizQuestions";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
+import StepEightContentSkeleton from "@/components/shared/skeleton/StepSkeleton";
 
 type StepEightContentProps = {
   selectedAnswers: Record<string, string>;
@@ -20,13 +21,15 @@ const StepEightContent: React.FC<StepEightContentProps> = ({
   loading,
 }) => {
   const id = window.location.pathname.split("/")[4];
-  const { data } = useGetCoursesOfChapterQuery(id);
+  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const stepEightData = data?.data?.chapters?.[0]?.stepEight;
   const [activeTab, setActiveTab] = useState<string>(
     stepEightData?.[0]?.id || ""
   );
 
-  if (!stepEightData) return <div>Loading quiz data...</div>;
+  if (isLoading) {
+    return <StepEightContentSkeleton />;
+  }
 
   return (
     <div>
