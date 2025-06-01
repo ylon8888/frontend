@@ -95,7 +95,7 @@ const authApi = baseApi.injectEndpoints({
     }),
     getMe: builder.query({
       query: () => ({
-        url: "auth/get-my-profile",
+        url: "/auth/me",
         method: "GET",
       }),
       providesTags: ["user"],
@@ -107,6 +107,21 @@ const authApi = baseApi.injectEndpoints({
         body: body,
       }),
       invalidatesTags: ["user"],
+    }),
+    createStudentProfile: builder.mutation({
+      query: (body) => ({
+        url: "/student/create-profile",
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: ["user"],
+    }),
+    getStudentProfile: builder.query({
+      query: () => ({
+        url: "/student/profile",
+        method: "GET",
+      }),
+      providesTags: ["user"],
     }),
     // googleLogin: builder.mutation({
     //   query: () => {
@@ -131,4 +146,6 @@ export const {
   useOtpMutation,
   useGetMeQuery,
   useGoogleLoginMutation,
+  useCreateStudentProfileMutation,
+  useGetStudentProfileQuery,
 } = authApi;
