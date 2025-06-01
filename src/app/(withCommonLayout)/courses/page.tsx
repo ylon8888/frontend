@@ -1,6 +1,6 @@
 import CoursesHero from "@/components/courses/CoursesHero";
 import CoursesPage from "@/components/courses/CoursesPage";
-import ExpectfromPodcastClasses from "@/components/home/ExpectfromPodcastClasses";
+// import ExpectfromPodcastClasses from "@/components/home/ExpectfromPodcastClasses";
 import Faq from "@/components/home/Faq";
 import SuccessInAcademicYear from "@/components/home/SuccessInAcademicYear";
 import Testimonials from "@/components/shared/Testimonials/Testimonials";

@@ -3,12 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Star } from "lucide-react";
-
+import profile from "@/assets/profile.png";
 interface ReviewCardProps {
   rating: number;
   review: string;
   name: string;
-  position: string;
   image: string;
   index?: number;
 }
@@ -17,7 +16,6 @@ const ReviewCard = ({
   rating,
   review,
   name,
-  position,
   image,
   index = 0,
 }: ReviewCardProps) => {
@@ -45,23 +43,25 @@ const ReviewCard = ({
         </div>
 
         {/* Review Text */}
-        <p className="text-gray-700">{review}</p>
+        {/* <p className="text-gray-700">{review}</p> */}
+        <p className="text-gray-700">
+          {review?.length > 160 ? `${review.substring(0, 160)}...` : review}
+        </p>
       </div>
 
       {/* Profile Section */}
       <div className="bg-primary p-4 text-white flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden mr-4 flex-shrink-0 border-2 border-white">
           <Image
-            src={image || "/placeholder.svg?height=48&width=48"}
+            src={image || profile}
             alt={name}
-            width={1000}
-            height={1000}
+            width={500}
+            height={500}
             className="object-cover w-12 h-12"
           />
         </div>
         <div>
           <h4 className="font-medium">{name}</h4>
-          <p className="text-teal-100 text-sm">{position}</p>
         </div>
       </div>
     </motion.div>

@@ -70,7 +70,6 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
-
     handleStepProgress: builder.mutation({
       query: (data) => {
         return {
@@ -81,7 +80,6 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
-
     giveChapterFeedback: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -111,6 +109,13 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
+    getSingleCourseReviews: builder.query({
+      query: (id) => ({
+        url: `/course/course-review/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
   }),
 });
 
@@ -126,4 +131,5 @@ export const {
   useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,
+  useGetSingleCourseReviewsQuery,
 } = courseApi;
