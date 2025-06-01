@@ -25,7 +25,7 @@ const ProfileBox = () => {
   const profileImage = studentInfo?.studentProfiles?.profileImage;
 
   return (
-    <div className="bg-white space-y-4 px-6 py-10 rounded-xl shadow border border-gray-200 max-w-sm w-full text-center">
+    <div className="bg-white space-y-4 px-6 py-10 rounded-xl shadow border border-gray-200 max-w-sm w-full text-center font-montserrat">
       {profileImage ? (
         <img
           src={profileImage}

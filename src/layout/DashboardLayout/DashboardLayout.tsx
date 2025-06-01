@@ -307,12 +307,6 @@ const SideMenu = ({
           isActive: false,
         },
         {
-          href: "/user/my-progress",
-          icon: <ChartNoAxesCombined className="w-5 h-5 mr-1" />,
-          text: "Your Progress",
-          isActive: false,
-        },
-        {
           href: "/",
           icon: <IoHomeSharp className="w-5 h-5 mr-1" />,
           text: "Go back to Home",
