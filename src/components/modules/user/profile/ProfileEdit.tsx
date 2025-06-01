@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -16,10 +16,10 @@ import {
 import { X, Upload, Plus } from "lucide-react";
 import { useCreateStudentProfileMutation } from "@/redux/features/auth/authApi";
 import { ButtonLoading } from "@/components/shared/button-loading/LoadingButton";
+import dayjs from "dayjs";
 const { Title } = Typography;
 const { Option } = Select;
 
-// Define the ProfileData type (adjust fields as needed)
 type ProfileData = {
   avatarUrl?: string | { src: string };
   name?: string;
@@ -49,7 +49,7 @@ export const ProfileEdit: React.FC<any> = ({
   onCancel,
 }) => {
   const [form] = Form.useForm();
-  const [formData, setFormData] = useState<ProfileData>();
+  const [formData, setFormData] = useState<ProfileData>({});
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const [emergencyContacts, setEmergencyContacts] = useState([{ id: 1 }]);
   const [academicInfo, setAcademicInfo] = useState([{ id: 1 }]);
@@ -59,6 +59,85 @@ export const ProfileEdit: React.FC<any> = ({
   const [socialProfiles, setSocialProfiles] = useState([{ id: 1 }]);
   const [createStudentProfile, { isLoading }] =
     useCreateStudentProfileMutation();
+
+  // Initialize form with profile data
+  useEffect(() => {
+    if (profileData?.studentProfiles) {
+      const {
+        profileImage,
+        gurdianContact = [],
+        academicInformation = [],
+        experience = [],
+        hobbies: apiHobbies = [],
+        skill = [],
+        socialProfile = [],
+      } = profileData.studentProfiles;
+
+      // Prepare initial form values
+      const initialValues: any = {
+        name: `${profileData.firstName} ${profileData.lastName}`,
+        avatarUrl: profileImage,
+        emergencyContacts: gurdianContact.map((contact: any) => ({
+          name: contact.gurdianName,
+          number: contact.gurdianNumber,
+        })),
+        academicInfo: academicInformation.map((info: any) => ({
+          schoolName: info.institutionName,
+          courseName: info.courseName,
+          startDate: info.startDate ? dayjs(info.startDate) : null,
+          endDate: info.endDate ? dayjs(info.endDate) : null,
+        })),
+        professionalExp: experience.map((exp: any) => ({
+          companyName: exp.companyName,
+          position: exp.position,
+          startDate: exp.startDate ? dayjs(exp.startDate) : null,
+          endDate: exp.endDate ? dayjs(exp.endDate) : null,
+        })),
+        skills: skill.map((s: any) => ({ name: s.skillName })),
+        hobbies: apiHobbies.map((h: any) => ({ interest: h.name })),
+        socialProfiles: socialProfile.map((profile: any) => ({
+          platform: profile.socialMedia,
+          link: profile.socialLink,
+        })),
+      };
+
+      // Set initial form values
+      form.setFieldsValue(initialValues);
+      setFormData(initialValues);
+
+      // Set dynamic sections based on data
+      if (gurdianContact.length > 0) {
+        setEmergencyContacts(
+          gurdianContact.map((_: any, index: number) => ({ id: index + 1 }))
+        );
+      }
+      if (academicInformation.length > 0) {
+        setAcademicInfo(
+          academicInformation.map((_: any, index: number) => ({
+            id: index + 1,
+          }))
+        );
+      }
+      if (experience.length > 0) {
+        setProfessionalExp(
+          experience.map((_: any, index: number) => ({ id: index + 1 }))
+        );
+      }
+      if (skill.length > 0) {
+        setSkills(skill.map((_: any, index: number) => ({ id: index + 1 })));
+      }
+      if (apiHobbies.length > 0) {
+        setHobbies(
+          apiHobbies.map((_: any, index: number) => ({ id: index + 1 }))
+        );
+      }
+      if (socialProfile.length > 0) {
+        setSocialProfiles(
+          socialProfile.map((_: any, index: number) => ({ id: index + 1 }))
+        );
+      }
+    }
+  }, [profileData, form]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -85,6 +164,8 @@ export const ProfileEdit: React.FC<any> = ({
         updatedData[parentKey][childKey] = field.value;
       }
     });
+
+    setFormData(updatedData);
   };
 
   const handleSubmit = async () => {
@@ -149,7 +230,8 @@ export const ProfileEdit: React.FC<any> = ({
       // Original updated data for component use
       const updatedData: ProfileData = {
         ...values,
-        avatarUrl: formData?.avatarUrl,
+        avatarUrl:
+          formData?.avatarUrl || profileData?.studentProfiles?.profileImage,
         socials: {
           ...(profileData?.socials || {}),
           ...values.socials,
@@ -232,7 +314,7 @@ export const ProfileEdit: React.FC<any> = ({
       <Form
         form={form}
         layout="vertical"
-        initialValues={profileData}
+        initialValues={formData}
         onFieldsChange={handleFieldChange}
         className=""
       >
@@ -248,13 +330,8 @@ export const ProfileEdit: React.FC<any> = ({
                 <Avatar
                   size={80}
                   src={
-                    formData?.avatarUrl &&
-                    typeof formData?.avatarUrl === "string"
-                      ? formData?.avatarUrl
-                      : typeof formData?.avatarUrl === "object" &&
-                        "src" in formData?.avatarUrl
-                      ? (formData?.avatarUrl as { src: string }).src
-                      : ""
+                    formData?.avatarUrl ||
+                    profileData?.studentProfiles?.profileImage
                   }
                   className="border-2 border-white"
                 />
