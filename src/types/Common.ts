@@ -25,4 +25,6 @@ export type T_Step = {
   description: string;
   isCompleted?: boolean;
   isLast?: boolean;
+  isAccessible: boolean;
+  updatedSteps?: { isAccessible: boolean }[];
 };

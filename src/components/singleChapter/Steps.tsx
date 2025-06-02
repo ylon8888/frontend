@@ -8,120 +8,171 @@ import { T_Step } from "@/types/Common";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import StepsSkeleton from "../shared/skeleton/StepsSkeleton";
+import { toast } from "sonner";
 
 interface StepsProps {
   currentStepIndex: number;
   onStepClick: (index: number) => void;
   onNext: () => void;
+  onStepsInitialized?: (steps: { isAccessible: boolean }[]) => void;
   onCompleteStep?: (index: number) => void;
 }
 
-const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
+const Steps = ({
+  currentStepIndex,
+  onStepClick,
+  onNext,
+  onStepsInitialized,
+}: StepsProps) => {
+  const [steps, setSteps] = useState<T_Step[]>([]);
   const id = window.location.pathname.split("/")[4];
-
   const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const chapterData = data?.data?.chapters?.[0];
 
   const [stepProgress, { isLoading: isUpdatingProgress }] =
     useHandleStepProgressMutation();
 
-  const getFakeSteps = (chapterData: any): T_Step[] => [
-    {
-      id: chapterData?.stepOne?.id,
-      number: "01",
-      title: "Watch the Video or Read Topic",
-      description: chapterData?.stepOne?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepTwo?.id,
-      number: "02",
-      title: "Listen to the Podcast",
-      description: chapterData?.stepTwo?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepThree?.id,
-      number: "03",
-      title: "Watch the Video or Read Topic",
-      description: chapterData?.stepThree?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepFour?.id,
-      number: "04",
-      title: "Watch the Video or Read Topic",
-      description: chapterData?.stepFour?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepFive?.id,
-      number: "05",
-      title: "Watch the Video or Quiz Test",
-      description: chapterData?.stepFive?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepSix?.id,
-      number: "06",
-      title: "Review Key Terms or Key Words",
-      description: chapterData?.stepSix?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepSeven?.id,
-      number: "07",
-      title: "Watch the Story",
-      description: chapterData?.stepSeven?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepEight?.id,
-      number: "08",
-      title: "Final Quiz",
-      description: chapterData?.stepEight?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepNine?.id,
-      number: "09",
-      title: "Critical Thinking Questions",
-      description: chapterData?.stepNine?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: chapterData?.stepTen?.id,
-      number: "10",
-      title: "Feedback and Track Progress",
-      description: chapterData?.stepTen?.stepName || "-",
-      isCompleted: false,
-    },
-    {
-      id: "11",
-      number: "🌟",
-      title: "Finish Chapter 01 Unlock Next Chapter",
-      description:
-        "After you'll watch a comprehensive video Chapter that introduces the topic. This video covers all the core concepts clearly.",
-      isCompleted: false,
-      isLast: true,
-    },
-  ];
+  const getSteps = (chapterData: any): T_Step[] => {
+    const userProgress =
+      chapterData?.userChapterProgress?.[0]?.userStepProgress || [];
 
-  const [steps, setSteps] = useState<T_Step[]>([]);
+    const completedStepsMap = new Map();
+    userProgress.forEach((progress: any) => {
+      completedStepsMap.set(progress.stepId, progress.isCompleted);
+    });
 
+    const allSteps = [
+      {
+        id: chapterData?.stepOne?.id,
+        number: "01",
+        title: "Watch the Video or Read Topic",
+        description: chapterData?.stepOne?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepOne?.id) || false,
+      },
+      {
+        id: chapterData?.stepTwo?.id,
+        number: "02",
+        title: "Listen to the Podcast",
+        description: chapterData?.stepTwo?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepTwo?.id) || false,
+      },
+      {
+        id: chapterData?.stepThree?.id,
+        number: "03",
+        title: "Watch the Video or Read Topic",
+        description: chapterData?.stepThree?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepThree?.id) || false,
+      },
+      {
+        id: chapterData?.stepFour?.id,
+        number: "04",
+        title: "Watch the Video or Read Topic",
+        description: chapterData?.stepFour?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepFour?.id) || false,
+      },
+      {
+        id: chapterData?.stepFive?.id,
+        number: "05",
+        title: "Watch the Video or Quiz Test",
+        description: chapterData?.stepFive?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepFive?.id) || false,
+      },
+      {
+        id: chapterData?.stepSix?.id,
+        number: "06",
+        title: "Review Key Terms or Key Words",
+        description: chapterData?.stepSix?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepSix?.id) || false,
+      },
+      {
+        id: chapterData?.stepSeven?.id,
+        number: "07",
+        title: "Watch the Story",
+        description: chapterData?.stepSeven?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepSeven?.id) || false,
+      },
+      {
+        id: Array.isArray(chapterData?.stepEight)
+          ? chapterData?.stepEight[0]?.id
+          : chapterData?.stepEight?.id,
+        number: "08",
+        title: "Final Quiz",
+        description: "Complete the quiz to proceed",
+        isCompleted: Array.isArray(chapterData?.stepEight)
+          ? chapterData?.stepEight.some((step: any) =>
+              completedStepsMap.get(step.id)
+            )
+          : completedStepsMap.get(chapterData?.stepEight?.id) || false,
+      },
+      {
+        id: chapterData?.stepNine?.id,
+        number: "09",
+        title: "Critical Thinking Questions",
+        description: chapterData?.stepNine?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepNine?.id) || false,
+      },
+      {
+        id: chapterData?.stepTen?.id,
+        number: "10",
+        title: "Feedback and Track Progress",
+        description: chapterData?.stepTen?.stepName || "-",
+        isCompleted: completedStepsMap.get(chapterData?.stepTen?.id) || false,
+      },
+      {
+        id: "11",
+        number: "🌟",
+        title: "Finish Chapter 01 Unlock Next Chapter",
+        description: "Complete all steps to unlock the next chapter",
+        isCompleted: false,
+        isLast: true,
+      },
+    ];
+
+    // Find the highest completed step index
+    let highestCompletedIndex = -1;
+    allSteps.forEach((step, index) => {
+      if (step.isCompleted) {
+        highestCompletedIndex = index;
+      }
+    });
+
+    // Determine which steps should be accessible
+    return allSteps.map((step, index) => ({
+      ...step,
+      isAccessible: !!(
+        (
+          index === 0 || // First step always accessible
+          step.isCompleted || // Completed steps accessible
+          index === highestCompletedIndex + 1 || // Next step after last completed
+          step.isLast
+        ) // Last step always accessible
+      ),
+    }));
+  };
   useEffect(() => {
     if (chapterData) {
-      setSteps(getFakeSteps(chapterData));
+      const updatedSteps = getSteps(chapterData);
+      setSteps(updatedSteps);
+      if (onStepsInitialized) {
+        onStepsInitialized(updatedSteps);
+      }
     }
   }, [chapterData]);
 
-  // Mark step as completed when moving to next step
+  const handleStepClick = (index: number) => {
+    const step = steps[index];
+    if (step.isAccessible) {
+      onStepClick(index);
+    } else {
+      toast.warning("Please complete previous steps first");
+    }
+  };
+
   const handleNextWithCompletion = async () => {
     if (currentStepIndex < steps.length - 1) {
       try {
         const currentStep = steps[currentStepIndex];
 
-        console.log(currentStep?.id);
         // Prepare API payload
         const progressData = {
           chapterId: id,
@@ -130,14 +181,35 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
         };
 
         // Call the API to track step progress
-        const response = await stepProgress(progressData);
+        try {
+          const response = await stepProgress(progressData);
+          if (response?.data?.success === true) {
+            toast.success(response?.data?.message);
+          }
+        } catch (error) {
+          toast.error(
+            typeof error === "object" &&
+              error !== null &&
+              "data" in error &&
+              (error as any).data?.message
+              ? (error as any).data?.message
+              : "An error occurred"
+          );
+        }
 
         // Update local state after successful API call
         const updatedSteps = [...steps];
         updatedSteps[currentStepIndex] = {
           ...updatedSteps[currentStepIndex],
           isCompleted: true,
+          isAccessible: true,
         };
+
+        // Make the next step accessible if it exists
+        if (currentStepIndex + 1 < updatedSteps.length) {
+          updatedSteps[currentStepIndex + 1].isAccessible = true;
+        }
+
         setSteps(updatedSteps);
 
         // Move to next step
@@ -148,6 +220,7 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
         updatedSteps[currentStepIndex] = {
           ...updatedSteps[currentStepIndex],
           isCompleted: true,
+          isAccessible: true,
         };
         setSteps(updatedSteps);
         onNext();
@@ -160,21 +233,25 @@ const Steps = ({ currentStepIndex, onStepClick, onNext }: StepsProps) => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="space-y-2 flex-1 h-[800px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col border shadow-lg p-5 rounded-2xl">
       <h2 className="text-xl font-semibold mb-6 font-montserrat">
-        Chapter 01 Progress
+        Chapter Progress
       </h2>
 
-      <div className="flex md:flex-col space-y-2">
+      <div className="flex md:flex-col space-y-2 flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100 h-80">
         {steps.map((step, index) => (
           <div
             key={step.id}
-            className={`flex cursor-pointer transition-all duration-150 ${
+            className={`flex transition-all duration-150 ${
               index === currentStepIndex
                 ? "bg-primary/10 rounded-md p-4"
                 : "px-4 py-3 hover:bg-gray-50 rounded-md"
+            } ${
+              step.isAccessible
+                ? "cursor-pointer"
+                : "cursor-not-allowed opacity-50"
             }`}
-            onClick={() => onStepClick(index)}
+            onClick={() => handleStepClick(index)}
           >
             <div className="flex flex-col items-center md:mr-3">
               <div
