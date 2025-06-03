@@ -135,7 +135,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 width={280}
               >
                 <div className="ms-2 xl:ms-3 2xl:ms-4 !font-poppins">
-                  <SideMenu role={"ADMIN"} handleLogout={handleLogout} />
+                  <SideMenu role={"USER"} handleLogout={handleLogout} />
                 </div>
               </Sider>
             )}

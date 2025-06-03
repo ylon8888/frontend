@@ -13,7 +13,7 @@ export default function HomeLayout() {
       <ExpectfromPodcastClasses />
       <SpecialClasses />
       <MakeSureYouCompletePreparation />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Faq />
       <SuccessInAcademicYear />
     </div>
