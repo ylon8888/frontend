@@ -35,13 +35,11 @@ import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 //   ],
 // };
 
-const StepTwo = () => {
+const StepTwo = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
   const playVideo = (youtubeUrl: string) => setActiveVideoUrl(youtubeUrl);
   const closeVideo = () => setActiveVideoUrl(null);
 
-  const id = window.location.pathname.split("/")[4];
-  const { data } = useGetCoursesOfChapterQuery(id);
   const stepTwoData = data?.data?.chapters?.[0]?.stepTwo;
   // console.log(stepTwoData, "stepTwoData");
   // const { chapterTitle, podcasts } = podcastsData;

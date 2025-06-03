@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  useGetCoursesOfChapterQuery,
+  useCreateChapterProgressMutation,
   useHandleStepProgressMutation,
 } from "@/redux/features/course/course";
 import { T_Step } from "@/types/Common";
@@ -16,6 +16,8 @@ interface StepsProps {
   onNext: () => void;
   onStepsInitialized?: (steps: { isAccessible: boolean }[]) => void;
   onCompleteStep?: (index: number) => void;
+  data: any;
+  isLoading: boolean;
 }
 
 const Steps = ({
@@ -23,11 +25,13 @@ const Steps = ({
   onStepClick,
   onNext,
   onStepsInitialized,
+  data,
+  isLoading,
 }: StepsProps) => {
   const [steps, setSteps] = useState<T_Step[]>([]);
   const id = window.location.pathname.split("/")[4];
-  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const chapterData = data?.data?.chapters?.[0];
+  const [createChapterProgress] = useCreateChapterProgressMutation();
 
   const [stepProgress, { isLoading: isUpdatingProgress }] =
     useHandleStepProgressMutation();
@@ -149,6 +153,7 @@ const Steps = ({
       ),
     }));
   };
+
   useEffect(() => {
     if (chapterData) {
       const updatedSteps = getSteps(chapterData);
@@ -172,6 +177,8 @@ const Steps = ({
     if (currentStepIndex < steps.length - 1) {
       try {
         const currentStep = steps[currentStepIndex];
+        const isStepNine = currentStepIndex === 8; // Step 9 is index 8
+        const isStepEleven = currentStepIndex === 10; // Step 9 is index 8
 
         // Prepare API payload
         const progressData = {
@@ -185,6 +192,25 @@ const Steps = ({
           const response = await stepProgress(progressData);
           if (response?.data?.success === true) {
             toast.success(response?.data?.message);
+
+            // If completing step 9, also mark steps 10 and 11 as completed
+            if (isStepNine) {
+              const stepTenData = {
+                chapterId: id,
+                stepId: chapterData?.stepTen?.id,
+                stepSerial: "10",
+              };
+              const stepElevenData = {
+                chapterId: id,
+                stepId: "11",
+                stepSerial: "11",
+              };
+
+              await Promise.all([
+                stepProgress(stepTenData),
+                stepProgress(stepElevenData),
+              ]);
+            }
           }
         } catch (error) {
           toast.error(
@@ -205,8 +231,22 @@ const Steps = ({
           isAccessible: true,
         };
 
+        // If completing step 9, also update steps 10 and 11
+        if (isStepNine) {
+          updatedSteps[9] = {
+            ...updatedSteps[9],
+            isCompleted: true,
+            isAccessible: true,
+          };
+          updatedSteps[10] = {
+            ...updatedSteps[10],
+            isCompleted: true,
+            isAccessible: true,
+          };
+        }
+
         // Make the next step accessible if it exists
-        if (currentStepIndex + 1 < updatedSteps.length) {
+        if (currentStepIndex + 1 < updatedSteps.length && !isStepNine) {
           updatedSteps[currentStepIndex + 1].isAccessible = true;
         }
 
@@ -226,7 +266,50 @@ const Steps = ({
         onNext();
       }
     }
+    if (currentStepIndex === steps.length - 1) {
+      const stepElevenData = {
+        chapterId: id,
+        stepId: chapterData?.stepNine?.id,
+        stepSerial: "9",
+      };
+
+      try {
+        const res = await createChapterProgress(stepElevenData);
+        console.log(res);
+        if (res?.data?.success === true) {
+          toast.success(res?.data?.message);
+        }
+      } catch (error) {
+        toast.error(
+          typeof error === "object" &&
+            error !== null &&
+            "data" in error &&
+            (error as any).data?.message
+            ? (error as any).data?.message
+            : "An error occurred"
+        );
+      }
+    }
   };
+
+  // const handleChapterComplete = async () => {
+  //   try {
+  //     const response = await createChapterProgress(id);
+  //     if (response?.data?.success) {
+  //       toast.success(response?.data?.message);
+  //       onNext();
+  //     }
+  //   } catch (error) {
+  //     toast.error(
+  //       typeof error === "object" &&
+  //         error !== null &&
+  //         "data" in error &&
+  //         (error as any).data?.message
+  //         ? (error as any).data?.message
+  //         : "An error occurred"
+  //     );
+  //   }
+  // };
 
   if (isLoading) {
     return <StepsSkeleton />;
@@ -291,7 +374,7 @@ const Steps = ({
 
       <button
         onClick={handleNextWithCompletion}
-        disabled={currentStepIndex === steps.length - 1 || isUpdatingProgress}
+        disabled={isUpdatingProgress}
         className="mt-6 bg-secondary text-white py-3 px-4 rounded-md flex items-center justify-center disabled:opacity-50 hover:bg-secondary/90 transition-colors font-medium"
       >
         {isUpdatingProgress

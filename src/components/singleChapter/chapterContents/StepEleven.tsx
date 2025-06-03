@@ -1,11 +1,8 @@
 import React from "react";
 import img from "@/assets/complete.png";
 import Image from "next/image";
-import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
-const StepEleven = () => {
-  const id = window.location.pathname.split("/")[4];
-  const { data } = useGetCoursesOfChapterQuery(id);
 
+const StepEleven = ({ data }: { data: any }) => {
   return (
     <div className="my-10">
       <div className="flex flex-col items-center justify-center h-full gap-4">

@@ -14,6 +14,7 @@ import StepNine from "./chapterContents/StepNine";
 import StepTen from "./chapterContents/StepTen";
 import StepEleven from "./chapterContents/StepEleven";
 import Loading from "../ui/core/Loading/Loading";
+import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 
 const STORAGE_KEY = "chapter_progress";
 
@@ -25,23 +26,28 @@ const ChapterLayout = () => {
     }
     return 0;
   });
-
   const [accessibleSteps, setAccessibleSteps] = useState<boolean[]>([]);
   const [stepsInitialized, setStepsInitialized] = useState(false);
   const [highestAccessibleStep, setHighestAccessibleStep] = useState(0);
 
+  const id = window.location.pathname.split("/")[4];
+  const { data, isLoading } = useGetCoursesOfChapterQuery(id, {
+    skip: !id,
+  });
+
   const stepComponents = [
-    <StepOne key="stepOne" />,
-    <StepTwo key="stepTwo" />,
-    <StepThree key="stepThree" />,
-    <StepFour key="stepFour" />,
-    <StepFive key="stepFive" />,
-    <StepSix key="stepSix" />,
-    <StepSeven key="stepSeven" />,
+    // StepOne(data, isLoading),
+    <StepOne key="stepOne" data={data} isLoading={isLoading} />,
+    <StepTwo key="stepTwo" data={data} isLoading={isLoading} />,
+    <StepThree key="stepThree" data={data} isLoading={isLoading} />,
+    <StepFour key="stepFour" data={data} isLoading={isLoading} />,
+    <StepFive key="stepFive" data={data} isLoading={isLoading} />,
+    <StepSix key="stepSix" data={data} isLoading={isLoading} />,
+    <StepSeven key="stepSeven" data={data} isLoading={isLoading} />,
     <StepEight key="stepEight" />,
-    <StepNine key="stepNine" />,
-    <StepTen key="stepTen" />,
-    <StepEleven key="stepEleven" />,
+    <StepNine key="stepNine" data={data} isLoading={isLoading} />,
+    <StepTen key="stepTen" data={data} isLoading={isLoading} />,
+    <StepEleven key="stepEleven" data={data} />,
   ];
 
   useEffect(() => {
@@ -61,7 +67,6 @@ const ChapterLayout = () => {
       }
     }
     setHighestAccessibleStep(highest);
-
     setStepsInitialized(true);
   };
 
@@ -105,6 +110,8 @@ const ChapterLayout = () => {
           onStepClick={handleStepClick}
           onNext={handleNext}
           onStepsInitialized={handleAccessibleStepsUpdate}
+          data={data}
+          isLoading={isLoading}
         />
       </div>
     </div>

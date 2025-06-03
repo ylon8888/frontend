@@ -1,3 +1,4 @@
+import { get } from "http";
 import { baseApi } from "../../api/baseApi";
 
 const courseApi = baseApi.injectEndpoints({
@@ -80,7 +81,6 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
-
     getStepProgress: builder.query({
       query: (chapterId) => ({
         url: `/progress/${chapterId}`,
@@ -88,7 +88,16 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
-
+    createChapterProgress: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/progress/create-next-progress`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
     giveChapterFeedback: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -147,6 +156,7 @@ export const {
   useGetQuizResultsQuery,
   useHandleStepProgressMutation,
   useGetStepProgressQuery,
+  useCreateChapterProgressMutation,
   useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,

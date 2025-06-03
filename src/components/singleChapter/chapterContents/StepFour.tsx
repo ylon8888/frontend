@@ -2,14 +2,11 @@
 
 import { useState } from "react";
 import { Play, X } from "lucide-react";
-import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 
-const StepFour = () => {
+const StepFour = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
 
-  const id = window.location.pathname.split("/")[4];
-  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const stepFourData = data?.data?.chapters?.[0]?.stepFour;
 
   // Function to play video

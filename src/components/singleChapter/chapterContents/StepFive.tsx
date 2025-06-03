@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Play, X } from "lucide-react";
-import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 import {
   Accordion,
   AccordionContent,
@@ -11,10 +10,8 @@ import {
 } from "@/components/ui/step-accordian";
 import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 
-const StepFive = () => {
+const StepFive = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
-  const id = window.location.pathname.split("/")[4];
-  const { data, isLoading } = useGetCoursesOfChapterQuery(id);
   const stepFiveData = data?.data?.chapters?.[0]?.stepFive;
   console.log(stepFiveData, "stepFiveData");
   // Function to play video

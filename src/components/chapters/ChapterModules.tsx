@@ -108,7 +108,6 @@ const ChapterModules = ({ chapters }: { chapters: any }) => {
       </div>
 
       {/* Chapter modules content */}
-
       <div className="mt-8 space-y-4">
         {chapters?.chapters?.map((chapter: any) => {
           const isUnlocked =
