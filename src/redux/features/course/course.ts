@@ -143,6 +143,13 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getSingleChapterByStudent: builder.query({
+      query: (id) => ({
+        url: `/student/chapter-quiz/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
   }),
 });
 
@@ -162,4 +169,5 @@ export const {
   useVerifyEnrollMutation,
   useResendOtpMutation,
   useGetSingleCourseReviewsQuery,
+  useGetSingleChapterByStudentQuery,
 } = courseApi;
