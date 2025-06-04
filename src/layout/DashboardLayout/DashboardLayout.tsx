@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+'use client';
 
-import { ContextProvider } from "@/lib/MyContextProvider";
-import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { Drawer, Layout, Space, theme } from "antd";
-import { TbLogout2 } from "react-icons/tb";
+import { ContextProvider } from '@/lib/MyContextProvider';
+import { logout, selectCurrentUser } from '@/redux/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { Drawer, Layout, Space, theme } from 'antd';
+import { TbLogout2 } from 'react-icons/tb';
 import {
   ChartNoAxesCombined,
   LayoutDashboard,
@@ -14,10 +14,10 @@ import {
   School,
   UserPen,
   Users,
-} from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   ReactNode,
   use,
@@ -26,18 +26,20 @@ import {
   useMemo,
   useRef,
   useState,
-} from "react";
-import { BiLogOut } from "react-icons/bi";
-import { FiUser } from "react-icons/fi";
-import { IoClose, IoHomeSharp, IoMenu } from "react-icons/io5";
-import { MdKeyboardArrowDown } from "react-icons/md";
-import Swal from "sweetalert2";
+} from 'react';
+import { BiLogOut } from 'react-icons/bi';
+import { FiUser } from 'react-icons/fi';
+import { IoClose, IoHomeSharp, IoMenu } from 'react-icons/io5';
+import { MdKeyboardArrowDown } from 'react-icons/md';
+import Swal from 'sweetalert2';
+import { useGetMeQuery } from '@/redux/features/auth/authApi';
+import Loading from '@/components/ui/core/Loading/Loading';
 
 const { Header, Sider, Content } = Layout;
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const user = useAppSelector(selectCurrentUser);
-  const role = user?.role || "STUDENT";
+  const role = user?.role || 'STUDENT';
   console.log(role);
 
   const [isShowDrawer, setIsShowDrawer] = useState(false);
@@ -57,6 +59,8 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
     console.log(formData, reset);
   };
 
+  const { data: response, isLoading, isFetching } = useGetMeQuery(undefined);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -67,40 +71,44 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: "Are you sure?",
-      icon: "warning",
+      title: 'Are you sure?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Log out",
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Log out',
     });
     if (result.isConfirmed) {
       try {
         await dispatch(logout());
         Swal.fire({
-          title: "Logged out!",
-          icon: "success",
+          title: 'Logged out!',
+          icon: 'success',
           timer: 1500,
           showConfirmButton: false,
         });
       } catch (error) {
-        console.error("Logout failed:", error);
+        console.error('Logout failed:', error);
         Swal.fire({
-          title: "Error!",
-          text: "Logout failed. Please try again.",
-          icon: "error",
+          title: 'Error!',
+          text: 'Logout failed. Please try again.',
+          icon: 'error',
         });
       }
     }
   };
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
 
   return (
     <div className="!font-poppins">
@@ -157,7 +165,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
                   <div className="hidden flex-col my-5 lg:flex">
                     <h4 className="text-[24px] font-semibold">
-                      Welcome Back, Admin
+                      Welcome Back, {response?.data?.firstName} {response?.data?.lastName}
                     </h4>
                     <p className="text-sm lg:-mt-2">
                       Please validate your action to proceed and unlock your
@@ -208,14 +216,14 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                               />
                             </div>
                             <h3 className="font-medium text-black">
-                              Martin De
+                              {response?.data?.firstName} {response?.data?.lastName}
                             </h3>
                           </div>
-                          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                          {/* <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             <FiUser className="h-4 w-4 text-blue-primary" />
                             My Profile
-                          </button>
-                          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                          </button> */}
+                          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             <BiLogOut className="h-4 w-4 text-blue-primary" />
                             Logout
                           </button>
@@ -255,57 +263,57 @@ const SideMenu = ({
   const pathname = usePathname();
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const menuItems = useMemo(() => {
-    if (role === "ADMIN") {
+    if (role === 'ADMIN') {
       return [
         {
-          href: "/dashboard",
+          href: '/dashboard',
           icon: <LayoutDashboard className="w-5 h-5 mr-1" />,
-          text: "Overview",
+          text: 'Overview',
           isActive: true,
         },
         {
-          href: "/dashboard/student-list",
+          href: '/dashboard/student-list',
           icon: <Users className="w-5 h-5 mr-1" />,
-          text: "Student List",
+          text: 'Student List',
           isActive: false,
         },
         {
-          href: "/dashboard/classes",
+          href: '/dashboard/classes',
           icon: <School className="w-5 h-5 mr-1" />,
-          text: "Classes",
+          text: 'Classes',
           isActive: false,
         },
         {
-          href: "/dashboard/blogs",
+          href: '/dashboard/blogs',
           icon: <NotebookPen className="w-5 h-5 mr-1" />,
-          text: "Blogs",
+          text: 'Blogs',
           isActive: false,
         },
         {
-          href: "/dashboard/feedback",
+          href: '/dashboard/feedback',
           icon: <MessageSquareText className="w-5 h-5 mr-1" />,
-          text: "Feedback",
+          text: 'Feedback',
           isActive: false,
         },
       ];
     } else {
       return [
         {
-          href: "/user",
+          href: '/user',
           icon: <LayoutDashboard className="w-5 h-5 mr-1" />,
-          text: "Dashboard",
+          text: 'Dashboard',
           isActive: true,
         },
         {
-          href: "/user/my-profile",
+          href: '/user/my-profile',
           icon: <UserPen className="w-5 h-5 mr-1" />,
-          text: "Your Profile",
+          text: 'Your Profile',
           isActive: false,
         },
         {
-          href: "/user/enrolled-courses",
+          href: '/user/enrolled-courses',
           icon: <School className="w-5 h-5 mr-1" />,
-          text: "Enrolled Courses",
+          text: 'Enrolled Courses',
           isActive: false,
         },
         // {
@@ -315,9 +323,9 @@ const SideMenu = ({
         //   isActive: false,
         // },
         {
-          href: "/dashboard/feedback",
+          href: '/dashboard/feedback',
           icon: <IoHomeSharp className="w-5 h-5 mr-1" />,
-          text: "Go back to Home",
+          text: 'Go back to Home',
           isActive: false,
         },
       ];
@@ -357,7 +365,7 @@ const SideMenu = ({
             >
               <mask
                 id="mask0_265_4157"
-                style={{ maskType: "luminance" }}
+                style={{ maskType: 'luminance' }}
                 maskUnits="userSpaceOnUse"
                 x="0"
                 y="0"
@@ -390,8 +398,8 @@ const SideMenu = ({
               onClick={() => handleMenuClick(item)}
               className={`flex items-center px-6 py-3 lg:max-w-52  rounded-lg gap-2 transition-colors duration-300 ${
                 activeKey === item.href
-                  ? "!bg-primary !text-white"
-                  : "!text-gray-700 hover:!bg-primary hover:!text-white"
+                  ? '!bg-primary !text-white'
+                  : '!text-gray-700 hover:!bg-primary hover:!text-white'
               }`}
             >
               {item.icon}
