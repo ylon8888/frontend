@@ -35,11 +35,11 @@ const Abouts = ({
 
           {/* Text Section */}
           <div className="w-full md:w-1/2 md:pl-10">
-            <h2 className="text-5xl font-bold font-montserrat text-gray-800 mb-4">
+            <h2 className="text-3xl lg:text-5xl font-bold font-montserrat text-gray-800 mb-4">
               {title}
             </h2>
             {useList ? (
-              <ul className="list-disc pl-6 space-y-2 text-lg text-gray-700">
+              <ul className="list-disc pl-6 space-y-2 text-sm lg:text-lg text-gray-700">
                 {content.map((item, index) => (
                   <li key={index}>
                     <strong>{item.split(":")[0]}:</strong> {item.split(":")[1]}
@@ -47,7 +47,9 @@ const Abouts = ({
                 ))}
               </ul>
             ) : (
-              <p className="text-lg text-gray-700">{content.join(" ")}</p>
+              <p className="text-sm lg:text-lg text-gray-700">
+                {content.join(" ")}
+              </p>
             )}
           </div>
         </div>
