@@ -17,27 +17,23 @@ import Loading from "../ui/core/Loading/Loading";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
 import { useParams } from "next/navigation";
 
-const STORAGE_KEY = "chapter_progress";
+// const STORAGE_KEY = "chapter_progress";
 
 const ChapterLayout = () => {
-  const [currentStepIndex, setCurrentStepIndex] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? parseInt(saved) : 0;
-    }
-    return 0;
-  });
+  const params = useParams();
+  const chapterId = params.chapterId as string;
+
+  // Reset to step 0 when chapterId changes
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [accessibleSteps, setAccessibleSteps] = useState<boolean[]>([]);
   const [stepsInitialized, setStepsInitialized] = useState(false);
   const [highestAccessibleStep, setHighestAccessibleStep] = useState(0);
 
-  const id = useParams().chapterId;
-  const { data, isLoading } = useGetCoursesOfChapterQuery(id, {
-    skip: !id,
+  const { data, isLoading } = useGetCoursesOfChapterQuery(chapterId, {
+    skip: !chapterId,
   });
 
   const stepComponents = [
-    // StepOne(data, isLoading),
     <StepOne key="stepOne" data={data} isLoading={isLoading} />,
     <StepTwo key="stepTwo" data={data} isLoading={isLoading} />,
     <StepThree key="stepThree" data={data} isLoading={isLoading} />,
@@ -51,9 +47,11 @@ const ChapterLayout = () => {
     <StepEleven key="stepEleven" data={data} />,
   ];
 
+  // Reset to step 0 when chapter changes
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, currentStepIndex.toString());
-  }, [currentStepIndex]);
+    setCurrentStepIndex(0);
+    setStepsInitialized(false);
+  }, [chapterId]);
 
   const handleAccessibleStepsUpdate = (steps: { isAccessible: boolean }[]) => {
     const access = steps.map((step) => step.isAccessible);
@@ -84,21 +82,15 @@ const ChapterLayout = () => {
   };
 
   const renderCurrentStep = () => {
-    if (!stepsInitialized) {
+    if (!stepsInitialized || isLoading) {
       return <Loading />;
     }
 
-    // Always show Step One when landing on the page
-    if (currentStepIndex === 0) {
-      return stepComponents[0];
-    }
-
-    // Show the highest accessible step if current step is locked
-    if (!accessibleSteps[currentStepIndex] && currentStepIndex !== 0) {
+    // If current step is not accessible, show the highest accessible step
+    if (!accessibleSteps[currentStepIndex]) {
       return stepComponents[highestAccessibleStep];
     }
 
-    // Otherwise show the current step
     return stepComponents[currentStepIndex];
   };
 

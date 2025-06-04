@@ -46,14 +46,14 @@ const ChapterModules = ({
   return (
     <div className="bg-white container max-w-[1320px] mx-auto px-6 py-8 rounded-lg shadow-sm">
       <div className="mb-6">
-        <span className="text-secondary font-medium text-sm tracking-wide uppercase">
+        <span className="text-secondary font-medium text-xs sm:text-sm tracking-wide uppercase">
           {chapters?.subject?.class?.className}
         </span>
-        <h1 className="text-3xl md:text-4xl font-bold mt-2 mb-4 text-gray-900">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mt-1 sm:mt-2 mb-3 sm:mb-4 text-gray-900">
           {chapters?.subject?.subjectName}
         </h1>
         <p
-          className="text-gray-600 leading-relaxed"
+          className="text-gray-600 text-sm sm:text-base leading-relaxed"
           dangerouslySetInnerHTML={{
             __html: chapters?.subject?.subjectDescription,
           }}
@@ -61,7 +61,7 @@ const ChapterModules = ({
       </div>
 
       {/* Chapter modules content */}
-      <div className="mt-8 space-y-4">
+      <div className="mt-6 sm:mt-8 space-y-3 sm:space-y-4">
         {chapterList.map((chapter: any, index: number) => {
           const isUnlocked = isChapterUnlocked(chapter, index);
           const isActive = expandedChapter === chapter.id;
@@ -84,25 +84,25 @@ const ChapterModules = ({
               whileHover={isUnlocked ? { scale: 1.005 } : {}}
             >
               <div
-                className={`flex justify-between items-start p-4 ${
+                className={`flex flex-col sm:flex-row justify-between items-start p-3 sm:p-4 ${
                   isUnlocked ? "cursor-pointer" : "cursor-not-allowed"
                 }`}
                 onClick={() => isUnlocked && toggleChapter(chapter.id)}
               >
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <h2 className="font-montserrat text-xl font-semibold">
+                <div className="space-y-1 sm:space-y-2 w-full">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <h2 className="font-montserrat text-lg sm:text-xl font-semibold">
                       Chapter {chapter?.sLNumber}: {chapter?.chapterName}
                     </h2>
                     {isCompleted && (
-                      <span className="flex items-center gap-1 text-sm text-green-600">
-                        <Check size={16} />
+                      <span className="flex items-center gap-1 text-xs sm:text-sm text-green-600">
+                        <Check size={14} className="shrink-0" />
                         Completed
                       </span>
                     )}
                   </div>
-                  <p className="text-gray-600 text-sm flex gap-2">
-                    <span className="font-medium">Objective:</span>{" "}
+                  <p className="text-gray-600 text-xs sm:text-sm flex flex-col sm:flex-row sm:gap-2">
+                    <span className="font-medium">Objective:</span>
                     <span
                       dangerouslySetInnerHTML={{
                         __html: chapter?.chapterDescription,
@@ -110,23 +110,26 @@ const ChapterModules = ({
                     />
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mt-2 sm:mt-0 self-end sm:self-auto">
                   {isUnlocked ? (
                     <Link
                       href={`/courses/${subjectId}/chapters/${chapter.id}`}
-                      className="text-sm bg-secondary text-white px-3 py-1 rounded hover:bg-secondary/90 transition-colors"
+                      className="text-xs sm:text-sm bg-secondary text-white px-2 sm:px-3 py-1 rounded hover:bg-secondary/90 transition-colors whitespace-nowrap"
                       onClick={(e) => e.stopPropagation()}
                     >
                       Start
                     </Link>
                   ) : (
-                    <CiLock size={20} className="text-gray-400" />
+                    <CiLock size={18} className="text-gray-400 shrink-0" />
                   )}
                   {expandedChapter === chapter.id ? (
-                    <ChevronUp className="text-secondary" />
+                    <ChevronUp size={18} className="text-secondary shrink-0" />
                   ) : (
                     <ChevronDown
-                      className={isUnlocked ? "text-gray-600" : "text-gray-400"}
+                      size={18}
+                      className={`shrink-0 ${
+                        isUnlocked ? "text-gray-600" : "text-gray-400"
+                      }`}
                     />
                   )}
                 </div>
@@ -141,20 +144,21 @@ const ChapterModules = ({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-4 border-t border-gray-200 bg-gray-50">
+                    <div className="p-3 sm:p-4 border-t border-gray-200 bg-gray-50">
                       {chapter?.thumbnail && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           transition={{ delay: 0.1 }}
-                          className="mt-4 bg-gray-200 rounded-lg p-4 flex justify-center"
+                          className="mt-3 sm:mt-4 bg-gray-200 rounded-lg p-2 sm:p-4 flex justify-center"
                         >
                           <Image
                             src={chapter.thumbnail}
                             alt={chapter.chapterName}
                             width={875}
                             height={542}
-                            className="object-contain"
+                            className="object-contain w-full h-auto"
+                            sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, 875px"
                           />
                         </motion.div>
                       )}
@@ -162,7 +166,7 @@ const ChapterModules = ({
                       {!isCompleted && isUnlocked && (
                         <Link
                           href={`/courses/${subjectId}/chapters/${chapter.id}`}
-                          className="inline-block mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+                          className="inline-block mt-3 sm:mt-4 bg-orange-500 hover:bg-orange-600 text-white font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-lg transition-colors duration-200 text-sm sm:text-base"
                         >
                           Continue Chapter
                         </Link>

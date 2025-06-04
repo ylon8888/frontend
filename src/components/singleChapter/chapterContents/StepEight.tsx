@@ -56,7 +56,7 @@ const StepEight = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="">
       {showResults ? (
         <ReviewQuizResults onRetake={handleRetakeQuiz} quizId={currentQuizId} />
       ) : (

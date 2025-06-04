@@ -297,7 +297,7 @@ const Steps = ({
   }
 
   return (
-    <div className="space-y-2 flex-1 h-[800px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col border shadow-lg p-5 rounded-2xl">
+    <div className="space-y-2 flex-1 md:h-[800px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex flex-col border shadow-lg p-5 rounded-2xl">
       <h2 className="text-xl font-semibold mb-6 font-montserrat">
         Chapter Progress
       </h2>
@@ -331,7 +331,7 @@ const Steps = ({
               </div>
               {!step.isLast && (
                 <div
-                  className={`w-0.5 h-full my-1 ${
+                  className={`w-0.5 h-2 md:h-full my-1 ${
                     step.isCompleted ? "bg-secondary" : "bg-secondary/20"
                   }`}
                 />

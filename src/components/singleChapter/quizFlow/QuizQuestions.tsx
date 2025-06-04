@@ -32,7 +32,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-medium flex items-center justify-between mb-6">
+        <h2 className="text-2xl lg:text-3xl font-medium flex items-center justify-between mb-6">
           {quiz.data.questionType} Quiz Step
         </h2>
         <p className="font-light mb-10">{quiz.data.questionDescription}</p>
@@ -41,14 +41,16 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
       {/* Quiz Questions */}
       <div className="space-y-4">
         {quiz.data.stepEightQuizzes?.map((question: any, index: number) => (
-          <div key={question.id} className="border rounded-lg p-6">
+          <div key={question.id} className="border rounded-lg p-3 lg:p-6">
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <p className="flex-shrink-0 text-lg font-medium">
+                <p className="flex-shrink-0 text-base lg:text-lg font-medium">
                   Quiz - {String(index + 1).padStart(2, "0")}
                 </p>
                 <div className="flex-1">
-                  <h3 className="text-lg mb-4">{question.questionText}</h3>
+                  <h3 className="text-base lg:text-lg mb-4">
+                    {question.questionText}
+                  </h3>
                 </div>
               </div>
 
@@ -57,7 +59,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
                   (option, optionIndex) => (
                     <div
                       key={option}
-                      className={`flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer ${
+                      className={`flex items-center space-x-3 p-2 lg:p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer text-sm lg:text-base ${
                         selectedAnswers[question.id] === option
                           ? "border-primary bg-primary/5"
                           : ""

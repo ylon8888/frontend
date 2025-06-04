@@ -7,11 +7,8 @@ import Modal from "../shared/Testimonials/SharedModal";
 import EnrollForm from "./EnrollForm";
 import Link from "next/link";
 import EnrollOtp from "./EnrollOtp";
-
-type EnrollData = {
-  success?: boolean;
-  // add other properties as needed
-};
+import { useParams } from "next/navigation";
+import { toast } from "sonner";
 
 const EnrollCard = ({ courseDetail }: any) => {
   const [enrollFormOpen, setEnrollFormOpen] = useState(false);
@@ -26,8 +23,8 @@ const EnrollCard = ({ courseDetail }: any) => {
       setOtpOpen(true);
     }
   }, [enrollData]);
-  const id = window.location.pathname.split("/")[2];
-  // console.log(courseDetail);
+  const id = useParams().id;
+  console.log(courseDetail);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">
@@ -64,7 +61,22 @@ const EnrollCard = ({ courseDetail }: any) => {
       <div className="flex gap-3 mb-6">
         <Modal
           trigger={
-            <button className="flex-1 bg-secondary text-white py-3 px-6 rounded-lg hover:bg-secondary/90 transition-colors">
+            <button
+              disabled={courseDetail?.data?.isEnroll}
+              onClick={() => {
+                if (courseDetail?.data?.isEnroll) {
+                  toast.error("You are already enrolled");
+                } else {
+                }
+              }}
+              className={`flex-1 py-3 px-6 rounded-lg transition-colors
+              ${
+                courseDetail?.data?.isEnroll
+                  ? "bg-secondary/70 text-white cursor-not-allowed"
+                  : "bg-secondary text-white hover:bg-secondary/90 cursor-pointer"
+              }
+            `}
+            >
               Enroll Now
             </button>
           }
@@ -83,13 +95,21 @@ const EnrollCard = ({ courseDetail }: any) => {
         >
           <EnrollOtp />
         </Modal>
-
-        <Link
-          href={`${id}/chapters`}
-          className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"
-        >
-          View Course
-        </Link>
+        {courseDetail?.data?.isEnroll ? (
+          <Link
+            href={`${id}/chapters`}
+            className="flex-1 bg-gray-100 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-colors text-center"
+          >
+            View Course
+          </Link>
+        ) : (
+          <button
+            onClick={() => toast.error("You need to enroll first")}
+            className="flex-1 bg-gray-200 text-gray-400 py-3 px-6 rounded-lg font-semibold cursor-not-allowed text-center"
+          >
+            View Course
+          </button>
+        )}
       </div>
 
       <div className="space-y-3">

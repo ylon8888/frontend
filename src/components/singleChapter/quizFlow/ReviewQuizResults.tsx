@@ -51,10 +51,10 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
     <div className="max-w-4xl mx-auto">
       {/* Header Section */}
       <div className="border p-6 rounded-lg mb-8">
-        <h2 className="text-4xl font-semibold font-montserrat mb-6">
+        <h2 className="text-2xl lg:text-3xl font-semibold font-montserrat mb-6">
           Review Your Quiz Results
         </h2>
-        <p className="text-gray-600 font-light mb-6">
+        <p className="text-gray-600 font-light mb-6 text-sm lg:text-base-">
           To ensure a strong understanding of the material, we recommend
           achieving at least 100% on your quiz. If your score is below 100%, you
           will be required to retake the quiz to reinforce your learning.
@@ -84,7 +84,7 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
           </div>
         </div>
 
-        <h3 className="text-xl font-semibold font-montserrat mb-4">
+        <h3 className="lg:text-xl font-semibold font-montserrat mb-4">
           Click to retake the quiz and improve your score.
         </h3>
         <button
