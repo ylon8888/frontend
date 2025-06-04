@@ -11,13 +11,14 @@ import FrequentlyAskedQuestions from "./FrequentlyAskedQuestions";
 import { courseData } from "@/lib/CourseData";
 import { useGetSingleCourseDetailsQuery } from "@/redux/features/course/course";
 import Loading from "../ui/core/Loading/Loading";
+import { useParams } from "next/navigation";
 
 const CoursesDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("instructor");
-  const id = window.location.pathname.split("/")[2];
-  console.log(id);
-
-  const { data, isLoading } = useGetSingleCourseDetailsQuery(id);
+  const courseID = useParams().id;
+  const { data, isLoading } = useGetSingleCourseDetailsQuery(courseID, {
+    skip: !courseID,
+  });
   const courseDetail = data?.data;
 
   const tabs = [

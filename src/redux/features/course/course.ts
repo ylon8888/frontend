@@ -1,3 +1,4 @@
+import { get } from "http";
 import { baseApi } from "../../api/baseApi";
 
 const courseApi = baseApi.injectEndpoints({
@@ -46,6 +47,66 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getQuizByType: builder.query({
+      query: (id) => ({
+        url: `/step/quiz-question/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    submitQuiz: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/step/submit-quiz/${id}`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
+    getQuizResults: builder.query({
+      query: (id) => ({
+        url: `/step/quiz-result/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    handleStepProgress: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/progress/create-progress`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
+    getStepProgress: builder.query({
+      query: (chapterId) => ({
+        url: `/progress/${chapterId}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    createChapterProgress: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/progress/create-next-progress`,
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
+    giveChapterFeedback: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/course/course-review/${id}`,
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
     enrollCourse: builder.mutation({
       query: ({ data, id }) => {
         return {
@@ -66,6 +127,29 @@ const courseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["course"],
     }),
+    resendOtp: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/course/resend-otp/${id}`,
+          method: "POST",
+        };
+      },
+      invalidatesTags: ["course"],
+    }),
+    getSingleCourseReviews: builder.query({
+      query: (id) => ({
+        url: `/course/course-review/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
+    getSingleChapterByStudent: builder.query({
+      query: (id) => ({
+        url: `/student/chapter-quiz/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
   }),
 });
 
@@ -74,6 +158,16 @@ export const {
   useGetSingleCourseDetailsQuery,
   useGetChaptersQuery,
   useGetCoursesOfChapterQuery,
+  useGetQuizByTypeQuery,
+  useSubmitQuizMutation,
+  useGetQuizResultsQuery,
+  useHandleStepProgressMutation,
+  useGetStepProgressQuery,
+  useCreateChapterProgressMutation,
+  useGiveChapterFeedbackMutation,
   useEnrollCourseMutation,
   useVerifyEnrollMutation,
+  useResendOtpMutation,
+  useGetSingleCourseReviewsQuery,
+  useGetSingleChapterByStudentQuery,
 } = courseApi;

@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useVerifyEnrollMutation } from "@/redux/features/course/course";
+import {
+  useResendOtpMutation,
+  useVerifyEnrollMutation,
+} from "@/redux/features/course/course";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 import { useRouter } from "next/navigation";
@@ -23,6 +26,7 @@ const EnrollOtp = () => {
   const subjectId = window.location.pathname.split("/")[2];
   const router = useRouter();
   const [enrollCourse, { isLoading }] = useVerifyEnrollMutation();
+  const [resendOtp] = useResendOtpMutation();
 
   const handleDigitChange = (index: number, value: string) => {
     if (value.length > 1 || (value && isNaN(Number(value)))) return;
@@ -43,7 +47,7 @@ const EnrollOtp = () => {
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setIsPasting(true); // flag we are pasting
+    setIsPasting(true);
 
     const pasteData = e.clipboardData.getData("Text").trim();
     const digits = pasteData.replace(/\D/g, "").slice(0, 6).split("");
@@ -97,7 +101,7 @@ const EnrollOtp = () => {
   const handleResendCode = async () => {
     await handleAsyncWithToast(async () => {
       // You might need to adjust this based on your API
-      return enrollCourse({ data: { resend: true }, subjectId });
+      return resendOtp(subjectId);
     });
   };
 
@@ -139,7 +143,10 @@ const EnrollOtp = () => {
       </div>
 
       <div className="space-y-4">
-        <button className="w-full" onClick={handleResendCode}>
+        <button
+          className="w-full border border-black font-medium py-3 px-4 rounded-md transition-colors"
+          onClick={handleResendCode}
+        >
           Resend Code
         </button>
 

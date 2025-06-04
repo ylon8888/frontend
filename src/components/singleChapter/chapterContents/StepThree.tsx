@@ -1,64 +1,43 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
+
 import { useState } from "react";
 import { Play, X } from "lucide-react";
+import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 
-const briefingData = {
-  title: "Briefing Document: Photosynthesis, Carbon Cycle, and Climate Change",
-  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  videoThumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
-  overview:
-    "<p>This briefing provides an introduction to photosynthesis, the carbon cycle, and climate change, focusing on the relationships between them. The larger context is how the Earth's systems interact with human activities and natural methods including habitat examination, diagrams, experiments, and activities. The chapter builds upon fundamental science to explore the complex dynamics of our planet.</p>",
-  content: `
-    <h3>Photosynthesis and the Carbon Cycle</h3>
-
-    <h4>1. Photosynthesis</h4>
-    <ul>
-      <li>How and Why photosynthesis</li>
-      <li>What happens inside a leaf</li>
-    </ul>
-
-    <h4>2. Carbon cycle</h4>
-    <ul>
-      <li>Carbon in Life and Air</li>
-      <li>Fossil fuels and combustion</li>
-    </ul>
-
-    <h4>3. Climate change</h4>
-    <ul>
-      <li>Greenhouse gases</li>
-      <li>Climate change: Past, Present, Future</li>
-      <li>Impacts of climate change</li>
-    </ul>
-    `,
-};
-
-const StepThree = () => {
+const StepThree = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
   const [activeVideoUrl, setActiveVideoUrl] = useState<string | null>(null);
-  const { title, videoUrl, videoThumbnail, content, overview } = briefingData;
+
+  const stepThreeData = data?.data?.chapters?.[0]?.stepThree;
 
   // Function to play video
-  const playVideo = () => setActiveVideoUrl(videoUrl);
+  const playVideo = () => setActiveVideoUrl(stepThreeData?.stepVideo);
 
   const closeVideo = () => {
     setActiveVideoUrl(null);
   };
 
+  if (isLoading) {
+    return <StepOneSkeleton />;
+  }
   return (
     <div className="flex flex-col space-y-6">
       {/* Title */}
-      <h2 className="text-2xl font-semibold font-montserrat">{title}</h2>
+      <div className="bg-white rounded-lg px-6 py-6 shadow-sm">
+        <h2 className="font-semibold text-2xl font-montserrat">
+          {data?.data?.chapters?.[0]?.chapterName}
+        </h2>
+      </div>
 
       {/* Video Section */}
       <div
         className="relative rounded-lg overflow-hidden cursor-pointer aspect-video"
         onClick={playVideo}
       >
-        <img
+        {/* <img
           src={videoThumbnail}
           alt={title}
           className="w-full h-full object-cover"
-        />
+        /> */}
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center hover:bg-black/30 transition-colors">
           <Play className="w-12 h-12 text-white bg-secondary/70 rounded-full p-3" />
         </div>
@@ -66,18 +45,10 @@ const StepThree = () => {
 
       {/* Document Content */}
       <div className="bg-white rounded-lg p-8 border border-primary shadow-xl">
-        <h2 className="text-2xl font-semibold mb-4 font-montserrat">{title}</h2>
-
-        {/* Overview */}
-        <div className="mb-6">
-          <h3 className="font-montserrat text-lg font-semibold mb-2">
-            Overview:
-          </h3>
-          <div dangerouslySetInnerHTML={{ __html: overview }} />
-        </div>
-
         {/* Content Sections */}
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div
+          dangerouslySetInnerHTML={{ __html: stepThreeData?.stepDescription }}
+        />
       </div>
 
       {/* YouTube Player Modal */}

@@ -3,8 +3,11 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import bg from "@/assets/courses/hero-bg.png";
-import banner from "@/assets/courses/hero-logo.png";
+import { useGetSingleBlogQuery } from "@/redux/features/blog/blog.admin.api";
+import { useParams } from "next/navigation";
 const DetailsHero = () => {
+  const id = useParams().id;
+  const { data } = useGetSingleBlogQuery(id);
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -52,14 +55,10 @@ const DetailsHero = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-4xl lg:text-6xl font-bold font-montserrat mb-6 "
+              className="text-4xl lg:text-4xl font-bold font-montserrat mb-6 leading-tight tracking-wide"
             >
-              The Importance of Early Literacy
+              {data?.data?.blog?.title}
             </motion.h1>
-            <motion.p variants={itemVariants} className="mb-8">
-              Learn why early literacy plays a crucial role in a child’s
-              academic development and long-term success.
-            </motion.p>
           </motion.div>
           {/* Right Content - Banner Image */}
           <motion.div
@@ -70,7 +69,7 @@ const DetailsHero = () => {
           >
             <div className="relative w-[243px] h-[250px]">
               <Image
-                src={banner || "/placeholder.svg"}
+                src={data?.data?.blog?.image}
                 alt="Learning Platform Banner"
                 fill
                 className="object-contain"

@@ -8,6 +8,8 @@ import { ProgressProvider } from "@bprogress/next/app";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout, selectCurrentUser } from "@/redux/features/auth/authSlice";
 import Swal from "sweetalert2";
+import Image from "next/image";
+import profilePicture from "@/assets/profile.png";
 
 const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -16,6 +18,7 @@ const Navbar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
+
   const handleLogout = async () => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -95,7 +98,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="text-white font-bold text-2xl md:text-3xl">
-              LOGO
+              Brain Drawer
               <span className="inline-block w-2 h-2 bg-secondary rounded-full ml-1 align-top mt-2"></span>
             </div>
           </Link>
@@ -121,7 +124,7 @@ const Navbar = () => {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
-                className="absolute top-16 left-0 right-0 bg-[#1e2130] z-20 md:hidden"
+                className="absolute top-18 left-0 right-0 bg-[#1e2130] z-20 md:hidden"
               >
                 <div className="flex flex-col p-4 space-y-4">
                   {navLinks.map((link, index) => (
@@ -194,12 +197,23 @@ const Navbar = () => {
             </div>
 
             {user ? (
-              <button
-                onClick={handleLogout}
-                className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
-              >
-                Logout
-              </button>
+              <>
+                <Link href="/user/my-profile">
+                  <Image
+                    src={user.profilePicture || profilePicture}
+                    alt="Profile"
+                    width={400}
+                    height={400}
+                    className="w-10 h-10 rounded-full"
+                  />
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-secondary hover:bg-orange-600 text-white py-2 px-6 rounded-md transition-colors"
+                >
+                  Logout
+                </button>
+              </>
             ) : (
               <div className="hidden lg:flex items-center space-x-8">
                 <Link
@@ -214,12 +228,35 @@ const Navbar = () => {
 
           {/* Mobile Search */}
           <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="bg-teal-600 hover:bg-teal-700 transition-colors p-2 rounded-full flex items-center justify-center mr-2"
-            >
-              <Search className="h-5 w-5" />
-            </button>
+            {user ? (
+              <div className="flex items-center space-x-2">
+                {" "}
+                <Link href="/user/my-profile">
+                  <Image
+                    src={user.profilePicture || profilePicture}
+                    alt="Profile"
+                    width={400}
+                    height={400}
+                    className="w-8 h-8 rounded-full"
+                  />
+                </Link>
+                <button
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="bg-teal-600 hover:bg-teal-700 transition-colors p-2 rounded-full flex items-center justify-center mr-2"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+              </div>
+            ) : (
+              <div>
+                <button
+                  onClick={() => setIsSearchOpen(!isSearchOpen)}
+                  className="bg-teal-600 hover:bg-teal-700 transition-colors p-2 rounded-full flex items-center justify-center mr-2"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

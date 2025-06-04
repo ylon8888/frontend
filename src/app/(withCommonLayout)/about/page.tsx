@@ -49,7 +49,7 @@ const About = () => {
       />
       <OurTeam />
       <GetInTouch />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Faq />
       <SuccessInAcademicYear />
     </div>

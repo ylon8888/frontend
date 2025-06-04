@@ -1,7 +1,10 @@
 "use client";
 
+import { useCreateContactMutation } from "@/redux/features/contact/contactApi";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { Mail, MapPin, PhoneCall } from "lucide-react";
 import React, { useState } from "react";
+import { ButtonLoading } from "../shared/button-loading/LoadingButton";
 
 const GetInTouch = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +14,8 @@ const GetInTouch = () => {
     message: "",
   });
 
+  const [createContact, { isLoading }] = useCreateContactMutation();
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -18,8 +23,11 @@ const GetInTouch = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    await handleAsyncWithToast(async () => {
+      return createContact(formData);
+    });
     // Handle form submission logic here
     console.log(formData);
   };
@@ -112,7 +120,7 @@ const GetInTouch = () => {
               type="submit"
               className="w-full py-3 bg-secondary text-white text-lg font-montserrat rounded-lg"
             >
-              Submit
+              {isLoading ? <ButtonLoading /> : "Send Message"}
             </button>
           </form>
         </div>

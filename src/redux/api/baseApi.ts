@@ -32,6 +32,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   if (result.error?.status === 401) {
     try {
       const refreshToken = (api.getState() as RootState).auth.refresh_token;
+      console.log("refreshToken", refreshToken);
 
       // if (!refreshToken) {
       //   api.dispatch(logout());
@@ -45,7 +46,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
       // Make a request to refresh the token
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}refresh-token`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/refresh-token`,
         {
           method: "POST",
           credentials: "include",
@@ -57,10 +58,21 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       );
 
       const data = await res.json();
+      console.log("Generate New Token", data);
       if (data?.success) {
         const user = (api.getState() as RootState).auth.user;
         api.dispatch(
-          setUser({ user, token: data.data.token, refresh_token: refreshToken })
+          setUser({
+            user,
+            access_token: data.data.accessToken,
+            refresh_token: refreshToken,
+          })
+
+          // setUser({
+          //       user: user,
+          //       access_token: res?.data?.data?.accessToken,
+          //       refresh_token: res?.data?.data?.refreshToken,
+          //     })
         );
 
         // Retry the original query with the new token
