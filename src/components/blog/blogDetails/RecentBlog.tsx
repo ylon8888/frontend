@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import BlogCard from "@/components/shared/cards/BlogCard";
 import { useGetSingleBlogQuery } from "@/redux/features/blog/blog.admin.api";
+import { useParams } from "next/navigation";
 
 const RecentBlog = () => {
-  const id = window.location.pathname.split("/").pop();
+  const id = useParams().id;
   const { data } = useGetSingleBlogQuery(id);
   console.log(data);
 

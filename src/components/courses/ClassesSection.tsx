@@ -10,7 +10,6 @@ import Loading from "../ui/core/Loading/Loading";
 interface ClassesSectionProps {
   title: string;
   badge: string;
-  grade?: number | string;
   classData: any;
   id: string;
 }
@@ -19,7 +18,6 @@ const ClassesSection = ({
   id,
   title,
   badge,
-  grade,
   classData,
 }: ClassesSectionProps) => {
   const [visibleCards, setVisibleCards] = useState(3);

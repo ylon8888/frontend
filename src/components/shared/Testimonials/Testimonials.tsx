@@ -9,10 +9,13 @@ import { useEffect } from "react";
 import SectionHeader from "../SectionHeader";
 import ReviewCard from "../cards/ReviewCard";
 import { useGetSingleCourseReviewsQuery } from "@/redux/features/course/course";
+import { useParams } from "next/navigation";
 
 const Testimonials = () => {
-  const id = window.location.pathname.split("/").pop();
-  const { data, isLoading } = useGetSingleCourseReviewsQuery(id);
+  const subjectId = useParams().id;
+  const { data, isLoading } = useGetSingleCourseReviewsQuery(subjectId, {
+    skip: !subjectId,
+  });
 
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({

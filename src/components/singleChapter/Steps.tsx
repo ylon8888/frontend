@@ -292,25 +292,6 @@ const Steps = ({
     }
   };
 
-  // const handleChapterComplete = async () => {
-  //   try {
-  //     const response = await createChapterProgress(id);
-  //     if (response?.data?.success) {
-  //       toast.success(response?.data?.message);
-  //       onNext();
-  //     }
-  //   } catch (error) {
-  //     toast.error(
-  //       typeof error === "object" &&
-  //         error !== null &&
-  //         "data" in error &&
-  //         (error as any).data?.message
-  //         ? (error as any).data?.message
-  //         : "An error occurred"
-  //     );
-  //   }
-  // };
-
   if (isLoading) {
     return <StepsSkeleton />;
   }
@@ -324,7 +305,7 @@ const Steps = ({
       <div className="flex md:flex-col space-y-2 flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-100 h-80">
         {steps.map((step, index) => (
           <div
-            key={step.id}
+            key={index}
             className={`flex transition-all duration-150 ${
               index === currentStepIndex
                 ? "bg-primary/10 rounded-md p-4"

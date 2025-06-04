@@ -19,14 +19,13 @@ const CoursesPage = () => {
 
   return (
     <div>
-      {classId.map((classes: any) => (
+      {classId?.map((classes: any) => (
         <ClassesSection
           key={classes?.id}
           title={`Make sure you complete your preparation for the examination.`}
           classData={classes}
           badge={`${classes?.className}`}
           id={classes?.id}
-          grade={classes}
         />
       ))}
     </div>

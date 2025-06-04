@@ -10,7 +10,7 @@ const BlogDetails = () => {
       <DetailsHero />
       <BlogDescription />
       <RecentBlog />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <SuccessInAcademicYear />
     </div>
   );

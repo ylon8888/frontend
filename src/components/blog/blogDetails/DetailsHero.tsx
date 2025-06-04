@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import bg from "@/assets/courses/hero-bg.png";
 import { useGetSingleBlogQuery } from "@/redux/features/blog/blog.admin.api";
+import { useParams } from "next/navigation";
 const DetailsHero = () => {
-  const id = window.location.pathname.split("/").pop();
+  const id = useParams().id;
   const { data } = useGetSingleBlogQuery(id);
   console.log(data);
   // Animation variants
@@ -57,7 +58,7 @@ const DetailsHero = () => {
               variants={itemVariants}
               className="text-4xl lg:text-6xl font-bold font-montserrat mb-6 leading-tight tracking-wide"
             >
-              {data?.data?.blog?.title || "Blog Title"}
+              {data?.data?.blog?.title}
             </motion.h1>
           </motion.div>
           {/* Right Content - Banner Image */}

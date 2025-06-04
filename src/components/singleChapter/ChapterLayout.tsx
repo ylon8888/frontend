@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Steps from "./Steps";
 import StepOne from "./chapterContents/StepOne";
 import StepTwo from "./chapterContents/StepTwo";
@@ -15,6 +15,7 @@ import StepTen from "./chapterContents/StepTen";
 import StepEleven from "./chapterContents/StepEleven";
 import Loading from "../ui/core/Loading/Loading";
 import { useGetCoursesOfChapterQuery } from "@/redux/features/course/course";
+import { useParams } from "next/navigation";
 
 const STORAGE_KEY = "chapter_progress";
 
@@ -30,7 +31,7 @@ const ChapterLayout = () => {
   const [stepsInitialized, setStepsInitialized] = useState(false);
   const [highestAccessibleStep, setHighestAccessibleStep] = useState(0);
 
-  const id = window.location.pathname.split("/")[4];
+  const id = useParams().chapterId;
   const { data, isLoading } = useGetCoursesOfChapterQuery(id, {
     skip: !id,
   });
