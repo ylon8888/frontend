@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Star } from 'lucide-react';
-import bg from '@/assets/home/hero-section-bg.png';
-import banner from '@/assets/home/hero-banner.png';
-import icon1 from '@/assets/home/students.png';
-import icon2 from '@/assets/home/courses.png';
-import icon3 from '@/assets/home/category.png';
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { Star } from "lucide-react";
+import bg from "@/assets/home/hero-section-bg.png";
+import banner from "@/assets/home/hero-banner.png";
+import icon1 from "@/assets/home/students.png";
+import icon2 from "@/assets/home/courses.png";
+import icon3 from "@/assets/home/category.png";
 
 const Hero = () => {
   // Animation variants
@@ -38,7 +38,7 @@ const Hero = () => {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={bg || '/placeholder.svg'}
+          src={bg || "/placeholder.svg"}
           alt="Background"
           fill
           priority
@@ -58,26 +58,24 @@ const Hero = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-4xl md:text-5xl lg:text-[44px] xl:text-6xl font-bold font-montserrat mb-6 leading-16 xl:leading-20"
+              className="text-4xl md:text-5xl lg:text-[44px] xl:text-6xl font-bold font-montserrat mb-6 leading-12 md:leading-16 xl:leading-20"
             >
               Welcome to <br />
               Your <span className="bg-secondary px-2">Personalized</span>
               <br />
               <span className="bg-primary px-2">Learning</span> Journey
             </motion.h1>
-
             <motion.p variants={itemVariants} className="mb-8 max-w-lg">
               Engage with structured learning paths, track your progress, and
               master new skills!
             </motion.p>
-
             <motion.div
               variants={itemVariants}
               className="flex flex-wrap items-center gap-6 mb-12"
             >
               <Link
                 href="/courses"
-                className="bg-secondary hover:bg-secondary/80 transition-colors text-white font-medium py-3 px-6 rounded-md"
+                className="bg-secondary hover:bg-secondary/80 transition-colors text-white font-medium py-2 md:py-3 px-6 rounded-md"
               >
                 Start Learning Now
               </Link>
@@ -170,7 +168,7 @@ const Hero = () => {
           >
             <div className="relative h-[500px] w-full">
               <Image
-                src={banner || '/placeholder.svg'}
+                src={banner || "/placeholder.svg"}
                 alt="Learning Platform Banner"
                 fill
                 className="object-contain"

@@ -22,19 +22,19 @@ const AllEnrolledCourses = () => {
 
         return (
           <motion.div
-            key={subject.id}
+            key={subject?.id}
             className="rounded-lg overflow-hidden hover:shadow-md p-5 border"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1, duration: 0.5 }}
           >
-            <Link href={`/user/enrolled-courses/${subject.id}`}>
+            <Link href={`/user/enrolled-courses/${subject?.id}`}>
               <div className="relative h-48">
                 <Image
                   src={
-                    subject.banner || "/placeholder.svg?height=192&width=384"
+                    subject?.banner || "/placeholder.svg?height=192&width=384"
                   }
-                  alt={subject.subjectName}
+                  alt={subject?.subjectName}
                   fill
                   className="bg-gray-200 object-cover"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -42,12 +42,17 @@ const AllEnrolledCourses = () => {
               </div>
               <div className="mt-6 text-gray-800">
                 <p className="text-sm mb-4">
-                  {subject._count?.chapters || 0} chapters
+                  {subject?._count?.chapters || 0} chapters
                 </p>
                 <h3 className="text-2xl font-semibold mb-1 font-montserrat">
-                  {subject.subjectName}
+                  {subject?.subjectName}
                 </h3>
-                <p className="mb-2 text-base">{subject.subjectDescription}</p>
+                <p
+                  className="mb-2 text-base"
+                  dangerouslySetInnerHTML={{
+                    __html: subject?.subjectDescription,
+                  }}
+                />
               </div>
             </Link>
           </motion.div>

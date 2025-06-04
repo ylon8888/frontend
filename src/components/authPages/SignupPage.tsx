@@ -86,9 +86,7 @@ const SignupPage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">
-                Brain Drawer
-              </span>
+              <span className="text-4xl font-bold text-teal-600">LOGO</span>
             </div>
           </div>
         </div>

@@ -83,7 +83,7 @@ const VerificationCodePage = () => {
               } else {
                 router.push("/");
               }
-              if (res?.data?.success) {
+              if (res?.success) {
                 const user = verifyToken(
                   res?.data?.data?.accessToken
                 ) as DecodedUser;

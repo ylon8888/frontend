@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { JwtPayload } from "jwt-decode";
@@ -22,11 +21,7 @@ const LoginPage = () => {
     password: "",
   });
   // Define the expected response type for login
-  interface LoginResponse {
-    success: boolean;
-    message: string;
-    data?: any;
-  }
+
   const [login, { isLoading }] = useLoginMutation();
   const router = useRouter();
   const dispatch = useAppDispatch();

@@ -18,6 +18,7 @@ const Navbar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
+  console.log(user);
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -108,10 +109,10 @@ const Navbar = () => {
             {navLinks.map((link, index) => (
               <Link
                 key={index}
-                href={link.href}
+                href={link?.href}
                 className="text-white hover:text-secondary font-montserrat transition-colors"
               >
-                {link.name}
+                {link?.name}
               </Link>
             ))}
           </div>
@@ -130,11 +131,11 @@ const Navbar = () => {
                   {navLinks.map((link, index) => (
                     <Link
                       key={index}
-                      href={link.href}
+                      href={link?.href}
                       className="text-white hover:text-secondary font-montserrat transition-colors py-2"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
-                      {link.name}
+                      {link?.name}
                     </Link>
                   ))}
                   {user ? (
@@ -145,7 +146,7 @@ const Navbar = () => {
                       Logout
                     </button>
                   ) : (
-                    <div className="hidden lg:flex items-center space-x-8">
+                    <div className="flex flex-col space-y-2">
                       <Link
                         href="/login"
                         className="bg-secondary hover:bg-orange-600 text-white py-2 px-4 rounded-md text-center transition-colors"
