@@ -37,7 +37,9 @@ const { Header, Sider, Content } = Layout;
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const user = useAppSelector(selectCurrentUser);
-  const role = user?.role || "USER";
+  const role = user?.role || "STUDENT";
+  console.log(role);
+
   const [isShowDrawer, setIsShowDrawer] = useState(false);
   const context = useContext(ContextProvider);
   const windowWidth = context ? context.windowWidth : 0;
@@ -120,10 +122,10 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
           </Space>
         }
       >
-        <SideMenu role={"ADMIN"} handleLogout={handleLogout} />
+        <SideMenu role={role} handleLogout={handleLogout} />
       </Drawer>
-      {/* Mobile menu end */}
 
+      {/* Mobile menu end */}
       <Layout className="h-[calc(100vh-0px)]">
         <Layout>
           <div className="bg-white lg:border-t-[1px] lg:pt-5 overflow-hidden overflow-y-auto slim-scroll border">
@@ -135,7 +137,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                 width={280}
               >
                 <div className="ms-2 xl:ms-3 2xl:ms-4 !font-poppins">
-                  <SideMenu role={"USER"} handleLogout={handleLogout} />
+                  <SideMenu role={role} handleLogout={handleLogout} />
                 </div>
               </Sider>
             )}

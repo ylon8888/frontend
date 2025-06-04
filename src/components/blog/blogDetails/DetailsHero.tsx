@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 const DetailsHero = () => {
   const id = useParams().id;
   const { data } = useGetSingleBlogQuery(id);
-  console.log(data);
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -56,7 +55,7 @@ const DetailsHero = () => {
           >
             <motion.h1
               variants={itemVariants}
-              className="text-4xl lg:text-6xl font-bold font-montserrat mb-6 leading-tight tracking-wide"
+              className="text-4xl lg:text-4xl font-bold font-montserrat mb-6 leading-tight tracking-wide"
             >
               {data?.data?.blog?.title}
             </motion.h1>
