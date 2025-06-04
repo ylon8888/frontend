@@ -4,7 +4,7 @@ import Hero from "@/components/home/Hero";
 import MakeSureYouCompletePreparation from "@/components/home/MakeSureYouCompletePreparation";
 import SpecialClasses from "@/components/home/SpecialClasses";
 import SuccessInAcademicYear from "@/components/home/SuccessInAcademicYear";
-import Testimonials from "@/components/shared/Testimonials/Testimonials";
+// import Testimonials from "@/components/shared/Testimonials/Testimonials";
 
 export default function HomeLayout() {
   return (

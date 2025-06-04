@@ -75,7 +75,9 @@ const LoginPage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-primary">LOGO</span>
+              <span className="text-4xl font-bold text-primary">
+                Brain Drawer
+              </span>
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
           </div>

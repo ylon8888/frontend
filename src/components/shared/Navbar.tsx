@@ -97,7 +97,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="text-white font-bold text-2xl md:text-3xl">
-              LOGO
+              Brain Drawer
               <span className="inline-block w-2 h-2 bg-secondary rounded-full ml-1 align-top mt-2"></span>
             </div>
           </Link>

@@ -89,11 +89,13 @@ const ChangePasswordPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
-        {/* Logo */}
+        {/* Brain Drawer */}
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">LOGO</span>
+              <span className="text-4xl font-bold text-teal-600">
+                Brain Drawer
+              </span>
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
             </div>
           </div>

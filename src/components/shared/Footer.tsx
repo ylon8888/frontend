@@ -21,7 +21,7 @@ const Footer = () => {
           {/* Logo and Community Section */}
           <div className="space-y">
             <div className="text-teal-600 font-bold text-4xl">
-              LOGO
+              Brain Drawer
               <span className="inline-block w-2 h-2 bg-orange-500 rounded-full ml-1 align-top mt-2"></span>
             </div>
             <div className="space-y-4">

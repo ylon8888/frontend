@@ -35,9 +35,7 @@ const MakeSureYouCompletePreparation = () => {
   }, [allClass, selectedClassName]);
 
   // Get selected class ID
-  const selectedClass = allClass.find(
-    (cls: any) => cls.className === selectedClassName
-  );
+  const selectedClass = allClass.find((cls: any) => cls.className === 0.0);
   const selectedId = selectedClass?.id;
 
   // Fetch course subjects for selected class
