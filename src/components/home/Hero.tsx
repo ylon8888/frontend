@@ -9,8 +9,11 @@ import banner from "@/assets/home/hero-banner.png";
 import icon1 from "@/assets/home/students.png";
 import icon2 from "@/assets/home/courses.png";
 import icon3 from "@/assets/home/category.png";
+import { useGetHeroSectionValuesQuery } from "@/redux/features/course/course";
 
 const Hero = () => {
+  const { data } = useGetHeroSectionValuesQuery({});
+
   // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -32,6 +35,7 @@ const Hero = () => {
       },
     },
   };
+  const heroSectionValues = data?.data?.brainDrawer;
 
   return (
     <section className="relative overflow-hidden">
@@ -127,7 +131,7 @@ const Hero = () => {
                 </div>
                 <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
-                  <p className="">Students</p>
+                  <p className="">{heroSectionValues?.totalStudent} Students</p>
                 </div>
               </motion.div>
 
@@ -140,7 +144,7 @@ const Hero = () => {
                 </div>
                 <div className="flex md:flex-col gap-1">
                   <p className="">Total</p>
-                  <p className="">Courses</p>
+                  <p className="">{heroSectionValues?.totalCourses} Courses</p>
                 </div>
               </motion.div>
 
@@ -152,8 +156,8 @@ const Hero = () => {
                   <Image src={icon3} alt="icon" className="w-8 h-8" />
                 </div>
                 <div className="flex md:flex-col gap-1">
-                  <p className="">Overall</p>
-                  <p className="">Category</p>
+                  <p className="">Total</p>
+                  <p className="">{heroSectionValues?.totalReviews} Reviews</p>
                 </div>
               </motion.div>
             </motion.div>

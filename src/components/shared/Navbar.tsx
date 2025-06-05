@@ -18,7 +18,6 @@ const Navbar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
-  console.log(user);
 
   const handleLogout = async () => {
     const result = await Swal.fire({
