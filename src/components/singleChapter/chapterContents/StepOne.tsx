@@ -41,15 +41,6 @@ const StepOne = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
           className="prose prose-sm max-w-none text-gray-800"
           dangerouslySetInnerHTML={{ __html: stepOneData?.stepDescription }}
         />
-        {/* <div className="mt-6">
-          <Image
-            src={imageSrc}
-            alt="Topic-related illustration"
-            className="w-full"
-            width={1000}
-            height={1000}
-          />
-        </div> */}
       </div>
     </div>
   );
