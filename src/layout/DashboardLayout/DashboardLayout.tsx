@@ -32,13 +32,14 @@ import { FiUser } from "react-icons/fi";
 import { IoClose, IoHomeSharp, IoMenu } from "react-icons/io5";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import Swal from "sweetalert2";
+import { useGetMeQuery } from "@/redux/features/auth/authApi";
+import Loading from "@/components/ui/core/Loading/Loading";
 
 const { Header, Sider, Content } = Layout;
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const user = useAppSelector(selectCurrentUser);
   const role = user?.role || "STUDENT";
-  console.log(role);
 
   const [isShowDrawer, setIsShowDrawer] = useState(false);
   const context = useContext(ContextProvider);
@@ -53,9 +54,9 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (formData: any, reset: any) => {
-    console.log(formData, reset);
-  };
+  const handleSubmit = async (formData: any, reset: any) => {};
+
+  const { data: response, isLoading, isFetching } = useGetMeQuery(undefined);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -101,6 +102,10 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       }
     }
   };
+
+  if (isLoading || isFetching) {
+    return <Loading />;
+  }
 
   return (
     <div className="!font-poppins">
@@ -157,7 +162,8 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
 
                   <div className="hidden flex-col my-5 lg:flex">
                     <h4 className="text-[24px] font-semibold">
-                      Welcome Back, Admin
+                      Welcome Back, {response?.data?.firstName}{" "}
+                      {response?.data?.lastName}
                     </h4>
                     <p className="text-sm lg:-mt-2">
                       Please validate your action to proceed and unlock your
@@ -208,14 +214,18 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
                               />
                             </div>
                             <h3 className="font-medium text-black">
-                              Martin De
+                              {response?.data?.firstName}{" "}
+                              {response?.data?.lastName}
                             </h3>
                           </div>
-                          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                          {/* <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                             <FiUser className="h-4 w-4 text-blue-primary" />
                             My Profile
-                          </button>
-                          <button className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                          </button> */}
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          >
                             <BiLogOut className="h-4 w-4 text-blue-primary" />
                             Logout
                           </button>

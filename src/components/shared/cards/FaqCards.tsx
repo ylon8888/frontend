@@ -14,7 +14,7 @@ export const FaqItem = ({
   toggleAccordion: () => void;
 }) => {
   return (
-    <div className="relative bg-[#FAFAFA] p-6 rounded-sm">
+    <div className="relative bg-[#FAFAFA] p-3 border lg:p-6 rounded-sm">
       {/* Diagonal line decoration */}
       <div className="absolute -bottom-6 -right-6 w-12 h-12 opacity-10">
         <svg
@@ -33,7 +33,7 @@ export const FaqItem = ({
         onClick={toggleAccordion}
         aria-expanded={isOpen}
       >
-        <h3 className="font-montserrat text-lg font-medium text-gray-900 pr-8">
+        <h3 className="font-montserrat lg:text-lg font-medium text-gray-900 lg:pr-8">
           {item.question}
         </h3>
         <span className="flex-shrink-0 mt-1">

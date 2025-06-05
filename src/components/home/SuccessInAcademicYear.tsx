@@ -40,7 +40,7 @@ const SuccessInAcademicYear = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: stat.delay, duration: 0.6 }}
             >
-              <h3 className="font-montserrat text-5xl lg:text-6xl font-semibold mb-8">
+              <h3 className="font-montserrat text-3xl lg:text-6xl font-semibold mb-8">
                 {stat.number}
               </h3>
               <p className="text-xl md:text-lg lg:text-3xl font-light">

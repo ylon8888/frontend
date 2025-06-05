@@ -42,22 +42,25 @@ const CoursesHero = () => {
         />
       </div>
 
-      <div className="container max-w-[1320px] mx-auto px-4 py-10  relative z-10">
+      <div className="container max-w-[1320px] mx-auto px-4 py-10 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 items-center">
           {/* Left Content */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="text-white col-span-2"
+            className="text-white lg:col-span-2"
           >
             <motion.h1
               variants={itemVariants}
-              className="text-4xl lg:text-6xl font-bold font-montserrat mb-6 "
+              className="text-4xl lg:text-6xl font-bold font-montserrat mb-6  text-center lg:text-start"
             >
               Complete Learning Path
             </motion.h1>
-            <motion.p variants={itemVariants} className="mb-8 max-w-lg">
+            <motion.p
+              variants={itemVariants}
+              className="mb-8 lg:max-w-lg text-center lg:text-start"
+            >
               Master key concepts with structured Chapters, interactive content,
               and quizzes.
             </motion.p>
@@ -70,7 +73,7 @@ const CoursesHero = () => {
             transition={{ duration: 0.7 }}
             className="relative col-span-1"
           >
-            <div className="relative w-[243px] h-[250px]">
+            <div className="relative lg:w-[243px] h-[250px]">
               <Image
                 src={banner || "/placeholder.svg"}
                 alt="Learning Platform Banner"

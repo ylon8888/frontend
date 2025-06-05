@@ -18,31 +18,32 @@ const MakeSureYouCompletePreparation = () => {
   });
 
   const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "20%"]);
-
   const { data: classesData } = useGetAllClassQuery({});
   const allClass = classesData?.data?.data || [];
 
-  // Selected class state
-  const [selectedClassName, setSelectedClassName] = useState<
-    string | undefined
-  >(undefined);
+  // Selected class ID state
+  const [selectedClassId, setSelectedClassId] = useState<string | undefined>(
+    undefined
+  );
 
-  // Default to first class
+  // Default to first class ID
   useEffect(() => {
-    if (allClass.length > 0 && !selectedClassName) {
-      setSelectedClassName(allClass[0].className);
+    if (allClass.length > 0 && !selectedClassId) {
+      setSelectedClassId(allClass[0]?.id);
     }
-  }, [allClass, selectedClassName]);
-
-  // Get selected class ID
-  const selectedClass = allClass.find((cls: any) => cls.className === 0.0);
-  const selectedId = selectedClass?.id;
+  }, [allClass, selectedClassId]);
 
   // Fetch course subjects for selected class
-  const { data: courseData, isFetching } = useGetSingleCourseQuery(selectedId, {
-    skip: !selectedId,
-  });
-  const subjects = courseData?.data?.singleClass?.subjects || [];
+  const { data: courseData, isFetching } = useGetSingleCourseQuery(
+    selectedClassId,
+    {
+      skip: !selectedClassId, // Skip query if no class is selected
+    }
+  );
+
+  // Correct data access based on your API response
+  const singleClass = courseData?.data?.singleClass;
+  const subjects = singleClass?.subjects || [];
 
   return (
     <section
@@ -74,16 +75,16 @@ const MakeSureYouCompletePreparation = () => {
 
         {/* Tabs */}
         <Tabs
-          value={selectedClassName}
-          onValueChange={setSelectedClassName}
+          value={selectedClassId || ""}
+          onValueChange={setSelectedClassId}
           className="w-full"
         >
           <div className="flex justify-center mb-8">
-            <TabsList className="grid grid-cols-4 w-full max-w-md">
+            <TabsList className="grid grid-cols-4 w-full max-w-2xl">
               {allClass.map((classItem: any) => (
                 <TabsTrigger
                   key={classItem?.id}
-                  value={classItem?.className}
+                  value={classItem?.id}
                   className="data-[state=active]:bg-gray-800 border data-[state=active]:text-white uppercase"
                 >
                   {classItem?.className}
@@ -93,19 +94,23 @@ const MakeSureYouCompletePreparation = () => {
           </div>
 
           {/* Tab Content */}
-          <TabsContent value={selectedClassName ?? ""} className="mt-0">
+          <TabsContent value={selectedClassId || ""} className="mt-0">
             {isFetching ? (
               <p className="text-center text-gray-600">Loading subjects...</p>
+            ) : subjects.length === 0 ? (
+              <p className="text-center text-gray-600">
+                No subjects found for this class
+              </p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {subjects.map((subject: any, index: number) => (
+                {subjects.map((subject: any) => (
                   <SubjectCard
-                    key={index}
-                    id={subject?.id}
-                    subject={subject?.subjectName}
-                    description={subject?.subjectDescription}
-                    image={subject?.banner}
-                    index={index}
+                    key={subject.id}
+                    id={subject.id}
+                    subject={subject.subjectName}
+                    description={subject.subjectDescription}
+                    image={subject.banner}
+                    index={subject.id}
                   />
                 ))}
               </div>

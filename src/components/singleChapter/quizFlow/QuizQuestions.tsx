@@ -25,7 +25,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
   if (isLoading) return <StepEightContentSkeleton />;
   if (!quiz?.data) return <div>No quiz data available.</div>;
 
-  const hasAnsweredQuestions = quiz.data.stepEightQuizzes?.some(
+  const hasAnsweredQuestions = quiz?.data?.stepEightQuizzes?.some(
     (q: any) => selectedAnswers[q.id]
   );
 
@@ -35,7 +35,10 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
         <h2 className="text-2xl lg:text-3xl font-medium flex items-center justify-between mb-6">
           {quiz.data.questionType} Quiz Step
         </h2>
-        <p className="font-light mb-10">{quiz.data.questionDescription}</p>
+        <p
+          className="font-light mb-10"
+          dangerouslySetInnerHTML={{ __html: quiz?.data?.questionDescription }}
+        ></p>
       </div>
 
       {/* Quiz Questions */}
@@ -49,7 +52,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
                 </p>
                 <div className="flex-1">
                   <h3 className="text-base lg:text-lg mb-4">
-                    {question.questionText}
+                    {question?.questionText}
                   </h3>
                 </div>
               </div>
@@ -60,22 +63,24 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
                     <div
                       key={option}
                       className={`flex items-center space-x-3 p-2 lg:p-3 rounded-lg border hover:bg-muted/50 transition-colors cursor-pointer text-sm lg:text-base ${
-                        selectedAnswers[question.id] === option
+                        selectedAnswers[question?.id] === option
                           ? "border-primary bg-primary/5"
                           : ""
                       }`}
-                      onClick={() => handleAnswerChange(question.id, option)}
+                      onClick={() => handleAnswerChange(question?.id, option)}
                     >
                       <input
                         type="radio"
-                        name={question.id}
+                        name={question?.id}
                         value={option}
-                        checked={selectedAnswers[question.id] === option}
-                        onChange={() => handleAnswerChange(question.id, option)}
+                        checked={selectedAnswers[question?.id] === option}
+                        onChange={() =>
+                          handleAnswerChange(question?.id, option)
+                        }
                         className="w-4 h-4 text-primary border-gray-300 focus:ring-primary focus:ring-2"
                       />
                       <label
-                        htmlFor={`${question.id}-${option}`}
+                        htmlFor={`${question?.id}-${option}`}
                         className="flex-1 cursor-pointer font-normal"
                       >
                         <span className="font-medium mr-2">
@@ -83,7 +88,7 @@ const QuizQuestions: React.FC<QuizQuestionProps> = ({
                         </span>
                         {question[option]}
                       </label>
-                      {selectedAnswers[question.id] === option && (
+                      {selectedAnswers[question?.id] === option && (
                         <CheckCircle2 className="w-4 h-4 text-primary" />
                       )}
                     </div>

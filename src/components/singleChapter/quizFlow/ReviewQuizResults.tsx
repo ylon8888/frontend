@@ -12,8 +12,6 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
   quizId,
 }) => {
   const { data, isLoading } = useGetQuizResultsQuery(quizId);
-  console.log(data);
-
   if (isLoading) {
     return <Loading />;
   }

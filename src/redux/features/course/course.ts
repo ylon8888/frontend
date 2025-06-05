@@ -150,6 +150,13 @@ const courseApi = baseApi.injectEndpoints({
       }),
       providesTags: ["course"],
     }),
+    getHeroSectionValues: builder.query({
+      query: () => ({
+        url: `/student//brain-drawer`,
+        method: "GET",
+      }),
+      providesTags: ["course"],
+    }),
   }),
 });
 
@@ -170,4 +177,5 @@ export const {
   useResendOtpMutation,
   useGetSingleCourseReviewsQuery,
   useGetSingleChapterByStudentQuery,
+  useGetHeroSectionValuesQuery,
 } = courseApi;

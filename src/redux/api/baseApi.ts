@@ -32,7 +32,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
   if (result.error?.status === 401) {
     try {
       const refreshToken = (api.getState() as RootState).auth.refresh_token;
-      console.log("refreshToken", refreshToken);
 
       // if (!refreshToken) {
       //   api.dispatch(logout());
@@ -58,7 +57,6 @@ const baseQueryWithRefreshToken: BaseQueryFn<
       );
 
       const data = await res.json();
-      console.log("Generate New Token", data);
       if (data?.success) {
         const user = (api.getState() as RootState).auth.user;
         api.dispatch(

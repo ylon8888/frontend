@@ -127,7 +127,7 @@ const Testimonials = () => {
             centered
             className="mb-12"
           />
-          <p className="text-gray-600">No reviews available yet.</p>
+          <p className="text-secondary">No reviews available yet.</p>
         </div>
       </section>
     );

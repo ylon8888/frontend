@@ -28,8 +28,6 @@ const GetInTouch = () => {
     await handleAsyncWithToast(async () => {
       return createContact(formData);
     });
-    // Handle form submission logic here
-    console.log(formData);
   };
 
   return (
@@ -40,7 +38,7 @@ const GetInTouch = () => {
           <h2 className="text-3xl md:text-5xl font-semibold mb-10 font-montserrat">
             Get in Touch
           </h2>
-          <p className="md:text-lg mb-20">
+          <p className="text-sm md:text-lg mb-20">
             Drop us a message using the contact form below and we&apos;ll get
             back to you within 24 hours (Monday–Friday).
           </p>
@@ -48,7 +46,7 @@ const GetInTouch = () => {
             <div className="flex gap-4">
               <div className="flex-1">
                 <label
-                  className="block text-lg mb-2 font-montserrat"
+                  className="block text-sm md:text-lg mb-2 font-montserrat"
                   htmlFor="name"
                 >
                   Enter Name*
@@ -66,7 +64,7 @@ const GetInTouch = () => {
               </div>
               <div className="flex-1">
                 <label
-                  className="block text-lg mb-2 font-montserrat"
+                  className="block text-sm md:text-lg mb-2 font-montserrat"
                   htmlFor="phone"
                 >
                   Enter Phone
@@ -84,7 +82,7 @@ const GetInTouch = () => {
             </div>
             <div>
               <label
-                className="block text-lg mb-2 font-montserrat"
+                className="block text-sm md:text-lg mb-2 font-montserrat"
                 htmlFor="email"
               >
                 Enter Email*
@@ -102,7 +100,7 @@ const GetInTouch = () => {
             </div>
             <div>
               <label
-                className="block text-lg mb-2 font-montserrat"
+                className="block text-sm md:text-lg mb-2 font-montserrat"
                 htmlFor="message"
               >
                 Enter Message
@@ -118,7 +116,7 @@ const GetInTouch = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-secondary text-white text-lg font-montserrat rounded-lg"
+              className="w-full py-3 bg-secondary text-white text-sm md:text-lg font-montserrat rounded-lg"
             >
               {isLoading ? <ButtonLoading /> : "Send Message"}
             </button>
@@ -136,21 +134,23 @@ const GetInTouch = () => {
               <span className="mr-5">
                 <PhoneCall className="w-5 h-5" />
               </span>
-              <span>(316) 555-0116</span>
+              <span className="text-sm lg:text-base">(316) 555-0116</span>
             </div>
             <div className="flex items-center text-[#475467]">
               <span className="mr-5">
                 {" "}
                 <Mail className="w-5 h-5" />
               </span>
-              <span>deanna.curtis@example.com</span>
+              <span className="text-sm lg:text-base">
+                deanna.curtis@example.com
+              </span>
             </div>
             <div className="flex items-center text-[#475467]">
               <span className="mr-5">
                 {" "}
                 <MapPin className="w-5 h-5" />
               </span>
-              <span>
+              <span className="text-sm lg:text-base">
                 132 Dartmouth Street, Boston, Massachusetts 02156, United States
               </span>
             </div>

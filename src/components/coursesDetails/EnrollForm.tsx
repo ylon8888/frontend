@@ -67,7 +67,6 @@ const EnrollForm = ({ setEnrollData }: any) => {
     });
 
     if (res?.data?.success) {
-      console.log(res);
       setEnrollData(res?.data);
       setFormData({
         name: "",

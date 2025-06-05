@@ -9,6 +9,7 @@ import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import StepsSkeleton from "../shared/skeleton/StepsSkeleton";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 interface StepsProps {
   currentStepIndex: number;
@@ -29,7 +30,7 @@ const Steps = ({
   isLoading,
 }: StepsProps) => {
   const [steps, setSteps] = useState<T_Step[]>([]);
-  const id = window.location.pathname.split("/")[4];
+  const id = useParams().chapterId;
   const chapterData = data?.data?.chapters?.[0];
   const [createChapterProgress] = useCreateChapterProgressMutation();
 
@@ -132,7 +133,6 @@ const Steps = ({
       },
     ];
 
-    // Find the highest completed step index
     let highestCompletedIndex = -1;
     allSteps.forEach((step, index) => {
       if (step.isCompleted) {
@@ -173,122 +173,97 @@ const Steps = ({
     }
   };
 
+  type ApiError = {
+    status?: number;
+    data?: {
+      message?: string;
+      errorMessages?: Array<{ message?: string }>;
+    };
+  };
+
+  const getErrorMessage = (error: unknown): string => {
+    if (typeof error === "string") return error;
+    if (error instanceof Error) return error.message;
+
+    const apiError = error as ApiError;
+    return (
+      apiError?.data?.message ||
+      apiError?.data?.errorMessages?.[0]?.message ||
+      "An unexpected error occurred"
+    );
+  };
+
   const handleNextWithCompletion = async () => {
-    if (currentStepIndex < steps.length - 1) {
-      try {
-        const currentStep = steps[currentStepIndex];
-        const isStepNine = currentStepIndex === 8; // Step 9 is index 8
-        const isStepEleven = currentStepIndex === 10; // Step 9 is index 8
-
-        // Prepare API payload
-        const progressData = {
-          chapterId: id,
-          stepId: currentStep?.id,
-          stepSerial: (currentStepIndex + 1).toString(),
-        };
-
-        // Call the API to track step progress
-        try {
-          const response = await stepProgress(progressData);
-          if (response?.data?.success === true) {
-            toast.success(response?.data?.message);
-
-            // If completing step 9, also mark steps 10 and 11 as completed
-            if (isStepNine) {
-              const stepTenData = {
-                chapterId: id,
-                stepId: chapterData?.stepTen?.id,
-                stepSerial: "10",
-              };
-              const stepElevenData = {
-                chapterId: id,
-                stepId: "11",
-                stepSerial: "11",
-              };
-
-              await Promise.all([
-                stepProgress(stepTenData),
-                stepProgress(stepElevenData),
-              ]);
-            }
-          }
-        } catch (error) {
-          toast.error(
-            typeof error === "object" &&
-              error !== null &&
-              "data" in error &&
-              (error as any).data?.message
-              ? (error as any).data?.message
-              : "An error occurred"
-          );
-        }
-
-        // Update local state after successful API call
-        const updatedSteps = [...steps];
-        updatedSteps[currentStepIndex] = {
-          ...updatedSteps[currentStepIndex],
-          isCompleted: true,
-          isAccessible: true,
-        };
-
-        // If completing step 9, also update steps 10 and 11
-        if (isStepNine) {
-          updatedSteps[9] = {
-            ...updatedSteps[9],
-            isCompleted: true,
-            isAccessible: true,
-          };
-          updatedSteps[10] = {
-            ...updatedSteps[10],
-            isCompleted: true,
-            isAccessible: true,
-          };
-        }
-
-        // Make the next step accessible if it exists
-        if (currentStepIndex + 1 < updatedSteps.length && !isStepNine) {
-          updatedSteps[currentStepIndex + 1].isAccessible = true;
-        }
-
-        setSteps(updatedSteps);
-
-        // Move to next step
-        onNext();
-      } catch (error) {
-        console.error("Failed to track step progress:", error);
-        const updatedSteps = [...steps];
-        updatedSteps[currentStepIndex] = {
-          ...updatedSteps[currentStepIndex],
-          isCompleted: true,
-          isAccessible: true,
-        };
-        setSteps(updatedSteps);
-        onNext();
-      }
-    }
-    if (currentStepIndex === steps.length - 1) {
-      const stepElevenData = {
+    const handleStepProgress = async (stepIndex: number) => {
+      const currentStep = steps[stepIndex];
+      const progressData = {
         chapterId: id,
-        stepId: chapterData?.stepNine?.id,
-        stepSerial: "9",
+        stepId: currentStep?.id,
+        stepSerial: (stepIndex + 1).toString(),
       };
 
       try {
-        const res = await createChapterProgress(stepElevenData);
-        console.log(res);
-        if (res?.data?.success === true) {
-          toast.success(res?.data?.message);
+        const response = await stepProgress(progressData);
+        if (response.data?.success) {
+          toast.success(response.data.message);
+          return true;
         }
+        toast.error(getErrorMessage(response.error));
+        return false;
       } catch (error) {
-        toast.error(
-          typeof error === "object" &&
-            error !== null &&
-            "data" in error &&
-            (error as any).data?.message
-            ? (error as any).data?.message
-            : "An error occurred"
-        );
+        toast.error(getErrorMessage(error));
+        return false;
       }
+    };
+
+    const updateStepState = (stepIndex: number, completed: boolean) => {
+      const updatedSteps = [...steps];
+      updatedSteps[stepIndex] = {
+        ...updatedSteps[stepIndex],
+        isCompleted: completed,
+        isAccessible: true,
+      };
+      setSteps(updatedSteps);
+    };
+
+    // Handle regular step progression
+    if (currentStepIndex < steps.length - 1) {
+      const success = await handleStepProgress(currentStepIndex);
+      if (!success) return;
+
+      updateStepState(currentStepIndex, true);
+
+      // Special handling for step 9 (index 8)
+      if (currentStepIndex === 8) {
+        await Promise.all(
+          [9, 10].map(async (stepIndex) => {
+            await handleStepProgress(stepIndex);
+            updateStepState(stepIndex, true);
+          })
+        );
+      } else if (currentStepIndex + 1 < steps.length) {
+        updateStepState(currentStepIndex + 1, false); // Just make next accessible
+      }
+
+      onNext();
+      return;
+    }
+
+    // Handle final step completion
+    try {
+      const response = await createChapterProgress({
+        chapterId: id,
+        stepId: chapterData?.stepNine?.id,
+        stepSerial: "9",
+      });
+
+      if (response.data?.success) {
+        toast.success(response.data.message);
+      } else {
+        toast.error(getErrorMessage(response.error));
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     }
   };
 

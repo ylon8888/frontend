@@ -41,7 +41,6 @@ const StepEight = () => {
       });
 
       if (response) {
-        console.log("Submission successful!", response);
         setShowResults(true);
       }
     } catch (error) {

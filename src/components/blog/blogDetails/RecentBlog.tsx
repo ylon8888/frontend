@@ -8,7 +8,6 @@ import { useParams } from "next/navigation";
 const RecentBlog = () => {
   const id = useParams().id;
   const { data } = useGetSingleBlogQuery(id);
-  console.log(data);
 
   const container = {
     hidden: { opacity: 0 },

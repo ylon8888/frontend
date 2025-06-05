@@ -100,9 +100,12 @@ const YourProgress = () => {
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
                       {subject.subjectName} Progress
                     </h3>
-                    <p className=" text-gray-600 line-clamp-2">
-                      {subject.subjectDescription}
-                    </p>
+                    <p
+                      className=" text-gray-600 line-clamp-2"
+                      dangerouslySetInnerHTML={{
+                        __html: subject.subjectDescription,
+                      }}
+                    />
                   </div>
                   <div className="text-right ml-4">
                     <span className=" font-medium text-gray-700">
