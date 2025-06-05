@@ -20,8 +20,6 @@ const StepTwo = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
     }
   };
 
-  console.log(stepTwoData, "stepTwoData");
-
   if (isLoading) {
     return <StepOneSkeleton />;
   }

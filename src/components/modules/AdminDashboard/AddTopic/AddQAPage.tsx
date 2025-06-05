@@ -57,7 +57,6 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
   const [createStep] = useCreateStepMutation();
 
   const onSubmit = async (data: QuestionAnswerFormData) => {
-    console.log("Form data:", data);
     message.success("Form submitted successfully!");
 
     const formData = new FormData();

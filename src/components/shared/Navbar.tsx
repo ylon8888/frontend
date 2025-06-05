@@ -18,6 +18,7 @@ const Navbar = () => {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectCurrentUser);
+  const role = user?.role;
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -198,9 +199,11 @@ const Navbar = () => {
 
             {user ? (
               <>
-                <Link href="/user/my-profile">
+                <Link
+                  href={role === "STUDENT" ? "/user/my-profile" : "/dashboard"}
+                >
                   <Image
-                    src={user.profilePicture || profilePicture}
+                    src={user?.profilePicture || profilePicture}
                     alt="Profile"
                     width={400}
                     height={400}
@@ -231,9 +234,11 @@ const Navbar = () => {
             {user ? (
               <div className="flex items-center space-x-2">
                 {" "}
-                <Link href="/user/my-profile">
+                <Link
+                  href={role === "STUDENT" ? "/user/my-profile" : "/dashboard"}
+                >
                   <Image
-                    src={user.profilePicture || profilePicture}
+                    src={user?.profilePicture || profilePicture}
                     alt="Profile"
                     width={400}
                     height={400}

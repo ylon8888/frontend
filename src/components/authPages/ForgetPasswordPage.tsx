@@ -22,11 +22,6 @@ const ForgetPasswordPage = () => {
     setEmail(e.target.value);
   };
 
-  // const handleSendCode = () => {
-  //   console.log("Send code to email:", email);
-  //   // Handle send code logic here
-  // };
-
   const handleSubmit = async () => {
     try {
       const res: T_Response = await forgetPassword({ email }).unwrap();

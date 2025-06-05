@@ -68,7 +68,6 @@ const StepTen = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
         rating: rating,
         message: message,
       };
-      //       console.log(JSON.stringify(reviewData, null, 2));
       const res = await handleAsyncWithToast(async () => {
         return submitFeedback({ data: reviewData, id });
       });

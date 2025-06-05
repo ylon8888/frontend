@@ -4,7 +4,6 @@ import StepOneSkeleton from "@/components/shared/skeleton/StepOneSkeleton";
 
 const StepSix = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
   const stepSixData = data?.data?.chapters?.[0]?.stepSix;
-  console.log(stepSixData);
   // Function to play video
 
   if (isLoading) {

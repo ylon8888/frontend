@@ -29,7 +29,6 @@ const EnrolledChapterDetails = () => {
       setExpandedQuiz(quizType);
     }
   };
-  console.log();
   return (
     <div className="p-6">
       <div className="mb-8">

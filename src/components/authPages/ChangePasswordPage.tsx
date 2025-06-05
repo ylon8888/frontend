@@ -57,8 +57,6 @@ const ChangePasswordPage = () => {
       return;
     }
 
-    // Send only the new password to console
-    console.log("Password reset with:", formData.newPassword);
     try {
       const formDataToSend = {
         email: email,
@@ -67,7 +65,6 @@ const ChangePasswordPage = () => {
       const response = await resetPassword(formDataToSend).unwrap();
       if (response?.success) {
         // Handle successful password reset logic here
-        console.log("Password reset successful:", response.message);
         toast.success(response.message);
         router.push("/login"); // Redirect to login page after successful reset
       } else {

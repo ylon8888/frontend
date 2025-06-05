@@ -1,85 +1,85 @@
-'use client';
-import { DataTable } from '@/components/shared/core/DataTable/DataTable';
-import Loading from '@/components/ui/core/Loading/Loading';
-import { useGetAllStudentByChapterQuery } from '@/redux/features/chapter/chapter.admin.api';
-import { Chapter, CourseEnroll } from '@/types/StudentByChapter';
-import { Pagination } from 'antd';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+"use client";
+import { DataTable } from "@/components/shared/core/DataTable/DataTable";
+import Loading from "@/components/ui/core/Loading/Loading";
+import { useGetAllStudentByChapterQuery } from "@/redux/features/chapter/chapter.admin.api";
+import { Chapter, CourseEnroll } from "@/types/StudentByChapter";
+import { Pagination } from "antd";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 // Sample data for the student list
 const students: any[] = [
   {
     id: 1,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 2,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 3,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 4,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 5,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 6,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 7,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
   {
     id: 8,
-    enrollDate: 'March 12, 2025',
-    name: 'Saifur Rahman',
-    email: 'ux.saifur.info@gmail.com',
-    phoneNumber: '+880 1567808747',
-    courseClass: 'Class Nine, Chapter 2',
-    action: ['View Details'],
+    enrollDate: "March 12, 2025",
+    name: "Saifur Rahman",
+    email: "ux.saifur.info@gmail.com",
+    phoneNumber: "+880 1567808747",
+    courseClass: "Class Nine, Chapter 2",
+    action: ["View Details"],
   },
 ];
 
@@ -93,11 +93,11 @@ const AllStudentByChapterPageComponent = ({
   const router = useRouter();
   const [objectQuery, setObjectQuery] = useState([
     {
-      name: 'page',
+      name: "page",
       value: page,
     },
     {
-      name: 'limit',
+      name: "limit",
       value: pageSize,
     },
   ]);
@@ -111,11 +111,11 @@ const AllStudentByChapterPageComponent = ({
   useEffect(() => {
     setObjectQuery([
       {
-        name: 'page',
+        name: "page",
         value: page,
       },
       {
-        name: 'limit',
+        name: "limit",
         value: pageSize,
       },
     ]);
@@ -136,41 +136,41 @@ const AllStudentByChapterPageComponent = ({
   // Define columns for the table
   const columns = [
     {
-      header: 'Enroll Date',
+      header: "Enroll Date",
       accessor: (student: CourseEnroll) => {
         const dateStr = student.createdAt;
-        if (!dateStr) return '';
+        if (!dateStr) return "";
         const date = new Date(dateStr);
         const options: Intl.DateTimeFormatOptions = {
-          weekday: 'short',
-          day: '2-digit',
-          month: 'short',
-          year: 'numeric',
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
         };
         // Format: Mon25 Jun, 2025
         const parts = date
-          .toLocaleDateString('en-US', options)
-          .replace(',', '')
-          .split(' ');
+          .toLocaleDateString("en-US", options)
+          .replace(",", "")
+          .split(" ");
         // parts: [Mon, 06, Jun, 2025]
         if (parts.length < 4) return dateStr;
         return `${parts[0]}${parts[1]} ${parts[2]}, ${parts[3]}`;
       },
     },
-    { header: 'Name', accessor: (student: CourseEnroll) => student.name },
+    { header: "Name", accessor: (student: CourseEnroll) => student.name },
     {
-      header: 'Email',
+      header: "Email",
       accessor: (student: CourseEnroll) => student.user.email,
     },
     {
-      header: 'Phone Number',
+      header: "Phone Number",
       accessor: (student: CourseEnroll) => student.phoneNumber,
     },
   ];
 
   // Handle row click
   const handleRowClick = (student: any) => {
-    console.log('Row clicked:', student);
+    console.log(student);
   };
 
   // Render actions menu

@@ -68,7 +68,6 @@ const VerificationCodePage = () => {
   const handleSubmit = async () => {
     const verificationCode = code.join("");
     if (verificationCode.length === 6) {
-      console.log("Verification code:", verificationCode);
       try {
         otp({
           email: email,

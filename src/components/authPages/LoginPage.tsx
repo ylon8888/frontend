@@ -58,7 +58,7 @@ const LoginPage = () => {
         );
       }
     } catch (error) {
-      console.log("=== ADMIN LOGIN ERROR ===", error);
+      console.log(error);
     }
     // Handle login logic here
   };

@@ -18,7 +18,6 @@ const ProfileHeader: React.FC = () => {
   };
 
   const handleSave = (updatedData: any) => {
-    console.log("Updated profile data:", updatedData);
     // setProfileData(updatedData);
     setIsEditMode(false);
   };
