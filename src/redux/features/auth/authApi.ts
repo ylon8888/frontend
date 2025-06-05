@@ -1,75 +1,75 @@
-import { baseApi } from "../../api/baseApi";
+import { baseApi } from '../../api/baseApi';
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "/auth/login",
-          method: "POST",
+          url: '/auth/login',
+          method: 'POST',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     logout: builder.mutation({
       query: () => {
         return {
-          url: "auth/logout",
-          method: "POST",
+          url: 'auth/logout',
+          method: 'POST',
           // body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     loginWithGoogle: builder.mutation({
       query: (userInfo) => {
         console.log({ userInfo });
         return {
-          url: "google-login",
-          method: "POST",
+          url: 'google-login',
+          method: 'POST',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     forgotPassword: builder.mutation({
       query: (userInfo) => {
         console.log({ userInfo });
         return {
-          url: "/auth/forgot-password",
-          method: "POST",
+          url: '/auth/forgot-password',
+          method: 'POST',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     resetPassword: builder.mutation({
       query: (userInfo) => {
         console.log({ userInfo });
         return {
-          url: "/auth/reset-password",
-          method: "PATCH",
+          url: '/auth/reset-password',
+          method: 'PATCH',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     updateUser: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "auth/update-profile",
-          method: "PATCH",
+          url: 'auth/update-profile',
+          method: 'PATCH',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     register: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "/student/register",
-          method: "POST",
+          url: '/student/register',
+          method: 'POST',
           body: userInfo,
         };
       },
@@ -77,51 +77,51 @@ const authApi = baseApi.injectEndpoints({
     updatePartnerImage: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "partner/update-profile-pic",
-          method: "PATCH",
+          url: 'partner/update-profile-pic',
+          method: 'PATCH',
           body: userInfo,
         };
       },
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     otp: builder.mutation({
       query: (userInfo) => {
         return {
-          url: "/auth/verify-otp",
-          method: "PATCH",
+          url: '/auth/verify-otp',
+          method: 'PATCH',
           body: userInfo,
         };
       },
     }),
     getMe: builder.query({
       query: () => ({
-        url: "/auth/me",
-        method: "GET",
+        url: '/auth/me',
+        method: 'GET',
       }),
-      providesTags: ["user"],
+      providesTags: ['user'],
     }),
     googleLogin: builder.mutation({
       query: (body) => ({
-        url: "auth/login-with-google",
-        method: "POST",
+        url: 'auth/login-with-google',
+        method: 'POST',
         body: body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     createStudentProfile: builder.mutation({
       query: (body) => ({
-        url: "/student/create-profile",
-        method: "POST",
+        url: '/student/create-profile',
+        method: 'POST',
         body: body,
       }),
-      invalidatesTags: ["user"],
+      invalidatesTags: ['user'],
     }),
     getStudentProfile: builder.query({
       query: () => ({
-        url: "/student/profile",
-        method: "GET",
+        url: '/student/profile',
+        method: 'GET',
       }),
-      providesTags: ["user"],
+      providesTags: ['user'],
     }),
     // googleLogin: builder.mutation({
     //   query: () => {
