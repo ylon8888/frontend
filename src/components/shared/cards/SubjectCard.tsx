@@ -36,7 +36,7 @@ export const SubjectCard = ({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
-        <div>
+        <div className="mt-4">
           <h3 className="font-semibold font-montserrat text-xl mb-2">
             {subject}
           </h3>
