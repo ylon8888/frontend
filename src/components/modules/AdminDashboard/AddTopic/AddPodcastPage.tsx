@@ -1,30 +1,26 @@
-'use client';
-import MyButton from '@/components/ui/core/MyButton/MyButton';
-import MyFormImageUpload from '@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload';
-import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
-import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
-import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UploadCloud } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { z } from 'zod';
+"use client";
+import MyButton from "@/components/ui/core/MyButton/MyButton";
+import MyFormImageUpload from "@/components/ui/core/MyForm/MyFormImageUpload/MyFormImageUpload";
+import MyFormInput from "@/components/ui/core/MyForm/MyFormInput/MyFormInput";
+import MyFormVideoUpload from "@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload";
+import MyFormWrapper from "@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper";
+import { useCreateStepMutation } from "@/redux/features/step/step.admin.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UploadCloud } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { z } from "zod";
 
 const addTopicValidationSchema = z.object({
   topicName: z
     .string()
-    .min(1, 'Topic name is required')
-    .max(50, 'Topic name must be less than 50 characters'),
+    .min(1, "Topic name is required")
+    .max(50, "Topic name must be less than 50 characters"),
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => file.size <= 15 * 1024 * 1024, // 15MB
-      'Video must be less than 15MB'
-    )
-    .refine(
-      (file) => ['video/mp4', 'video/webm'].includes(file.type),
-      'Only MP4 or WebM videos are allowed'
+      (file) => ["video/mp4", "video/webm"].includes(file.type),
+      "Only MP4 or WebM videos are allowed"
     ),
   thumbnail: z.instanceof(File),
 });
@@ -32,16 +28,16 @@ const addTopicValidationSchema = z.object({
 const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const chapterId = searchParams.get('chapterId');
+  const chapterId = searchParams.get("chapterId");
 
   const [createStep] = useCreateStepMutation();
 
   const handleSubmit = async (data: any, reset: any) => {
     const formData = new FormData();
-    formData.append('poadcast', data.topicVideo);
-    formData.append('thumbnail', data?.thumbnail);
+    formData.append("poadcast", data.topicVideo);
+    formData.append("thumbnail", data?.thumbnail);
     formData.append(
-      'data',
+      "data",
       JSON.stringify({
         podcastName: data.topicName,
       })
@@ -51,22 +47,22 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
       data: formData,
       stepNumber:
         currentStep === 1
-          ? 'one'
+          ? "one"
           : currentStep === 2
-          ? 'two'
+          ? "two"
           : currentStep === 3
-          ? 'three'
+          ? "three"
           : currentStep === 4
-          ? 'four'
+          ? "four"
           : currentStep === 5
-          ? 'five'
+          ? "five"
           : currentStep === 6
-          ? 'six'
+          ? "six"
           : currentStep === 7
-          ? 'seven'
+          ? "seven"
           : currentStep === 8
-          ? 'eight'
-          : '',
+          ? "eight"
+          : "",
       chapterId: chapterId,
     };
     const res = await handleAsyncWithToast(async () => {

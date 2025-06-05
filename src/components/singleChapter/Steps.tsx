@@ -133,7 +133,6 @@ const Steps = ({
       },
     ];
 
-    // Find the highest completed step index
     let highestCompletedIndex = -1;
     allSteps.forEach((step, index) => {
       if (step.isCompleted) {

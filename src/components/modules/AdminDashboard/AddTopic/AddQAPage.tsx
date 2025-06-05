@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import MyButton from '@/components/ui/core/MyButton/MyButton';
-import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { zodResolver } from '@hookform/resolvers/zod';
-import type { UploadProps } from 'antd';
-import { Button, Input, Upload, message } from 'antd';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
-import { z } from 'zod';
+import MyButton from "@/components/ui/core/MyButton/MyButton";
+import { useCreateStepMutation } from "@/redux/features/step/step.admin.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { UploadProps } from "antd";
+import { Button, Input, Upload, message } from "antd";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 
 // Define the validation schema
 const questionAnswerSchema = z.object({
   topicName: z
     .string()
-    .min(1, 'Topic name is required')
-    .max(50, 'Topic name must be less than 50 characters'),
+    .min(1, "Topic name is required")
+    .max(50, "Topic name must be less than 50 characters"),
   video: z.any(),
   questions: z.array(
     z.object({
-      question: z.string().min(1, 'Question is required'),
-      answer: z.string().min(1, 'Answer is required'),
+      question: z.string().min(1, "Question is required"),
+      answer: z.string().min(1, "Answer is required"),
     })
   ),
 });
@@ -32,7 +32,7 @@ type QuestionAnswerFormData = z.infer<typeof questionAnswerSchema>;
 const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const chapterId = searchParams.get('chapterId');
+  const chapterId = searchParams.get("chapterId");
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
 
   const {
@@ -44,28 +44,28 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
   } = useForm<QuestionAnswerFormData>({
     resolver: zodResolver(questionAnswerSchema),
     defaultValues: {
-      topicName: '',
-      questions: [{ question: '', answer: '' }],
+      topicName: "",
+      questions: [{ question: "", answer: "" }],
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'questions',
+    name: "questions",
   });
 
   const [createStep] = useCreateStepMutation();
 
   const onSubmit = async (data: QuestionAnswerFormData) => {
-    console.log('Form data:', data);
-    message.success('Form submitted successfully!');
+    console.log("Form data:", data);
+    message.success("Form submitted successfully!");
 
     const formData = new FormData();
     if (data.video) {
-      formData.append('file', data.video);
+      formData.append("file", data.video);
     }
     formData.append(
-      'data',
+      "data",
       JSON.stringify({
         stepName: data.topicName,
         questionAnswer: data.questions,
@@ -76,22 +76,22 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
       data: formData,
       stepNumber:
         currentStep === 1
-          ? 'one'
+          ? "one"
           : currentStep === 2
-          ? 'two'
+          ? "two"
           : currentStep === 3
-          ? 'three'
+          ? "three"
           : currentStep === 4
-          ? 'four'
+          ? "four"
           : currentStep === 5
-          ? 'five'
+          ? "five"
           : currentStep === 6
-          ? 'six'
+          ? "six"
           : currentStep === 7
-          ? 'seven'
+          ? "seven"
           : currentStep === 8
-          ? 'eight'
-          : '',
+          ? "eight"
+          : "",
       chapterId: chapterId,
     };
 
@@ -109,39 +109,34 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
   };
 
   const uploadProps: UploadProps = {
-    name: 'file',
+    name: "file",
     multiple: false,
-    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
-    accept: 'video/*',
+    action: "https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188",
+    accept: "video/*",
     beforeUpload: (file) => {
-      const isVideo = file.type.startsWith('video/');
+      const isVideo = file.type.startsWith("video/");
       if (!isVideo) {
-        message.error('You can only upload video files!');
-        return Upload.LIST_IGNORE;
-      }
-      const isLt25M = file.size / 1024 / 1024 < 25;
-      if (!isLt25M) {
-        message.error('Video must be smaller than 25MB!');
+        message.error("You can only upload video files!");
         return Upload.LIST_IGNORE;
       }
 
       // Create preview URL
       const previewUrl = URL.createObjectURL(file);
       setVideoPreview(previewUrl);
-      setValue('video', file);
+      setValue("video", file);
 
       return false; // Prevent automatic upload
     },
     onChange(info) {
-      if (info.file.status === 'done') {
+      if (info.file.status === "done") {
         message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
+      } else if (info.file.status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
     },
     onRemove() {
       setVideoPreview(null);
-      setValue('video', null);
+      setValue("video", null);
     },
     showUploadList: false,
   };
@@ -174,7 +169,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
                   id="topicName"
                   placeholder="Enter the name of the class"
                   className="w-full"
-                  status={errors.topicName ? 'error' : ''}
+                  status={errors.topicName ? "error" : ""}
                 />
               )}
             />
@@ -220,13 +215,13 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
                         controls
                         src={videoPreview}
                         className="w-full rounded-lg"
-                        style={{ maxHeight: '200px' }}
+                        style={{ maxHeight: "200px" }}
                       />
                       <Button
                         danger
                         onClick={() => {
                           setVideoPreview(null);
-                          setValue('video', null);
+                          setValue("video", null);
                         }}
                         className="mt-2"
                         size="small"
@@ -247,7 +242,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
                   htmlFor={`question-${index}`}
                   className="block text-gray-700 mb-2"
                 >
-                  Question {String(index + 1).padStart(2, '0')}
+                  Question {String(index + 1).padStart(2, "0")}
                 </label>
                 <Controller
                   name={`questions.${index}.question`}
@@ -259,7 +254,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
                       placeholder="Enter the Question"
                       className="w-full"
                       status={
-                        errors.questions?.[index]?.question ? 'error' : ''
+                        errors.questions?.[index]?.question ? "error" : ""
                       }
                     />
                   )}
@@ -287,7 +282,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
                       id={`answer-${index}`}
                       placeholder="Enter the answer"
                       className="w-full"
-                      status={errors.questions?.[index]?.answer ? 'error' : ''}
+                      status={errors.questions?.[index]?.answer ? "error" : ""}
                       autoSize={{ minRows: 2 }}
                     />
                   )}
@@ -314,7 +309,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
 
           <Button
             type="dashed"
-            onClick={() => append({ question: '', answer: '' })}
+            onClick={() => append({ question: "", answer: "" })}
             block
             icon={<PlusOutlined />}
             className="mb-6"

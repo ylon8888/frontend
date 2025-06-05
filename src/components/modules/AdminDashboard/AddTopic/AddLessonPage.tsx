@@ -1,23 +1,24 @@
-import RichTextEditor from '@/components/shared/rich-text-editor';
-import MyButton from '@/components/ui/core/MyButton/MyButton';
-import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormTextArea from '@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea';
-import MyFormVideoUpload from '@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload';
-import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
-import { useCreateStepMutation } from '@/redux/features/step/step.admin.api';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UploadCloud } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { z } from 'zod';
+import RichTextEditor from "@/components/shared/rich-text-editor";
+import MyButton from "@/components/ui/core/MyButton/MyButton";
+import MyFormInput from "@/components/ui/core/MyForm/MyFormInput/MyFormInput";
+import MyFormTextArea from "@/components/ui/core/MyForm/MyFormTextArea/MyFormTextArea";
+import MyFormVideoUpload from "@/components/ui/core/MyForm/MyFormVideoUpload/MyFormVideoUpload";
+import MyFormWrapper from "@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper";
+import { useCreateStepMutation } from "@/redux/features/step/step.admin.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UploadCloud } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const addTopicValidationSchema = z.object({
   topicName: z
     .string()
-    .min(1, 'Topic name is required')
-    .max(50, 'Topic name must be less than 50 characters'),
+    .min(1, "Topic name is required")
+    .max(50, "Topic name must be less than 50 characters"),
+
   // topicDescription: z
   //   .string()
   //   .min(1, 'Topic description is required')
@@ -25,25 +26,21 @@ const addTopicValidationSchema = z.object({
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => file.size <= 15 * 1024 * 1024, // 10MB
-      'Video must be less than 15MB'
-    )
-    .refine(
-      (file) => ['video/mp4', 'video/webm'].includes(file.type),
-      'Only MP4 or WebM videos are allowed'
+      (file) => ["video/mp4", "video/webm", "video/mkv"].includes(file.type),
+      "Only MP4 or WebM videos are allowed"
     ),
 });
 
 const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [showError, setShowError] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const chapterId = searchParams.get('chapterId');
+  const chapterId = searchParams.get("chapterId");
 
   const isEditorEmpty = (html: string) => {
-    const textContent = html.replace(/<[^>]*>/g, '').trim();
-    return textContent === '';
+    const textContent = html.replace(/<[^>]*>/g, "").trim();
+    return textContent === "";
   };
 
   const onChange = (content: string) => {
@@ -62,9 +59,9 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
     }
 
     const formData = new FormData();
-    formData.append('file', data.topicVideo);
+    formData.append("file", data.topicVideo);
     formData.append(
-      'data',
+      "data",
       JSON.stringify({
         stepName: data.topicName,
         stepDescription: description,
@@ -75,24 +72,24 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
       data: formData,
       stepNumber:
         currentStep === 1
-          ? 'one'
+          ? "one"
           : currentStep === 2
-          ? 'two'
+          ? "two"
           : currentStep === 3
-          ? 'three'
+          ? "three"
           : currentStep === 4
-          ? 'four'
+          ? "four"
           : currentStep === 5
-          ? 'five'
+          ? "five"
           : currentStep === 6
-          ? 'six'
+          ? "six"
           : currentStep === 7
-          ? 'seven'
+          ? "seven"
           : currentStep === 8
-          ? 'eight'
+          ? "eight"
           : currentStep === 9
-          ? 'nine'
-          : '',
+          ? "nine"
+          : "",
       chapterId: chapterId,
     };
     const res = await handleAsyncWithToast(async () => {
@@ -107,8 +104,8 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
           }&chapterId=${chapterId}`
         );
       } else {
-        toast.success('All Topics added successfully');
-        router.push('/dashboard/classes');
+        toast.success("All Topics added successfully");
+        router.push("/dashboard/classes");
       }
     }
   };
@@ -158,13 +155,13 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
                   Click to upload video
                 </span>
                 <p className="mt-1 text-xs text-center text-gray-500">
-                  Format: .mp4 & Max file size: 10 MB
+                  Format: .mp4
                 </p>
               </div>
             </MyFormVideoUpload>
           </div>
           <MyButton
-            label={currentStep > 0 && currentStep < 9 ? 'Next Step' : 'Finish'}
+            label={currentStep > 0 && currentStep < 9 ? "Next Step" : "Finish"}
             type="submit"
             fullWidth
             isArrow
