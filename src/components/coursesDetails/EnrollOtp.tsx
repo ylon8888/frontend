@@ -47,7 +47,7 @@ const EnrollOtp = () => {
 
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setIsPasting(true); // flag we are pasting
+    setIsPasting(true);
 
     const pasteData = e.clipboardData.getData("Text").trim();
     const digits = pasteData.replace(/\D/g, "").slice(0, 6).split("");

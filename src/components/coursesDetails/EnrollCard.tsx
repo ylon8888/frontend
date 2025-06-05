@@ -24,7 +24,6 @@ const EnrollCard = ({ courseDetail }: any) => {
     }
   }, [enrollData]);
   const id = useParams().id;
-  console.log(courseDetail);
 
   return (
     <div className="bg-white rounded-2xl border border-gray-300 shadow-lg p-4 -mt-[200px]">

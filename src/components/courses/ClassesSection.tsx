@@ -21,11 +21,8 @@ const ClassesSection = ({
   classData,
 }: ClassesSectionProps) => {
   const [visibleCards, setVisibleCards] = useState(3);
-
   const { data: courseDatas, isLoading } = useGetSingleCourseQuery(id);
-
   const courseData = courseDatas?.data?.singleClass?.subjects;
-  console.log(courseData);
   // console.log(classData?.subjects?.map((item: any) => item));
   const loadMoreCards = () => {
     setVisibleCards((prevVisibleCards) => prevVisibleCards + 3);
