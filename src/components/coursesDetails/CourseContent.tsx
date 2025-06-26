@@ -9,11 +9,11 @@ interface CourseContentProps {
 
 const CourseContent = ({ steps }: CourseContentProps) => {
   return (
-    <div className="p-6">
+    <div className="lg:p-6">
       <h2 className="text-3xl font-montserrat font-semibold mb-6">
         What you will learn by doing the course
       </h2>
-      <h3 className="font-montserrat font-semibold mb-12">
+      <h3 className="font-montserrat text-lg lg:text-2xl font-semibold mb-12">
         {steps.length} Steps to Complete Each Chapter
       </h3>
 

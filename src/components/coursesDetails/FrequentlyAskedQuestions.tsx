@@ -19,7 +19,7 @@ interface FAQProps {
 
 const FrequentlyAskedQuestions = ({ faqs }: FAQProps) => {
   return (
-    <div className="p-6">
+    <div className="lg:p-6">
       <motion.h2
         className="text-3xl font-montserrat font-semibold mb-6"
         initial={{ opacity: 0, y: -10 }}

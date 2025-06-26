@@ -6,7 +6,8 @@ import Link from "next/link";
 import React from "react";
 
 const YourProgress = () => {
-  const { data, isLoading, isError } = useGetProgressQuery({});
+  const { data, isLoading } = useGetProgressQuery({});
+  console.log(data);
 
   if (isLoading) {
     return (

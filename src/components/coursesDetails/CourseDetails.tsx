@@ -7,7 +7,7 @@ interface CourseDetailsProps {
 
 const CourseDetails = ({ details }: CourseDetailsProps) => {
   return (
-    <div className="p-6">
+    <div className="lg:p-6">
       <h2 className="text-3xl font-montserrat font-semibold mb-6">
         Course details
       </h2>
