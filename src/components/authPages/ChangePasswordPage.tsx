@@ -18,7 +18,9 @@ const ChangePasswordPage = () => {
   const [resetPassword, { isLoading }] = useResetPasswordMutation();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+
   const router = useRouter();
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -58,11 +60,21 @@ const ChangePasswordPage = () => {
     }
 
     try {
+      const token = searchParams.get("token"); // Get the token from the URL
+      if (!token) {
+        // Handle missing token case if necessary
+        setPasswordError("Token is missing");
+        return;
+      }
+
       const formDataToSend = {
         email: email,
         password: formData.newPassword,
       };
-      const response = await resetPassword(formDataToSend).unwrap();
+      const response = await resetPassword({
+        userInfo: formDataToSend,
+        token,
+      }).unwrap();
       if (response?.success) {
         // Handle successful password reset logic here
         toast.success(response.message);
@@ -103,7 +115,7 @@ const ChangePasswordPage = () => {
           <div className="text-center">
             <h1 className="text-4xl font-semibold mb-2">
               {" "}
-              Change New Password!
+              Change Your Password!
             </h1>
             <p className="text-gray-600">
               Enter A Different Password With The Previous!

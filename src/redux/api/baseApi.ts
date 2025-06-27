@@ -62,7 +62,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         api.dispatch(
           setUser({
             user,
-            access_token: data.data.accessToken,
+            access_token: data.accessToken,
             refresh_token: refreshToken,
           })
 
@@ -76,20 +76,21 @@ const baseQueryWithRefreshToken: BaseQueryFn<
         // Retry the original query with the new token
         result = await baseQuery(args, api, extraOptions);
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Session Expired",
-          text: "Please login again to continue",
-          showConfirmButton: false,
-          showCancelButton: true,
-          cancelButtonText: "Stay Logged Out",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            api.dispatch(logout());
-          } else if (result.isDismissed) {
-            api.dispatch(logout());
-          }
-        });
+        // Swal.fire({
+        //   icon: "error",
+        //   title: "Session Expired",
+        //   text: "Please login again to continue",
+        //   showConfirmButton: false,
+        //   showCancelButton: true,
+        //   cancelButtonText: "Stay Logged Out",
+        // }).then((result) => {
+        //   if (result.isConfirmed) {
+        //     api.dispatch(logout());
+        //   } else if (result.isDismissed) {
+        //     api.dispatch(logout());
+        //   }
+        // });
+        api.dispatch(logout());
       }
     } catch (error) {
       console.error("Error during token refresh:", error);

@@ -10,6 +10,7 @@ import { JwtPayload } from "jwt-decode";
 import { setUser } from "@/redux/features/auth/authSlice";
 import { verifyToken } from "@/utils/verifyToken";
 import { ButtonLoading } from "../shared/button-loading/LoadingButton";
+import { toast } from "sonner";
 interface DecodedUser extends JwtPayload {
   role: string; // Add role explicitly
 }
@@ -41,11 +42,11 @@ const LoginPage = () => {
     try {
       const res = await login(formData);
 
-      if (res?.data?.success == true) {
-        router.push("/");
-      }
-
       if (res?.data?.success) {
+        // If login is successful, proceed
+        router.push("/");
+
+        // Verify token and dispatch user data if login succeeded
         const user = (await verifyToken(
           res?.data?.data?.accessToken
         )) as DecodedUser;
@@ -56,11 +57,21 @@ const LoginPage = () => {
             refresh_token: res?.data?.data?.refreshToken,
           })
         );
+      } else {
+        // Handle login failure (e.g., incorrect password)
+        toast.error(res?.data?.message || "Login failed");
       }
     } catch (error) {
-      console.log(error);
+      // RTK Query errors typically have 'error.data' and 'error.status'
+      if ((error as any)?.status === 401) {
+        // Handle 401 Unauthorized error (Incorrect password)
+        toast.error((error as any)?.data?.message || "Password is incorrect");
+      } else {
+        // Handle other errors (e.g., network issues, unexpected errors)
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+      console.log(error); // Log the error for debugging purposes
     }
-    // Handle login logic here
   };
 
   return (

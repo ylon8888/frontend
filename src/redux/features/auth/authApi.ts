@@ -42,16 +42,31 @@ const authApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+    // resetPassword: builder.mutation({
+    //   query: (userInfo) => {
+    //     return {
+    //       url: "/auth/reset-password",
+    //       method: "PATCH",
+    //       body: userInfo,
+    //     };
+    //   },
+    //   invalidatesTags: ["user"],
+    // }),
+
     resetPassword: builder.mutation({
-      query: (userInfo) => {
+      query: ({ userInfo, token }) => {
         return {
           url: "/auth/reset-password",
           method: "PATCH",
+          headers: {
+            Authorization: token, // Add token to the headers
+          },
           body: userInfo,
         };
       },
       invalidatesTags: ["user"],
     }),
+
     updateUser: builder.mutation({
       query: (userInfo) => {
         return {

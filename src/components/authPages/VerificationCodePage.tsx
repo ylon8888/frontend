@@ -78,24 +78,16 @@ const VerificationCodePage = () => {
             if (res?.success) {
               toast.success(res?.message);
               if (searchParams.get("reset-email")) {
-                router.push("/change-password?email=" + email);
+                router.push(
+                  "/change-password?email=" +
+                    email +
+                    "&token=" +
+                    res?.data?.accessToken
+                );
+                console.log(res?.data?.accessToken);
               } else {
                 router.push("/");
               }
-              if (res?.success) {
-                const user = verifyToken(
-                  res?.data?.data?.accessToken
-                ) as DecodedUser;
-                dispatch(
-                  setUser({
-                    user: user,
-                    access_token: res?.data?.data?.accessToken,
-                    refresh_token: res?.data?.data?.refreshToken,
-                  })
-                );
-              }
-            } else {
-              console.error("OTP verification failed:", res?.message);
             }
           })
           .catch((error) => {
