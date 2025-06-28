@@ -16,14 +16,65 @@ import {
   Strikethrough,
   Underline as UnderlineIcon,
   Undo,
+  Image as ImageIcon,
 } from "lucide-react";
 import { Editor } from "@tiptap/react";
 import { Toggle } from "./ToggleButton";
+import React from "react";
 
-export default function MenuBar({ editor }: { editor: Editor | null }) {
+interface MenuBarProps {
+  editor: Editor | null;
+  onImageUpload?: (file: File) => Promise<string>;
+}
+
+export default function MenuBar({ editor, onImageUpload }: MenuBarProps) {
   if (!editor) {
     return null;
   }
+
+  const addImage = async () => {
+    if (!editor) return;
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      // Show loading state
+      editor.commands.focus();
+
+      try {
+        let src: string;
+
+        if (onImageUpload) {
+          src = await onImageUpload(file);
+        } else {
+          src = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        }
+
+        // Verify the src before insertion
+        if (!src) {
+          console.error("No image source obtained");
+          return;
+        }
+
+        // Insert at current position
+        editor.chain().focus().setImage({ src }).run();
+      } catch (error) {
+        console.error("Image upload failed:", error);
+      }
+    };
+
+    input.click();
+  };
 
   const Options = [
     {
@@ -100,6 +151,11 @@ export default function MenuBar({ editor }: { editor: Editor | null }) {
       icon: <Code className="size-4" />,
       onClick: () => editor.chain().focus().setCode().run(),
       pressed: editor.isActive("code"),
+    },
+    {
+      icon: <ImageIcon className="size-4" />,
+      onClick: addImage,
+      pressed: false, // Image button doesn't need a pressed state
     },
     {
       icon: <Undo className="size-4" />,

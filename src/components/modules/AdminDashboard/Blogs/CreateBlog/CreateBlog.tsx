@@ -76,6 +76,28 @@ export default function CreateBlogPageComponent() {
     }
   };
 
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+    if (!apiKey) {
+      throw new Error("IMGBB API key is not set");
+    }
+
+    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.success && data.data && data.data.url) {
+      return data.data.url;
+    } else {
+      throw new Error("Image upload failed");
+    }
+  };
+
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center bg-gray-100">
       <div className="w-full bg-white mx-auto p-6 rounded-lg shadow-md flex flex-col">
@@ -121,7 +143,7 @@ export default function CreateBlogPageComponent() {
 
           <div className="mb-4">
             <p className="mb-2 text-base">Blog Description</p>
-            <RichTextEditor content={description} onChange={onChange} />
+            <RichTextEditor content={description} onChange={onChange} onImageUpload={handleImageUpload} />
             {showError && isEditorEmpty(description) && (
               <p className="text-red-500 text-base mt-2">
                 Description is required
