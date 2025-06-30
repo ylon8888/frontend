@@ -79,7 +79,7 @@ const VerificationCodePage = () => {
                     res?.data?.accessToken
                 );
               } else {
-                router.push("/");
+                router.push("/login");
               }
             }
           })
