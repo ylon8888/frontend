@@ -288,6 +288,28 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
     }
   };
 
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const apiKey = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!apiKey) {
+      throw new Error("API key is not set");
+    }
+
+    const response = await fetch(`${apiKey}/blog/upload-image`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data;
+    } else {
+      throw new Error("Image upload failed");
+    }
+  };
+
   if (isLoading || isFetching) return <Loading />;
 
   return (
@@ -340,7 +362,11 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
               </div>
               <div className="mb-4">
                 <p className="mb-2 text-base">Topic Description</p>
-                <RichTextEditor content={description} onChange={onChange} />
+                <RichTextEditor
+                  content={description}
+                  onChange={onChange}
+                  onImageUpload={handleImageUpload}
+                />
                 {showError && isEditorEmpty(description) && (
                   <p className="text-red-500 text-base mt-2">
                     Description is required
@@ -361,7 +387,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                     fullWidth
                   />
                 ) : (
-                  ''
+                  ""
                 )}
               </div>
             </MyFormWrapper>
@@ -385,7 +411,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                 <div
                   key={level.id}
                   className={cn(
-                    'border-b pb-6 last:border-b-0 shadow-sm p-4 rounded-md relative'
+                    "border-b pb-6 last:border-b-0 shadow-sm p-4 rounded-md relative"
                   )}
                 >
                   {level.isDisable && (
@@ -489,7 +515,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                               });
                             }}
                           >
-                            {level.isDisable ? 'Enable Set' : 'Disable Set'}
+                            {level.isDisable ? "Enable Set" : "Disable Set"}
                           </button>
                         </div>
                       )}
@@ -521,7 +547,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                   label="Next step >"
                 />
               ) : (
-                ''
+                ""
               )}
             </div>
           </div>
@@ -582,7 +608,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                   onClick={() => {
                     setIsUploadFileOpen(false);
                     setIsSeeAllOpen(true);
-                    setQuizSetIdForUpload('');
+                    setQuizSetIdForUpload("");
                   }}
                   label="< Back"
                   className="!text-gray-500 !bg-slate-400 !border-0"

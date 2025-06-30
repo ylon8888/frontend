@@ -78,21 +78,21 @@ export default function CreateBlogPageComponent() {
 
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append("file", file);
 
-    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+    const apiKey = process.env.NEXT_PUBLIC_BASE_URL;
     if (!apiKey) {
-      throw new Error("IMGBB API key is not set");
+      throw new Error("API key is not set");
     }
 
-    const response = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+    const response = await fetch(`${apiKey}/blog/upload-image`, {
       method: "POST",
       body: formData,
     });
 
     const data = await response.json();
-    if (data.success && data.data && data.data.url) {
-      return data.data.url;
+    if (data.success && data.data) {
+      return data.data;
     } else {
       throw new Error("Image upload failed");
     }
