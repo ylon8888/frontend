@@ -73,6 +73,29 @@ const Step1 = ({ goNext }: TStepProps) => {
       goNext();
     }
   };
+
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const apiKey = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!apiKey) {
+      throw new Error("API key is not set");
+    }
+
+    const response = await fetch(`${apiKey}/blog/upload-image`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data;
+    } else {
+      throw new Error("Image upload failed");
+    }
+  };
+
   return (
     <div className="min-h-[calc(100vh-200px)] flex items-center justify-center">
       <div className="w-full max-w-md bg-white rounded-lg shadow-sm p-8">
@@ -110,7 +133,11 @@ const Step1 = ({ goNext }: TStepProps) => {
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
             /> */}
             <p className="mb-2 text-base">Class Description</p>
-            <RichTextEditor content={description} onChange={onChange} />
+            <RichTextEditor
+              content={description}
+              onChange={onChange}
+              onImageUpload={handleImageUpload}
+            />
             {showError && isEditorEmpty(description) && (
               <p className="text-red-500 text-base mt-2">
                 Description is required

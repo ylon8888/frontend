@@ -58,6 +58,28 @@ export default function AddSubjectModal({
     onClose();
   };
 
+  const handleImageUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const apiKey = process.env.NEXT_PUBLIC_BASE_URL;
+    if (!apiKey) {
+      throw new Error("API key is not set");
+    }
+
+    const response = await fetch(`${apiKey}/blog/upload-image`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data;
+    } else {
+      throw new Error("Image upload failed");
+    }
+  };
+
   return (
     <Modal
       title={<h2 className="text-xl font-bold">Add New Subject</h2>}
@@ -92,7 +114,11 @@ export default function AddSubjectModal({
             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           /> */}
           <p className="mb-2 text-base">Blog Description</p>
-          <RichTextEditor content={description} onChange={onChange} />
+          <RichTextEditor
+            content={description}
+            onChange={onChange}
+            onImageUpload={handleImageUpload}
+          />
           {showError && isEditorEmpty(description) && (
             <p className="text-red-500 text-base mt-2">
               Description is required
