@@ -328,7 +328,7 @@ const SideMenu = ({
         //   isActive: false,
         // },
         {
-          href: "/dashboard/feedback",
+          href: "/",
           icon: <IoHomeSharp className="w-5 h-5 mr-1" />,
           text: "Go back to Home",
           isActive: false,
