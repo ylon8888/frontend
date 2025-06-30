@@ -9,7 +9,7 @@ import React from "react";
 
 const Courses = () => {
   return (
-    <WithRole allowedRoles={["STUDENT"]}>
+    <WithRole allowedRoles={["STUDENT", "ADMIN"]}>
       <div>
         <CoursesHero />
         <ExpectfromPodcastClasses />
