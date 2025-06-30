@@ -7,7 +7,6 @@ import React from "react";
 
 const YourProgress = () => {
   const { data, isLoading } = useGetProgressQuery({});
-  console.log(data);
 
   if (isLoading) {
     return (
@@ -33,8 +32,6 @@ const YourProgress = () => {
 
   const progressData = data?.data || [];
 
-  console.log("progressData", progressData);
-
   if (progressData.length === 0) {
     return (
       <div className="w-full p-6">
@@ -48,13 +45,14 @@ const YourProgress = () => {
     );
   }
 
+  console.log("progressData", progressData);
   return (
     <div className="w-full p-6">
       <h2 className="text-3xl font-medium mb-6">Your Progress</h2>
       <div className="grid gap-4 md:gap-6">
         {progressData.map((subject: any) => (
           <div
-            key={subject.subjectId}
+            key={subject?.subjectId}
             className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow"
           >
             <div className="flex gap-4 p-4">
@@ -79,9 +77,9 @@ const YourProgress = () => {
               </div> */}
 
               <div>
-                {subject?.banner ? (
+                {subject?.subjectImage ? (
                   <Image
-                    src={subject?.banner}
+                    src={subject?.subjectImage}
                     alt={subject?.subjectName}
                     width={500}
                     height={500}

@@ -5,11 +5,11 @@ import {
   useHandleStepProgressMutation,
 } from "@/redux/features/course/course";
 import { T_Step } from "@/types/Common";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Router } from "lucide-react";
 import { useEffect, useState } from "react";
 import StepsSkeleton from "../shared/skeleton/StepsSkeleton";
 import { toast } from "sonner";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 interface StepsProps {
   currentStepIndex: number;
@@ -34,6 +34,8 @@ const Steps = ({
   const chapterData = data?.data?.chapters?.[0];
   const [createChapterProgress] = useCreateChapterProgressMutation();
 
+  const router = useRouter();
+  const subjectId = useParams().id;
   const [stepProgress, { isLoading: isUpdatingProgress }] =
     useHandleStepProgressMutation();
 
@@ -140,16 +142,13 @@ const Steps = ({
       }
     });
 
-    // Determine which steps should be accessible
     return allSteps.map((step, index) => ({
       ...step,
       isAccessible: !!(
-        (
-          index === 0 || // First step always accessible
-          step.isCompleted || // Completed steps accessible
-          index === highestCompletedIndex + 1 || // Next step after last completed
-          step.isLast
-        ) // Last step always accessible
+        index === 0 ||
+        step.isCompleted ||
+        index === highestCompletedIndex + 1 ||
+        step.isLast
       ),
     }));
   };
@@ -191,6 +190,34 @@ const Steps = ({
       apiError?.data?.errorMessages?.[0]?.message ||
       "An unexpected error occurred"
     );
+  };
+
+  const handleCompleteChapter = async () => {
+    try {
+      const response = await createChapterProgress({
+        chapterId: id,
+        stepId: chapterData?.stepNine?.id,
+        stepSerial: "9",
+      });
+
+      if (response.data?.success) {
+        toast.success(response.data.message);
+        router.push(`/courses/${subjectId}/chapters`);
+        // Update the last step to completed
+        const updatedSteps = [...steps];
+        updatedSteps[steps.length - 1] = {
+          ...updatedSteps[steps.length - 1],
+          isCompleted: true,
+        };
+        setSteps(updatedSteps);
+        // Call onNext to potentially move to next chapter
+        onNext();
+      } else {
+        toast.error(getErrorMessage(response.error));
+      }
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    }
   };
 
   const handleNextWithCompletion = async () => {
@@ -242,28 +269,10 @@ const Steps = ({
           })
         );
       } else if (currentStepIndex + 1 < steps.length) {
-        updateStepState(currentStepIndex + 1, false); // Just make next accessible
+        updateStepState(currentStepIndex + 1, false);
       }
 
       onNext();
-      return;
-    }
-
-    // Handle final step completion
-    try {
-      const response = await createChapterProgress({
-        chapterId: id,
-        stepId: chapterData?.stepNine?.id,
-        stepSerial: "9",
-      });
-
-      if (response.data?.success) {
-        toast.success(response.data.message);
-      } else {
-        toast.error(getErrorMessage(response.error));
-      }
-    } catch (error) {
-      toast.error(getErrorMessage(error));
     }
   };
 
@@ -329,7 +338,11 @@ const Steps = ({
       </div>
 
       <button
-        onClick={handleNextWithCompletion}
+        onClick={
+          currentStepIndex === steps.length - 1
+            ? handleCompleteChapter
+            : handleNextWithCompletion
+        }
         disabled={isUpdatingProgress}
         className="mt-6 bg-secondary text-white py-3 px-4 rounded-md flex items-center justify-center disabled:opacity-50 hover:bg-secondary/90 transition-colors font-medium"
       >

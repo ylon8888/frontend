@@ -30,14 +30,21 @@ const BlogCard = ({ blog, index }: BlogCardProps) => {
       </div>
       <div className="p-5">
         <p className="text-sm text-gray-800 mb-2">
-          Uploaded Date: {blog?.updatedAt}
+          Uploaded:{" "}
+          {new Date(blog?.updatedAt).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
         </p>
-        <h3 className="font-montserrat text-2xl font-semibold text-gray-900 mb-2 line-clamp-2 h-20">
+        <h3 className="font-montserrat text-2xl font-semibold text-gray-900 mb-2 line-clamp-2 h-14">
           {blog?.title}
         </h3>
         <p
-          className="text-gray-800 mb-4 line-clamp-3 h-24"
-          dangerouslySetInnerHTML={{ __html: blog?.description }}
+          className="text-gray-800 mb-4 line-clamp-3"
+          dangerouslySetInnerHTML={{
+            __html: blog?.description?.split(" ").slice(0, 8).join(" ") + "...",
+          }}
         />
         <Link
           href={`/blog/${blog?.id}`}

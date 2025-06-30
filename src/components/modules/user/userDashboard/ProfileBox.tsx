@@ -11,7 +11,6 @@ dayjs.extend(relativeTime);
 
 const ProfileBox = () => {
   const { data: studentData, isLoading } = useGetStudentQuery({});
-  console.log("From students Dashboard,", studentData);
   const student = studentData?.data;
 
   if (isLoading || !student) {
