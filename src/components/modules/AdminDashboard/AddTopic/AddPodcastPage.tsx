@@ -130,9 +130,6 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
                 <span className="text-sm text-center font-medium">
                   Click to upload video
                 </span>
-                <p className="mt-1 text-xs text-center text-gray-500">
-                  Format: .mp4 & Max file size: 10 MB
-                </p>
               </div>
             </MyFormVideoUpload>
           </div>

@@ -4,15 +4,9 @@ import React, { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useOtpMutation } from "@/redux/features/auth/authApi";
 import { toast } from "sonner";
-import { verifyToken } from "@/utils/verifyToken";
-import { setUser } from "@/redux/features/auth/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
-import { JwtPayload } from "jwt-decode";
 import { ButtonLoading } from "../shared/button-loading/LoadingButton";
-
-interface DecodedUser extends JwtPayload {
-  role: string; // Add role explicitly
-}
+import Link from "next/link";
 
 const VerificationCodePage = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
@@ -84,7 +78,6 @@ const VerificationCodePage = () => {
                     "&token=" +
                     res?.data?.accessToken
                 );
-                console.log(res?.data?.accessToken);
               } else {
                 router.push("/");
               }
@@ -107,9 +100,9 @@ const VerificationCodePage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">
+              <Link href="/" className="text-4xl font-bold text-primary">
                 Brain Drawer
-              </span>
+              </Link>
             </div>
           </div>
         </div>

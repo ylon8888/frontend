@@ -16,9 +16,12 @@ import { useParams } from "next/navigation";
 const CoursesDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("instructor");
   const courseID = useParams().id;
-  const { data, isLoading } = useGetSingleCourseDetailsQuery(courseID, {
-    skip: !courseID,
-  });
+  const { data, isLoading, isError } = useGetSingleCourseDetailsQuery(
+    courseID,
+    {
+      skip: !courseID,
+    }
+  );
   const courseDetail = data?.data;
 
   const tabs = [
@@ -43,11 +46,12 @@ const CoursesDetailsPage = () => {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+
   if (isLoading) {
     return <Loading />;
   }
 
-  if (!courseDetail) {
+  if (isError || !courseDetail) {
     return (
       <div className="min-h-screen flex items-center justify-center text-center focus-within:text-gray-500 font-semibold text-2xl">
         No Data Found

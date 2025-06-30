@@ -6,6 +6,7 @@ import { useResetPasswordMutation } from "@/redux/features/auth/authApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { ButtonLoading } from "../shared/button-loading/LoadingButton";
+import Link from "next/link";
 
 const ChangePasswordPage = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -102,10 +103,9 @@ const ChangePasswordPage = () => {
         <div className="text-center">
           <div className="flex items-center justify-center mb-8">
             <div className="relative">
-              <span className="text-4xl font-bold text-teal-600">
+              <Link href="/" className="text-4xl font-bold text-primary">
                 Brain Drawer
-              </span>
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></div>
+              </Link>
             </div>
           </div>
         </div>

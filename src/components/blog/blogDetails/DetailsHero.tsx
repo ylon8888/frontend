@@ -45,13 +45,13 @@ const DetailsHero = () => {
       </div>
 
       <div className="container max-w-[1320px] mx-auto px-4 py-10  relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12 items-center">
+        <div className="grid grid-cols-2 gap-5 items-center">
           {/* Left Content */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="text-white col-span-2"
+            className="text-white col-span-1"
           >
             <motion.h1
               variants={itemVariants}
@@ -65,14 +65,14 @@ const DetailsHero = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7 }}
-            className="relative col-span-1"
+            className="relative col-span-1 rounded-2xl overflow-hidden shadow-lg"
           >
-            <div className="relative w-[243px] h-[250px]">
+            <div className="relative w-[648px] h-[364px] rounded-2xl overflow-hidden">
               <Image
                 src={data?.data?.blog?.image}
                 alt="Learning Platform Banner"
                 fill
-                className="object-contain"
+                className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>

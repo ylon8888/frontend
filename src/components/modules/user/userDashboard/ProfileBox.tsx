@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useGetStudentQuery } from "@/redux/features/userDashboard/userApi";
@@ -5,17 +6,32 @@ import React from "react";
 import { FaInfoCircle } from "react-icons/fa";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import Loading from "@/components/ui/core/Loading/Loading";
 
 dayjs.extend(relativeTime);
 
 const ProfileBox = () => {
   const { data: studentData, isLoading } = useGetStudentQuery({});
-  console.log("From user Dashboard,", studentData);
+  console.log("From students Dashboard,", studentData);
   const student = studentData?.data;
 
   if (isLoading || !student) {
-    return <Loading />;
+    return (
+      <div className="bg-white space-y-4 px-6 py-10 rounded-xl shadow border border-gray-200 max-w-sm w-full h-fit text-center font-montserrat">
+        {/* Skeleton Loader for Profile Image */}
+        <div className="w-36 h-36 rounded-full bg-gray-200 mx-auto mb-4 animate-pulse"></div>
+
+        {/* Skeleton Loader for Name */}
+        <div className="w-2/3 h-6 bg-gray-200 mx-auto mb-2 animate-pulse"></div>
+
+        {/* Skeleton Loader for Email */}
+        <div className="w-1/2 h-4 bg-gray-200 mx-auto mb-4 animate-pulse"></div>
+
+        {/* Skeleton Loader for Joined Date */}
+        <div className="flex items-start gap-2 text-lg justify-center">
+          <div className="w-1/4 h-4 bg-gray-200 animate-pulse"></div>
+        </div>
+      </div>
+    );
   }
 
   const { studentInfo } = student;
@@ -26,7 +42,7 @@ const ProfileBox = () => {
   const profileImage = studentInfo?.studentProfiles?.profileImage;
 
   return (
-    <div className="bg-white space-y-4 px-6 py-10 rounded-xl shadow border border-gray-200 max-w-sm w-full text-center font-montserrat">
+    <div className="bg-white space-y-4 px-6 py-10 rounded-xl shadow border border-gray-200 max-w-sm w-full h-fit text-center font-montserrat">
       {profileImage ? (
         <img
           src={profileImage}
@@ -45,10 +61,6 @@ const ProfileBox = () => {
         <div className="flex items-start gap-2 text-lg">
           <FaInfoCircle className="mt-1 text-black" />
           <span>Joined {joinedDate}</span>
-        </div>
-        <div className="flex items-start gap-2 text-lg">
-          <FaInfoCircle className="mt-1 text-black" />
-          <span>You enrolled in six chapters for your ninth-grade class.</span>
         </div>
       </div>
     </div>
