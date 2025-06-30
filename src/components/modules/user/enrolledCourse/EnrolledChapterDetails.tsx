@@ -3,7 +3,6 @@
 import { useGetSingleChapterByStudentQuery } from "@/redux/features/course/course";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { Button } from "antd";
 import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 const EnrolledChapterDetails = () => {
@@ -29,13 +28,120 @@ const EnrolledChapterDetails = () => {
       setExpandedQuiz(quizType);
     }
   };
+
+  const getOrdinalSuffix = (num: number): string => {
+    const j = num % 10;
+    const k = num % 100;
+    if (j === 1 && k !== 11) return `${num}st`;
+    if (j === 2 && k !== 12) return `${num}nd`;
+    if (j === 3 && k !== 13) return `${num}rd`;
+    return `${num}th`;
+  };
+
+  const renderCombinedProgressBar = (session: any) => {
+    const correctPercentage = calculatePercentage(
+      session.correctAttempts,
+      session.totalAttempts
+    );
+    const wrongPercentage = 100 - correctPercentage;
+
+    return (
+      <div className="bg-gray-100 p-4 rounded-lg mb-6">
+        <div className="flex justify-between mb-2">
+          <span className="text-green-600 font-medium">
+            Correct: {correctPercentage}%
+          </span>
+          <span className="text-red-600 font-medium">
+            Wrong: {wrongPercentage}%
+          </span>
+        </div>
+        <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden flex">
+          <div
+            className="h-full bg-green-500"
+            style={{ width: `${correctPercentage}%` }}
+          />
+          <div
+            className="h-full bg-red-500"
+            style={{ width: `${wrongPercentage}%` }}
+          />
+        </div>
+        <div className="flex justify-between mt-1 text-sm text-gray-500">
+          <span>0%</span>
+          <span>100%</span>
+        </div>
+      </div>
+    );
+  };
+
+  const renderReviewResults = (session: any, attemptIndex: number) => {
+    const wrongAnswers =
+      session.attempts?.filter((a: any) => !a.isCorrect) || [];
+
+    if (wrongAnswers.length === 0) {
+      return (
+        <div className="text-center py-4 text-gray-500">
+          No wrong answers in this attempt
+        </div>
+      );
+    }
+
+    return (
+      <div className="mb-6">
+        <h3 className="font-medium mb-3">Review Wrong Answers</h3>
+        {wrongAnswers.map((attempt: any) => (
+          <div
+            key={`${attempt.quizId}-${attemptIndex}`}
+            className="mb-4 p-4 border rounded-lg"
+          >
+            <p className="font-medium mb-3">
+              {attempt.stepEightQuiz?.questionText}
+            </p>
+            <div className="space-y-2">
+              {["optionA", "optionB", "optionC", "optionD"].map((opt) => (
+                <div
+                  key={opt}
+                  className={`p-3 border rounded-lg ${
+                    attempt.selectedOption === opt
+                      ? "bg-red-50 border-red-200"
+                      : attempt.stepEightQuiz?.correctAnswer.toLowerCase() ===
+                        opt
+                      ? "border-green-200 bg-green-50"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <span className="mr-2">
+                      {attempt.selectedOption === opt && (
+                        <span className="inline-block h-4 w-4 rounded-full bg-red-500"></span>
+                      )}
+                      {attempt.stepEightQuiz?.correctAnswer.toLowerCase() ===
+                        opt && (
+                        <span className="inline-block h-4 w-4 rounded-full bg-green-500"></span>
+                      )}
+                    </span>
+                    {attempt.stepEightQuiz[opt]}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">
           Chapter {chapter?.sLNumber}: {chapter?.chapterName}
         </h1>
-        <p className="text-gray-700">{chapter?.chapterDescription}</p>
+        <p
+          className="text-gray-700"
+          dangerouslySetInnerHTML={{
+            __html: chapter?.chapterDescription,
+          }}
+        />
       </div>
 
       <div className="space-y-6">
@@ -45,8 +151,6 @@ const EnrolledChapterDetails = () => {
           const currentSession = hasSessions
             ? quiz?.sessions[selectedSession]
             : null;
-          const wrongAnswers =
-            currentSession?.attempts?.filter((a: any) => !a.isCorrect) || [];
 
           return (
             <div
@@ -63,7 +167,12 @@ const EnrolledChapterDetails = () => {
                   <h2 className="text-xl font-semibold">
                     {quiz?.questionType} Quiz Step
                   </h2>
-                  <p className="text-gray-600">{quiz?.questionDescription}</p>
+                  <p
+                    className="text-gray-600"
+                    dangerouslySetInnerHTML={{
+                      __html: quiz?.questionDescription,
+                    }}
+                  />
                 </div>
                 {isExpanded ? (
                   <ChevronUp className="text-gray-500" />
@@ -78,138 +187,35 @@ const EnrolledChapterDetails = () => {
                     <>
                       {/* Attempt Selection */}
                       <div className="mb-6">
-                        <div className="flex gap-4 mb-4">
+                        <div className="flex gap-2 flex-wrap mb-4">
                           {quiz?.sessions.map((session: any, index: number) => (
                             <button
                               key={session.sessionId}
                               onClick={() => setSelectedSession(index)}
-                              className="flex items-center gap-2 "
+                              className={`flex items-center gap-2 px-3 py-1 rounded text-sm ${
+                                selectedSession === index
+                                  ? "bg-blue-100 text-blue-700 border border-blue-300"
+                                  : "hover:bg-gray-100 border border-gray-200"
+                              }`}
                             >
                               Attempt {index + 1}
-                              {session.correctAttempts /
-                                session.totalAttempts >=
-                                0.7 && <CheckCircle className="h-4 w-4" />}
+                              {calculatePercentage(
+                                session.correctAttempts,
+                                session.totalAttempts
+                              ) >= 70 && (
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                              )}
                             </button>
                           ))}
                         </div>
 
-                        {/* First Attempt Result */}
-                        <div className="mb-6">
-                          <h3 className="font-medium mb-2">
-                            First Attempt Result
-                          </h3>
-                          <div className="flex gap-4">
-                            <div className="bg-gray-100 p-3 rounded flex-1">
-                              <span className="block text-base text-gray-500">
-                                Right
-                              </span>
-                              <span className="text-lg font-bold">
-                                {calculatePercentage(
-                                  quiz?.sessions[0].correctAttempts,
-                                  quiz?.sessions[0].totalAttempts
-                                )}
-                                %
-                              </span>
-                            </div>
-                            <div className="bg-gray-100 p-3 rounded flex-1">
-                              <span className="block text-base text-gray-500">
-                                Wrong Answer
-                              </span>
-                              <span className="text-lg font-bold">
-                                {100 -
-                                  calculatePercentage(
-                                    quiz?.sessions[0].correctAttempts,
-                                    quiz?.sessions[0].totalAttempts
-                                  )}
-                                %
-                              </span>
-                            </div>
-                          </div>
-                        </div>
+                        {/* Combined Progress Bar for Selected Attempt */}
+                        {currentSession &&
+                          renderCombinedProgressBar(currentSession)}
 
-                        {/* Second Attempt Result (if exists) */}
-                        {quiz?.sessions.length > 1 && (
-                          <div className="mb-6">
-                            <h3 className="font-medium mb-2">
-                              Second Attempt Result
-                            </h3>
-                            <div className="flex gap-4">
-                              <div className="bg-gray-100 p-3 rounded flex-1">
-                                <span className="block text-base text-gray-500">
-                                  Right
-                                </span>
-                                <span className="text-lg font-bold">
-                                  {calculatePercentage(
-                                    quiz?.sessions[1].correctAttempts,
-                                    quiz?.sessions[1].totalAttempts
-                                  )}
-                                  %
-                                </span>
-                              </div>
-                              <div className="bg-gray-100 p-3 rounded flex-1">
-                                <span className="block text-base text-gray-500">
-                                  Wrong Answer
-                                </span>
-                                <span className="text-lg font-bold">
-                                  {100 -
-                                    calculatePercentage(
-                                      quiz?.sessions[1].correctAttempts,
-                                      quiz?.sessions[1].totalAttempts
-                                    )}
-                                  %
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-
-                        {/* Review Results - Only Wrong Answers */}
-                        <div className="border-t pt-4">
-                          <h3 className="font-medium mb-3">Review Results</h3>
-                          {wrongAnswers.map((attempt: any) => (
-                            <div
-                              key={attempt.quizId}
-                              className="mb-6 p-4 border rounded-lg"
-                            >
-                              <p className="font-medium mb-3">
-                                Quiz -01 {attempt.stepEightQuiz?.questionText}
-                              </p>
-                              <div className="space-y-2">
-                                {[
-                                  "optionA",
-                                  "optionB",
-                                  "optionC",
-                                  "optionD",
-                                ].map((opt) => (
-                                  <div
-                                    key={opt}
-                                    className={`p-3 border rounded-lg ${
-                                      attempt.selectedOption === opt
-                                        ? "bg-red-50 border-red-200"
-                                        : attempt.stepEightQuiz?.correctAnswer.toLowerCase() ===
-                                          opt
-                                        ? "border-green-200 bg-green-50"
-                                        : "border-gray-200"
-                                    }`}
-                                  >
-                                    <div className="flex items-center">
-                                      <span className="mr-2">
-                                        {attempt.selectedOption === opt && (
-                                          <span className="inline-block h-4 w-4 rounded-full bg-red-500"></span>
-                                        )}
-                                        {attempt.stepEightQuiz?.correctAnswer.toLowerCase() ===
-                                          opt && (
-                                          <span className="inline-block h-4 w-4 rounded-full bg-green-500"></span>
-                                        )}
-                                      </span>
-                                      {attempt.stepEightQuiz[opt]}
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
+                        {/* Review Results for Selected Attempt Only */}
+                        {currentSession &&
+                          renderReviewResults(currentSession, selectedSession)}
                       </div>
                     </>
                   ) : (

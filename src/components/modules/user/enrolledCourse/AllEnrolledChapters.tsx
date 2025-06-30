@@ -35,7 +35,12 @@ export default function AllEnrolledChapters() {
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="bg-white rounded-lg p-6 mb-6 shadow-sm">
         <h1 className="text-2xl font-bold mb-2">{subject?.subjectName}</h1>
-        <p className="text-gray-600">{subject?.subjectDescription}</p>
+        <p
+          className="text-gray-600"
+          dangerouslySetInnerHTML={{
+            __html: subject?.subjectDescription,
+          }}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -93,9 +98,12 @@ export default function AllEnrolledChapters() {
                   Chapter {chapter?.sLNumber}: {chapter?.chapterName}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-4">
-                  {chapter?.chapterDescription}
-                </p>
+                <p
+                  className="text-gray-600 text-sm mb-4"
+                  dangerouslySetInnerHTML={{
+                    __html: chapter?.chapterDescription,
+                  }}
+                />
 
                 {status === "complete" && (
                   <Link
@@ -107,16 +115,27 @@ export default function AllEnrolledChapters() {
                 )}
 
                 {status === "in-progress" && (
-                  <button className="bg-secondary hover:bg-orange-600 text-white text-base px-7 py-2 rounded-lg">
-                    Continue
-                  </button>
+                  <div className="flex justify-between mt-4">
+                    <Link
+                      href={`/courses/${subject?.id}/chapters/${chapter?.id}`}
+                      className="!bg-secondary !hover:bg-orange-600 !text-white !text-base !px-7 !py-2 !rounded-lg"
+                    >
+                      Continue
+                    </Link>
+                    <Link
+                      href={`/user/enrolled-courses/${subject?.id}/${chapter?.id}`}
+                      className="!bg-primary !hover:bg-orange-600 !text-white !text-base !px-7 !py-2 !rounded-lg"
+                    >
+                      See Progress
+                    </Link>
+                  </div>
                 )}
 
                 {isExpanded && (
                   <div className="mt-4 pt-4 border-t border-gray-100">
                     {status !== "locked" && chapter?.thumbnail && (
                       <Link
-                        href={`/courses/${subject?.id}/${chapter?.id}`}
+                        href={`/user/enrolled-courses/${subject?.id}/${chapter?.id}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <div className="relative aspect-video bg-gray-200 rounded-lg mb-4 overflow-hidden">

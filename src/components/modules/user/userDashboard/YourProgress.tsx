@@ -33,6 +33,8 @@ const YourProgress = () => {
 
   const progressData = data?.data || [];
 
+  console.log("progressData", progressData);
+
   if (progressData.length === 0) {
     return (
       <div className="w-full p-6">
@@ -139,18 +141,21 @@ const YourProgress = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">
-                  <button className="bg-secondary hover:bg-secondary/80 text-white px-4 py-2 rounded-lg font-montserrat  transition-colors">
+                  <Link
+                    href={`courses/${subject.subjectId}/chapters`}
+                    className="!bg-secondary !hover:bg-secondary/80 !text-white !px-4 !py-2 !rounded-lg !font-montserrat !transition-colors"
+                  >
                     {subject.progress === 0
                       ? "Start Course"
                       : subject.progress === 100
                       ? "Review Course"
                       : "Continue Course"}
-                  </button>
+                  </Link>
                   <Link
-                    href={`/courses/${subject.subjectId}/chapters`}
-                    className="border border-secondary px-4 py-2 rounded-lg  font-montserrat  transition-colors"
+                    href={`/user/enrolled-courses/${subject.subjectId}`}
+                    className="border border-primary px-4 py-2 rounded-lg font-montserrat  transition-colors"
                   >
-                    <p className="text-secondary ">See Chapters</p>
+                    <p className="text-primary">See Progress</p>
                   </Link>
                 </div>
               </div>
