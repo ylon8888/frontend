@@ -1,7 +1,5 @@
 "use client";
 
-import Loading from "@/components/ui/core/Loading/Loading";
-import { useGetStatsQuery } from "@/redux/features/student/student.api";
 import { useGetStudentQuery } from "@/redux/features/userDashboard/userApi";
 
 // Map of icon names to their components
@@ -139,7 +137,7 @@ const iconMap = {
 // Define the type after `iconMap` is declared
 type StatCardData = {
   id: number;
-  value: string;
+  value: string | number;
   label: string;
   icon: keyof typeof iconMap;
 };
@@ -163,19 +161,19 @@ const StatCards = () => {
   const statData: StatCardData[] = [
     {
       id: 1,
-      value: String(stats?.quizPracticed),
+      value: stats?.quizPracticed || 0,
       label: "Class Participation Rate",
       icon: "users", // ✅ "users" represents group/class
     },
     {
       id: 2,
-      value: String(stats?.correctQuiz),
+      value: stats?.correctQuiz || 0,
       label: "Quiz Practiced",
       icon: "graduationCap", // Changed to a valid icon key from iconMap
     },
     {
       id: 3,
-      value: String(stats?.correctAnswerRate),
+      value: stats?.correctAnswerRate || 0,
       label: "Correct Answer Rate",
       icon: "lightbulb", // Changed to a valid icon key from iconMap
     },
