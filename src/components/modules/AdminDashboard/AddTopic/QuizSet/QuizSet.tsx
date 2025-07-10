@@ -1,29 +1,29 @@
-'use client';
-import RichTextEditor from '@/components/shared/rich-text-editor';
-import Loading from '@/components/ui/core/Loading/Loading';
-import MyButton from '@/components/ui/core/MyButton/MyButton';
-import MyFormExcelUpload from '@/components/ui/core/MyForm/MyFormExcelUpload/MyFormExcelUpload';
-import MyFormInput from '@/components/ui/core/MyForm/MyFormInput/MyFormInput';
-import MyFormWrapper from '@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper';
-import { cn } from '@/lib/utils';
+"use client";
+import RichTextEditor from "@/components/shared/rich-text-editor";
+import Loading from "@/components/ui/core/Loading/Loading";
+import MyButton from "@/components/ui/core/MyButton/MyButton";
+import MyFormExcelUpload from "@/components/ui/core/MyForm/MyFormExcelUpload/MyFormExcelUpload";
+import MyFormInput from "@/components/ui/core/MyForm/MyFormInput/MyFormInput";
+import MyFormWrapper from "@/components/ui/core/MyForm/MyFormWrapper/MyFormWrapper";
+import { cn } from "@/lib/utils";
 import {
   useCreateStepMutation,
   useDisableQuizMutation,
   useGetAllQuizQuestionByQuizSetQuery,
   useGetAllQuizSetByChapterQuery,
   useUploadQuizFileMutation,
-} from '@/redux/features/step/step.admin.api';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { z } from 'zod';
+} from "@/redux/features/step/step.admin.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { z } from "zod";
 
 const addQuizSetValidationSchema = z.object({
   setName: z
     .string()
-    .min(1, 'Set name is required')
-    .max(50, 'Set name must be less than 50 characters'),
+    .min(1, "Set name is required")
+    .max(50, "Set name must be less than 50 characters"),
   // setDescription: z
   //   .string()
   //   .min(1, 'Set description is required')
@@ -34,17 +34,17 @@ export const addQuizUploadValidationSchema = z.object({
   quizFile: z
     .instanceof(File)
     .refine((file) => file.size > 0, {
-      message: 'File is required',
+      message: "File is required",
     })
     .refine(
       (file) =>
         [
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
-          'application/vnd.ms-excel', // .xls
-          'text/csv', // .csv
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+          "application/vnd.ms-excel", // .xls
+          "text/csv", // .csv
         ].includes(file.type),
       {
-        message: 'Only .xlsx, .xls, or .csv files are allowed',
+        message: "Only .xlsx, .xls, or .csv files are allowed",
       }
     ),
 });
@@ -88,7 +88,7 @@ type QuizQuestion = {
   optionB: string;
   optionC: string;
   optionD: string;
-  correctOption?: 'optionA' | 'optionB' | 'optionC' | 'optionD'; // Optional field for correct answer
+  correctOption?: "optionA" | "optionB" | "optionC" | "optionD"; // Optional field for correct answer
   explanation?: string; // Optional field for explanation
 };
 
@@ -189,14 +189,20 @@ const SeeAddedQuizBySetComponent: React.FC<SeeAddedQuizBySetComponentProps> = ({
   );
 };
 
-const QuizSet = ({ currentStep }: { currentStep: number }) => {
+const QuizSet = ({
+  currentStep,
+  isEditMode,
+}: {
+  currentStep: number;
+  isEditMode?: boolean;
+}) => {
   const router = useRouter();
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [showError, setShowError] = useState(false);
   const searchParams = useSearchParams();
-  const chapterId = searchParams.get('chapterId');
-  const [quizSetIdForUpload, setQuizSetIdForUpload] = useState('');
-  const [quizSetIdForWatch, setQuizSetIdForWatch] = useState('');
+  const chapterId = searchParams.get("chapterId");
+  const [quizSetIdForUpload, setQuizSetIdForUpload] = useState("");
+  const [quizSetIdForWatch, setQuizSetIdForWatch] = useState("");
 
   const [isQuizSetFormOpen, setIsQuizSetFormOpen] = useState(false);
   const [isSeeAllOpen, setIsSeeAllOpen] = useState(false);
@@ -231,22 +237,22 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
         data: payload,
         stepNumber:
           currentStep === 1
-            ? 'one'
+            ? "one"
             : currentStep === 2
-            ? 'two'
+            ? "two"
             : currentStep === 3
-            ? 'three'
+            ? "three"
             : currentStep === 4
-            ? 'four'
+            ? "four"
             : currentStep === 5
-            ? 'five'
+            ? "five"
             : currentStep === 6
-            ? 'six'
+            ? "six"
             : currentStep === 7
-            ? 'seven'
+            ? "seven"
             : currentStep === 8
-            ? 'eight'
-            : '',
+            ? "eight"
+            : "",
         chapterId: chapterId,
       });
     });
@@ -262,7 +268,7 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
   const handleQuizUpload = async (data: any, reset: any) => {
     // Handle uploading quiz file
     const formData = new FormData();
-    formData.append('quiz', data.quizFile);
+    formData.append("quiz", data.quizFile);
     const res = await handleAsyncWithToast(async () => {
       return uploadQuiz({
         data: formData,
@@ -277,8 +283,8 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
   };
 
   const isEditorEmpty = (html: string) => {
-    const textContent = html.replace(/<[^>]*>/g, '').trim();
-    return textContent === '';
+    const textContent = html.replace(/<[^>]*>/g, "").trim();
+    return textContent === "";
   };
 
   const onChange = (content: string) => {
@@ -539,7 +545,9 @@ const QuizSet = ({ currentStep }: { currentStep: number }) => {
                     router.push(
                       `/dashboard/classes/add-topic?step=${
                         currentStep + 1
-                      }&chapterId=${chapterId}`
+                      }&chapterId=${chapterId}&edit=${
+                        isEditMode ? "true" : "false"
+                      }`
                     );
                   }}
                   className="!bg-slate-400"

@@ -29,7 +29,7 @@ const questionAnswerSchema = z.object({
 
 type QuestionAnswerFormData = z.infer<typeof questionAnswerSchema>;
 
-const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
+const AddQAPage = ({ currentStep, isEditMode }: { currentStep?: number, isEditMode?: boolean }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const chapterId = searchParams.get("chapterId");
@@ -102,7 +102,7 @@ const AddQAPage = ({ currentStep }: { currentStep?: number }) => {
       router.push(
         `/dashboard/classes/add-topic?step=${
           currentStep! + 1
-        }&chapterId=${chapterId}`
+        }&chapterId=${chapterId}&edit=${isEditMode ? "true" : "false"}`
       );
     }
   };

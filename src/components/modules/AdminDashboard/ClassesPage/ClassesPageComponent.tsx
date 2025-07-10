@@ -1,7 +1,10 @@
 "use client";
 import Loading from "@/components/ui/core/Loading/Loading";
 import MyButton from "@/components/ui/core/MyButton/MyButton";
-import { useGetAllClassQuery } from "@/redux/features/class/class.admin.api";
+import {
+  useDeleteClassMutation,
+  useGetAllClassQuery,
+} from "@/redux/features/class/class.admin.api";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { PlusIcon, Trash } from "lucide-react";
 import Link from "next/link";
@@ -63,6 +66,34 @@ const ClassesPageComponent = () => {
 
   const classData: TClass[] = response?.data?.data;
 
+  const [deleteClass] = useDeleteClassMutation();
+
+  const handleDeleteClass = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await handleAsyncWithToast(async () => {
+          return deleteClass(id);
+        });
+        if (res?.data?.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Class has been deleted.",
+            icon: "success",
+          });
+          router.refresh();
+        }
+      }
+    });
+  };
+
   if (isLoading || isFetching) return <Loading />;
 
   if (response?.data?.data?.length === 0)
@@ -84,38 +115,11 @@ const ClassesPageComponent = () => {
       </div>
     );
 
-  const handleDeleteClass = async (id: string) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then(async(result) => {
-      if (result.isConfirmed) {
-        // const res = await handleAsyncWithToast(async () => {
-          // return deleteClass({ id });
-        // });
-        // if (res?.data?.success) {
-        //   toast.success("Class deleted successfully!");
-        //   router.refresh();
-        // }
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-        });
-      }
-    });
-  };
-
   return (
     <section className="flex flex-col w-full max-w-[1580px] items-start gap-6">
       <div className="flex flex-col items-start gap-5 w-full">
         <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
-          <h1 className="font-['Montserrat',Helvetica] font-semibold text-[#101010] text-2xl sm:text-[32px] leading-[1.4]">
+          <h1 className="font-['Montserrat',Helvetica] font-semibold text-black text-2xl sm:text-[32px] leading-[1.4]">
             All Classes
           </h1>
           <Link href={"/dashboard/classes/add-class"}>

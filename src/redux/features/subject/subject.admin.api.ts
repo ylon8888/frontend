@@ -55,8 +55,8 @@ const subjectApi = baseApi.injectEndpoints({
     deleteSubject: builder.mutation({
       query: (id) => {
         return {
-          url: `subject/${id}`,
-          method: 'DELETE',
+          url: `subject/delete/${id}`,
+          method: 'PATCH',
         };
       },
       invalidatesTags: ['subject'],
@@ -64,4 +64,4 @@ const subjectApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateSubjectMutation, useGetAllSubjectQuery, useUpdateSubjectVisibilityMutation } = subjectApi;
+export const { useCreateSubjectMutation, useGetAllSubjectQuery, useUpdateSubjectVisibilityMutation, useDeleteSubjectMutation } = subjectApi;

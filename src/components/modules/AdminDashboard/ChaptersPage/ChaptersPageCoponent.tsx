@@ -8,16 +8,20 @@ import { useState } from "react";
 import AddChapterModal from "./AddChapterModal/AddChapterModal";
 import {
   useCreateChapterMutation,
+  useDeleteChapterMutation,
   useGetAllChapterQuery,
 } from "@/redux/features/chapter/chapter.admin.api";
 import Loading from "@/components/ui/core/Loading/Loading";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import Swal from "sweetalert2";
+import { BiTrash } from "react-icons/bi";
 
 export type TChapter = {
   id: string;
   chapterName: string;
   chapterDescription: string;
   thumbnail: string; // URL to the image
+  completeSteps: number;
 };
 
 export type TSubject = {
@@ -41,6 +45,34 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
 
   const chapters: TChapter[] = response?.data?.data?.chapters;
   const subject: TSubject = response?.data?.data?.subject;
+
+  const [deleteChapter] = useDeleteChapterMutation();
+
+  const handleDeleteChapter = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await handleAsyncWithToast(async () => {
+          return deleteChapter(id);
+        });
+        if (res?.data?.success) {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Chapter has been deleted.",
+            icon: "success",
+          });
+          router.refresh();
+        }
+      }
+    });
+  };
 
   const [createChapter] = useCreateChapterMutation();
 
@@ -133,17 +165,35 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
                   <h2 className="text-lg md:text-[20px] font-semibold text-gray-900">
                     Chapter: {chapter?.chapterName}
                   </h2>
-                  <button
-                    className="text-white cursor-pointer bg-secondary hover:bg-secondary-dark px-3 py-1 rounded text-sm font-medium"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(
-                        `/dashboard/classes/add-topic?step=1&chapterId=${chapter?.id}`
-                      );
-                    }}
-                  >
-                    Add Lesson
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button
+                      className="text-white cursor-pointer bg-secondary hover:bg-secondary-dark px-3 py-1 rounded text-sm font-medium"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (chapter?.completeSteps >= 1) {
+                          router.push(
+                            `/dashboard/classes/add-topic?step=1&chapterId=${chapter?.id}&edit=true`
+                          );
+                        } else {
+                          router.push(
+                            `/dashboard/classes/add-topic?step=1&chapterId=${chapter?.id}`
+                          );
+                        }
+                      }}
+                    >
+                      {chapter?.completeSteps >= 1
+                        ? "Edit Lesson"
+                        : "Add Lesson"}
+                    </button>
+                    <BiTrash
+                      size={25}
+                      className="text-red-500"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteChapter(chapter?.id);
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div className="mb-3">

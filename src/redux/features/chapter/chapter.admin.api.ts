@@ -1,4 +1,4 @@
-import { baseApi } from '../../api/baseApi';
+import { baseApi } from "../../api/baseApi";
 
 const chapterApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -6,10 +6,10 @@ const chapterApi = baseApi.injectEndpoints({
       query: (subjectId) => {
         return {
           url: `subject/subject-wise-chapter/${subjectId}`,
-          method: 'GET',
+          method: "GET",
         };
       },
-      providesTags: ['chapter'],
+      providesTags: ["chapter"],
     }),
 
     getAllStudentByChapter: builder.query({
@@ -22,64 +22,64 @@ const chapterApi = baseApi.injectEndpoints({
         }
         return {
           url: `course/chapter-enroll-student/${chapterId}`,
-          method: 'GET',
+          method: "GET",
           params: params,
         };
       },
-      providesTags: ['chapter'],
+      providesTags: ["chapter"],
     }),
 
     getSingleChapter: builder.query({
       query: (id) => ({
         url: `chapter/${id}`,
-        method: 'GET',
+        method: "GET",
       }),
-      providesTags: ['chapter'],
+      providesTags: ["chapter"],
     }),
 
     getStudentAnalysisReportByChapter: builder.query({
       query: (data) => {
         const params = new URLSearchParams();
-        params.append('chapterId', data?.chapterId);
-        params.append('studentId', data?.studentId);
+        params.append("chapterId", data?.chapterId);
+        params.append("studentId", data?.studentId);
         return {
           url: `course/chapter-quiz-details`,
-          method: 'GET',
+          method: "GET",
           params: params,
         };
       },
-      providesTags: ['chapter'],
+      providesTags: ["chapter"],
     }),
 
     createChapter: builder.mutation({
       query: ({ data, subjectId }) => {
         return {
           url: `chapter/${subjectId}`,
-          method: 'POST',
+          method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ['chapter'],
+      invalidatesTags: ["chapter"],
     }),
 
     updateChapter: builder.mutation({
       query: (data) => {
         return {
           url: `chapter/${data?.id}`,
-          method: 'POST',
+          method: "POST",
           body: data?.formData,
         };
       },
-      invalidatesTags: ['chapter'],
+      invalidatesTags: ["chapter"],
     }),
     deleteChapter: builder.mutation({
       query: (id) => {
         return {
-          url: `chapter/${id}`,
-          method: 'DELETE',
+          url: `chapter/delete/${id}`,
+          method: "PATCH",
         };
       },
-      invalidatesTags: ['chapter'],
+      invalidatesTags: ["chapter"],
     }),
   }),
 });
@@ -89,4 +89,5 @@ export const {
   useCreateChapterMutation,
   useGetAllStudentByChapterQuery,
   useGetStudentAnalysisReportByChapterQuery,
+  useDeleteChapterMutation,
 } = chapterApi;

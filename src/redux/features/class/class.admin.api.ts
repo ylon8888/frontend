@@ -48,8 +48,8 @@ const classApi = baseApi.injectEndpoints({
     deleteClass: builder.mutation({
       query: (id) => {
         return {
-          url: `class/${id}`,
-          method: "DELETE",
+          url: `class/delete/${id}`,
+          method: "PATCH",
         };
       },
       invalidatesTags: ["class"],
@@ -57,4 +57,4 @@ const classApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateClassMutation, useGetAllClassQuery } = classApi;
+export const { useCreateClassMutation, useGetAllClassQuery, useDeleteClassMutation } = classApi;

@@ -25,7 +25,7 @@ const addTopicValidationSchema = z.object({
   thumbnail: z.instanceof(File),
 });
 
-const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
+const AddPodcastPage = ({ currentStep, isEditMode }: { currentStep: number, isEditMode?: boolean }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const chapterId = searchParams.get("chapterId");
@@ -73,7 +73,7 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
       router.push(
         `/dashboard/classes/add-topic?step=${
           currentStep + 1
-        }&chapterId=${chapterId}`
+        }&chapterId=${chapterId}&edit=${isEditMode ? "true" : "false"}`
       );
     }
   };

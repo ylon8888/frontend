@@ -31,7 +31,13 @@ const addTopicValidationSchema = z.object({
     ),
 });
 
-const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
+const AddLessonPage = ({
+  currentStep,
+  isEditMode,
+}: {
+  currentStep: number;
+  isEditMode?: boolean;
+}) => {
   const [description, setDescription] = useState("");
   const [showError, setShowError] = useState(false);
   const router = useRouter();
@@ -101,7 +107,7 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
         router.push(
           `/dashboard/classes/add-topic?step=${
             currentStep + 1
-          }&chapterId=${chapterId}`
+          }&chapterId=${chapterId}&edit=${isEditMode ? "true" : "false"}`
         );
       } else {
         toast.success("All Topics added successfully");
@@ -109,7 +115,7 @@ const AddLessonPage = ({ currentStep }: { currentStep: number }) => {
       }
     }
   };
-  
+
   const handleImageUpload = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
