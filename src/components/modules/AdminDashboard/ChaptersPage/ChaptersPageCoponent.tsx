@@ -129,7 +129,7 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
               className="bg-white rounded-lg border border-gray-200 hover:border-secondary cursor-pointer overflow-hidden flex flex-col h-full"
             >
               <div className="p-4 flex flex-col flex-grow">
-                <div className="flex justify-between items-center mb-3">
+                <div className="flex justify-between flex-col gap-2 items-start mb-3">
                   <h2 className="text-lg md:text-[20px] font-semibold text-gray-900">
                     Chapter: {chapter?.chapterName}
                   </h2>

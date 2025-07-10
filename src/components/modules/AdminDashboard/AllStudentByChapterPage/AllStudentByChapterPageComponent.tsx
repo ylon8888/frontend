@@ -154,7 +154,7 @@ const AllStudentByChapterPageComponent = ({
           .split(" ");
         // parts: [Mon, 06, Jun, 2025]
         if (parts.length < 4) return dateStr;
-        return `${parts[0]}${parts[1]} ${parts[2]}, ${parts[3]}`;
+        return `${parts[0]} ${parts[1]} ${parts[2]}, ${parts[3]}`;
       },
     },
     { header: "Name", accessor: (student: CourseEnroll) => student.name },

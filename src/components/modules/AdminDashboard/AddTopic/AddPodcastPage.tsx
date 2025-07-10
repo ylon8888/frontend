@@ -19,8 +19,8 @@ const addTopicValidationSchema = z.object({
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => ["video/mp4", "video/webm"].includes(file.type),
-      "Only MP4 or WebM videos are allowed"
+      (file) => ["video/mp4", "video/webm", "audio/mpeg", "audio/wav", "audio/mp3"].includes(file.type),
+      "Only videos and audios are allowed"
     ),
   thumbnail: z.instanceof(File),
 });
@@ -128,7 +128,7 @@ const AddPodcastPage = ({ currentStep }: { currentStep: number }) => {
               <div className="flex items-center flex-col justify-center text-primary border border-dashed border-gray-300 rounded-lg p-5 cursor-pointer">
                 <UploadCloud className="w-5 h-5 mr-2" />
                 <span className="text-sm text-center font-medium">
-                  Click to upload video
+                  Click to upload audio/video
                 </span>
               </div>
             </MyFormVideoUpload>

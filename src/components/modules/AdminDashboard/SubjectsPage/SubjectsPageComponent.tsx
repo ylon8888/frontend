@@ -1,16 +1,16 @@
-'use client';
-import MyButton from '@/components/ui/core/MyButton/MyButton';
-import { PlusIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { use, useState } from 'react';
-import AddSubjectModal from '../AddClassPage/Steps/AddSubjectModal/AddSubjectModal';
+"use client";
+import Loading from "@/components/ui/core/Loading/Loading";
+import MyButton from "@/components/ui/core/MyButton/MyButton";
 import {
   useCreateSubjectMutation,
   useGetAllSubjectQuery,
-} from '@/redux/features/subject/subject.admin.api';
-import Loading from '@/components/ui/core/Loading/Loading';
-import { handleAsyncWithToast } from '@/utils/handleAsyncWithToast';
-import { toast } from 'sonner';
+} from "@/redux/features/subject/subject.admin.api";
+import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
+import { PlusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import AddSubjectModal from "../AddClassPage/Steps/AddSubjectModal/AddSubjectModal";
 
 type TSingleClassProps = {
   classId: string;
@@ -28,7 +28,7 @@ export type TSubject = {
   _count: {
     courseEnrolls: number;
     chapters: number;
-  },
+  };
   totalLessons: number;
 };
 
@@ -87,15 +87,15 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
   const handleAddSubject = async (data: any, reset: () => void) => {
     const { subjectBanner, ...rest } = data;
     const formData = new FormData();
-    formData.append('file', subjectBanner);
-    formData.append('data', JSON.stringify(rest));
+    formData.append("file", subjectBanner);
+    formData.append("data", JSON.stringify(rest));
     const res = await handleAsyncWithToast(async () => {
       return createSubject({ data: formData, classID: classId });
     });
     if (res?.data?.success) {
       setShowNewSubjectInput(false);
       reset();
-      toast.success('Subject added successfully!');
+      toast.success("Subject added successfully!");
     }
   };
 
@@ -125,7 +125,7 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
             onAddSubject={handleAddSubject}
           />
         ) : (
-          ''
+          ""
         )}
       </div>
     );
@@ -151,7 +151,7 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
               onAddSubject={handleAddSubject}
             />
           ) : (
-            ''
+            ""
           )}
         </header>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full">
@@ -190,7 +190,8 @@ const SubjectsPageComponent = ({ classId }: TSingleClassProps) => {
                       Total Chapter - {subject?._count?.chapters ?? 0}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
-                      Total Enrolled Student - {subject?._count?.courseEnrolls ?? 0}
+                      Total Enrolled Student -{" "}
+                      {subject?._count?.courseEnrolls ?? 0}
                     </p>
                     <p className="font-['Poppins',Helvetica] font-normal text-main-text text-sm sm:text-base leading-[1.6] whitespace-nowrap">
                       Total Lesson - {subject?.totalLessons ?? 0}

@@ -1,15 +1,15 @@
-'use client';
-import { useSearchParams } from 'next/navigation';
-import Stats from './Stats/Stats';
-import LineChart from './LineChart/LineChart';
-import OverallGraph from './OverallGraph/OverallGraph';
-import QuizResultAccordion from './QuizResultAccordion/QuizResultAccordion';
-import { useGetStudentAnalysisReportByChapterQuery } from '@/redux/features/chapter/chapter.admin.api';
+"use client";
+import { useSearchParams } from "next/navigation";
+import Stats from "./Stats/Stats";
+import LineChart from "./LineChart/LineChart";
+import OverallGraph from "./OverallGraph/OverallGraph";
+import QuizResultAccordion from "./QuizResultAccordion/QuizResultAccordion";
+import { useGetStudentAnalysisReportByChapterQuery } from "@/redux/features/chapter/chapter.admin.api";
 
 const StudentAnalyticsComponent = () => {
   const params = useSearchParams();
-  const chapterId = params.get('chapterId');
-  const studentId = params.get('studentId');
+  const chapterId = params.get("chapterId");
+  const studentId = params.get("studentId");
 
   const {
     data: response,
@@ -48,8 +48,8 @@ const StudentAnalyticsComponent = () => {
         Object.keys(baseData).length > 0 && <Stats apiResponse={baseData} />
       )}
 
-      <div className="my-12 flex flex-col md:flex-row w-full gap-8">
-        <div className="w-full md:w-[60%] p-5 bg-gray-50 rounded-lg border border-gray-300/50">
+      <div className="my-12 flex flex-col lg:flex-row w-full gap-8">
+        <div className="w-full lg:w-[50%] p-5 bg-gray-50 rounded-lg border border-gray-300/50">
           {/* <LineChart /> */}
           {isLoading || isFetching ? (
             <div className="flex items-center justify-center">Loading...</div>
@@ -61,7 +61,7 @@ const StudentAnalyticsComponent = () => {
             )
           )}
         </div>
-        <div className="w-full flex items-center justify-center md:w-[40%] p-5 bg-gray-50 rounded-lg border border-gray-300/50">
+        <div className="w-full flex items-center justify-center lg:w-[50%] p-5 bg-gray-50 rounded-lg border border-gray-300/50">
           {!isLoading && !isFetching && Object.keys(baseData).length > 0 ? (
             <OverallGraph
               correctQuiz={baseData?.courseEnroll?.correctQuiz}
@@ -102,13 +102,13 @@ const StudentAnalyticsComponent = () => {
                       quizResult?.stepEightQuiz?.optionD,
                     ],
                     selectedAnswer:
-                      quizResult?.selectedOption === 'OptionA'
+                      quizResult?.selectedOption === "OptionA"
                         ? 0
-                        : quizResult?.selectedOption === 'OptionB'
+                        : quizResult?.selectedOption === "OptionB"
                         ? 1
-                        : quizResult?.selectedOption === 'OptionC'
+                        : quizResult?.selectedOption === "OptionC"
                         ? 2
-                        : quizResult?.selectedOption === 'OptionD'
+                        : quizResult?.selectedOption === "OptionD"
                         ? 3
                         : null,
                   })
@@ -119,7 +119,7 @@ const StudentAnalyticsComponent = () => {
           }
         )
       ) : (
-        ''
+        ""
       )}
     </div>
   );
