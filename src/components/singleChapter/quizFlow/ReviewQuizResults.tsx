@@ -23,12 +23,9 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
   const correctPercentage = Math.round((correct / total) * 100);
   const wrongPercentage = Math.round((wrong / total) * 100);
 
-  // Get all quiz attempts and filter for wrong answers only
+  // Get all quiz attempts (both correct and wrong)
   const quizAttempts =
     data.data.quizresult.stepEightQuizSessions[0]?.stepEightQuizAttempts || [];
-  const wrongQuestions = quizAttempts.filter(
-    (attempt: any) => !attempt.isCorrect
-  );
 
   const getOptionText = (quiz: any, option: string) => {
     switch (option) {
@@ -94,36 +91,50 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
       </div>
 
       {/* Review Results Section */}
-      {wrongQuestions.length > 0 && (
-        <div className="border p-6 rounded-lg">
-          <h3 className="text-2xl font-semibold font-montserrat mb-4">
-            Review Results
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Click to review your incorrect answers and learn from your mistakes.
-          </p>
+      <div className="border p-6 rounded-lg">
+        <h3 className="text-2xl font-semibold font-montserrat mb-4">
+          Review Results
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Review all your answers below. Incorrect answers are highlighted in
+          red, while correct answers are in green.
+        </p>
 
-          {/* Wrong Questions */}
-          <div className="space-y-6">
-            {wrongQuestions.map((attempt: any, index: number) => {
-              const quiz = attempt.stepEightQuiz;
-              const selectedOption = attempt.selectedOption;
+        {/* All Questions */}
+        <div className="space-y-6">
+          {quizAttempts.map((attempt: any, index: number) => {
+            const quiz = attempt.stepEightQuiz;
+            const selectedOption = attempt.selectedOption;
+            const correctAnswer = quiz.correctAnswer.toLowerCase(); // Convert to lowercase to match selectedOption format
 
-              return (
-                <div
-                  key={attempt.id}
-                  className="bg-gray-50 p-6 rounded-lg border"
-                >
-                  <div className="mb-4">
-                    <h4 className="font-semibold text-lg mb-3">
-                      Quiz -{(index + 1).toString().padStart(2, "0")}{" "}
-                      {quiz.questionText}
-                    </h4>
-                  </div>
+            return (
+              <div
+                key={attempt.id}
+                className="bg-gray-50 p-6 rounded-lg border"
+              >
+                <div className="mb-4">
+                  <h4 className="font-semibold text-lg mb-3">
+                    Quiz -{(index + 1).toString().padStart(2, "0")}{" "}
+                    {quiz.questionText}
+                  </h4>
+                </div>
 
-                  <div className="space-y-3">
-                    {["optionA", "optionB", "optionC", "optionD"].map(
-                      (option) => (
+                <div className="space-y-3">
+                  {["optionA", "optionB", "optionC", "optionD"].map(
+                    (option) => {
+                      const isSelected = selectedOption === option;
+                      const isCorrectOption =
+                        correctAnswer === option.toLowerCase(); // Convert to lowercase to match
+                      const isWrongSelection = isSelected && !attempt.isCorrect;
+
+                      let textColor = "text-gray-700";
+                      if (isCorrectOption) {
+                        textColor = "text-[#00AF58] font-medium";
+                      } else if (isWrongSelection) {
+                        textColor = "text-[#FF0000] font-medium";
+                      }
+
+                      return (
                         <label
                           key={option}
                           className="flex items-center space-x-3 cursor-pointer"
@@ -132,41 +143,42 @@ const ReviewQuizResults: React.FC<ReviewQuizResultsProps> = ({
                             <input
                               type="radio"
                               name={`question-${attempt.id}`}
-                              checked={selectedOption === option}
+                              checked={isSelected}
                               readOnly
                               className="sr-only"
                             />
                             <div
                               className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                                selectedOption === option
-                                  ? "border-[#FF0000] bg-[#FF0000]"
+                                isSelected
+                                  ? attempt.isCorrect
+                                    ? "border-[#00AF58] bg-[#00AF58]"
+                                    : "border-[#FF0000] bg-[#FF0000]"
                                   : "border-gray-300 bg-white"
                               }`}
                             >
-                              {selectedOption === option && (
+                              {isSelected && (
                                 <div className="w-2 h-2 bg-white rounded-full"></div>
                               )}
                             </div>
                           </div>
-                          <span
-                            className={`text-sm ${
-                              selectedOption === option
-                                ? "text-[#FF0000] font-medium"
-                                : "text-gray-700"
-                            }`}
-                          >
+                          <span className={`text-sm ${textColor}`}>
                             {getOptionText(quiz, option)}
+                            {isCorrectOption && !attempt.isCorrect && (
+                              <span className="ml-2 text-xs text-[#00AF58]">
+                                (Correct Answer)
+                              </span>
+                            )}
                           </span>
                         </label>
-                      )
-                    )}
-                  </div>
+                      );
+                    }
+                  )}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -17,14 +17,14 @@ const StepEleven = ({ data }: { data: any }) => {
         <h1 className="text-secondary text-6xl font-semibold text-center mt-4 uppercase">
           Congratulations
         </h1>
-        <p className="font-medium text-3xl text-center mt-2">
+        {/* <p className="font-medium text-3xl text-center mt-2">
           on Completing <span> {data?.data?.chapters?.[0]?.chapterName}!</span>
-        </p>
-        <p className="text-center text-gray-600 font-light mt-4">
+        </p> */}
+        {/* <p className="text-center text-gray-600 font-light mt-4">
           Well done! You’ve successfully finished this Chapter. Keep up the
           great work and unlock the next Courses to continue your learning
           journey.
-        </p>
+        </p> */}
       </div>
     </div>
   );
