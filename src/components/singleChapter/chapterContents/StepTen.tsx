@@ -1,13 +1,18 @@
 import { ButtonLoading } from "@/components/shared/button-loading/LoadingButton";
-import { useGiveChapterFeedbackMutation } from "@/redux/features/course/course";
+import {
+  useCreateChapterProgressMutation,
+  useGiveChapterFeedbackMutation,
+} from "@/redux/features/course/course";
 import { handleAsyncWithToast } from "@/utils/handleAsyncWithToast";
 import { Star } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
-const StepTen = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
+const StepTen = ({ data }: { data: any; isLoading: boolean }) => {
   const [submitFeedback, { isLoading: isSubmitting }] =
     useGiveChapterFeedbackMutation();
-
+  const [createChapterProgress] = useCreateChapterProgressMutation();
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [message, setMessage] = useState("");
@@ -81,11 +86,28 @@ const StepTen = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
     }
   };
 
-  const handleCancel = () => {
-    setRating(0);
-    setMessage("");
-    setCharCount(0);
-    setErrors({});
+  // const handleCancel = () => {
+  //   setRating(0);
+  //   setMessage("");
+  //   setCharCount(0);
+  //   setErrors({});
+  // };
+  const chapterData = data?.data?.chapters?.[0];
+  const router = useRouter();
+  const subjectId = useParams().id;
+  const handleCompleteChapter = async () => {
+    try {
+      const response = await createChapterProgress({
+        chapterId: id,
+        stepId: chapterData?.stepNine?.id,
+        stepSerial: "9",
+      });
+
+      if (response.data?.success) {
+        toast.success(response.data.message);
+        router.push(`/courses/${subjectId}/chapters`);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -197,10 +219,10 @@ const StepTen = ({ data, isLoading }: { data: any; isLoading: boolean }) => {
         {/* Action buttons */}
         <div className="flex justify-end gap-4">
           <button
-            onClick={handleCancel}
+            onClick={handleCompleteChapter}
             className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
           >
-            Cancel
+            Skip
           </button>
           <button
             onClick={handleSubmit}
