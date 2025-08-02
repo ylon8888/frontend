@@ -19,13 +19,28 @@ const addTopicValidationSchema = z.object({
   topicVideo: z
     .instanceof(File)
     .refine(
-      (file) => ["video/mp4", "video/webm", "audio/mpeg", "audio/wav", "audio/mp3"].includes(file.type),
+      (file) =>
+        [
+          "video/mp4",
+          "video/webm",
+          "audio/mpeg",
+          "audio/mp3",
+          "audio/wav",
+          "audio/x-wav",
+          "audio/x-pn-wav",
+        ].includes(file.type),
       "Only videos and audios are allowed"
     ),
   thumbnail: z.instanceof(File),
 });
 
-const AddPodcastPage = ({ currentStep, isEditMode }: { currentStep: number, isEditMode?: boolean }) => {
+const AddPodcastPage = ({
+  currentStep,
+  isEditMode,
+}: {
+  currentStep: number;
+  isEditMode?: boolean;
+}) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const chapterId = searchParams.get("chapterId");

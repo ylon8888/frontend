@@ -91,7 +91,7 @@ const MyFormVideoUpload = ({
                   key={fileInputKey}
                   id={name}
                   type="file"
-                  accept="video/*"
+                  accept="video/*, audio/*"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) handleFileChange(file);

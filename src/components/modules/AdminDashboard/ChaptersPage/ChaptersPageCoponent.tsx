@@ -185,14 +185,15 @@ const ChaptersPageComponent = ({ subjectId }: { subjectId: string }) => {
                         ? "Edit Lesson"
                         : "Add Lesson"}
                     </button>
-                    <BiTrash
+                    {/* no need for delete chapter for now */}
+                    {/* <BiTrash
                       size={25}
                       className="text-red-500"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteChapter(chapter?.id);
                       }}
-                    />
+                    /> */}
                   </div>
                 </div>
 
